@@ -207,7 +207,12 @@ if location == "India":
                 # Render the combo chart
                 st_echarts(combo_options)
 
-
+            # Logika untuk "Data"
+            elif chart_option == "Data":
+                # Menampilkan data_200hr sebagai tabel ketika opsi "Data" dipilih
+                st.write("Detailed Data View")
+                st.dataframe(data_200hr)    
+            
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
             st.write(f"Error: {e}")
