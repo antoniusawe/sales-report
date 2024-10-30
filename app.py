@@ -28,7 +28,7 @@ if location == "India":
             st.markdown(f"""
             <div style='display: flex; justify-content: space-around;'>
                 <div style='text-align: center;'>
-                    <div style='font-size: 16px; font-weight: bold; color: #333333;'>Total Booking</div>
+                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
                     <div style='font-size: 48px; font-weight: bold;'>{total_booking_ctr}</div>
                 </div>
             </div>
