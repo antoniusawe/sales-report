@@ -97,6 +97,7 @@ if location == "India":
                 }
 
                 # Render the bar chart
+                st.markdown("### Total Booking")
                 st_echarts(bar_options)
 
                 # Line chart for Average Bookings per Day
@@ -126,6 +127,7 @@ if location == "India":
                 }
 
                 # Render the line chart below the bar chart
+                st.markdown("### Average Booking per Day")
                 st_echarts(line_options)
 
             elif chart_option == "Total Payable":
