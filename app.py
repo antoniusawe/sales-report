@@ -213,7 +213,7 @@ if location == "India":
                 data_200hr_display = data_200hr.drop(columns=['S.No.'])
 
                 # Display the modified dataframe as a table
-                st.write("Detailed Data View")
+                st.write("RYP 200HR Students Database")
                 st.dataframe(data_200hr_display) 
             
         except Exception as e:
