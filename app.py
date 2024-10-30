@@ -50,6 +50,8 @@ if location == "India":
             </div>
             """, unsafe_allow_html=True)
 
+            chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable"])
+
             # Group data by batch start and end dates and count the number of students
             batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
             
