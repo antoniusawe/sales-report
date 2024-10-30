@@ -79,7 +79,11 @@ if location == "India":
                 "xAxis": {
                     "type": "category",
                     "data": wrapped_labels,
-                    "axisLabel": {"interval": 0}  # Keep wrapped labels without rotation
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 10,  # Smaller font size for x-axis labels
+                        "lineHeight": 12,  # Adjust line height if needed
+                    }
                 },
                 "yAxis": {"type": "value"},
                 "series": [
@@ -94,6 +98,7 @@ if location == "India":
 
             # Render the bar chart
             st_echarts(options)
+
 
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
