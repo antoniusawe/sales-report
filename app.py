@@ -29,7 +29,7 @@ if location == "India":
             <div style='display: flex; justify-content: space-around; align-items: center; font-size: 24px'>
                 <div style='text-align: center;'>
                     Total Booking
-                    <div style='color: #333333; font-size: 48px;'>{}</div>
+                    <div style='color: #333333; font-size: 48px; font-weight: bold; margin-left: 10px;'>{}</div>
                 </div>
             </div>
             """.format(total_booking_ctr), unsafe_allow_html=True)
