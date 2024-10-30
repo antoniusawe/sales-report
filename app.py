@@ -209,22 +209,12 @@ if location == "India":
 
             # Logika untuk "Data"
             elif chart_option == "Data":
-            # Display the data with conditional formatting
+                # Remove the 'S.No.' column from data_200hr before displaying
+                data_200hr_display = data_200hr.drop(columns=['S.No.'])
+
+                # Display the modified dataframe as a table
                 st.write("Detailed Data View")
-                
-                # Define a function to apply color formatting based on column values
-                def color_format(val):
-                    if isinstance(val, (int, float)):
-                        color = '#d65f5f' if val > 50 else '#5fba7d'  # Example: red for high, green for low
-                        return f'background-color: {color}'
-                    return ''
-
-                # Apply the color formatting
-                styled_data = data_200hr.style.applymap(color_format, subset=['Total Payable (in USD or USD equiv)', 'Student still to pay'])
-
-                # Display the styled dataframe
-                st.dataframe(styled_data, height=400)
-  
+                st.dataframe(data_200hr_display) 
             
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
