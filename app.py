@@ -26,7 +26,7 @@ if location == "India":
 
             # Display Total Booking
             st.markdown("""
-            <div style='display: flex; justify-content: space-around; align-items: center; font-size: 24px; font-weight: bold;'>
+            <div style='display: flex; justify-content: space-around; align-items: center; font-size: 24px'>
                 <div style='text-align: center;'>
                     Total Booking
                     <div style='color: #333333; font-size: 48px;'>{}</div>
