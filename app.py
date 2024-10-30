@@ -46,7 +46,7 @@ if location == "India":
                 <div style='text-align: left;'>
                     <div style='font-size: 16px; color: #333333;'>Outstanding</div>
                     <div style='font-size: 48px;'>{outstanding_sum:,.0f}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>{outstanding_percentage:.2f}% of Total Payable (Student still to pay)</div>
+                    <div style='color: #202fb2; font-size: 18px;'>{outstanding_percentage:.2f}% of Total Payable</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
