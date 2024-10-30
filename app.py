@@ -52,12 +52,19 @@ if location == "India":
 
             # Group data by batch start and end dates and count the number of students
             batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
-            # Sort by Batch start date to ensure chronological order
+            
+            # Convert Batch start and end dates to datetime format for sorting
+            batch_counts['Batch start date'] = pd.to_datetime(batch_counts['Batch start date'])
+            batch_counts['Batch end date'] = pd.to_datetime(batch_counts['Batch end date'])
+            
+            # Sort data by Batch start date to ensure chronological order
             batch_counts = batch_counts.sort_values(by='Batch start date')
             
+            # Convert dates back to string format for display purposes
+            batch_counts['Batch'] = batch_counts['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_counts['Batch end date'].dt.strftime('%B %d, %Y')
+            
             # Create wrapped labels
-            batch_counts['Batch'] = batch_counts['Batch start date'].astype(str) + " to " + batch_counts['Batch end date'].astype(str)
-            wrapped_labels = [label.replace(" to ", "\nto\n").replace(" ", "\n", 1) for label in batch_counts['Batch']]
+            wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
             student_counts = batch_counts['Name of student'].tolist()
 
             # Echarts options for Bar Chart with wrapped labels
