@@ -92,10 +92,10 @@ if location == "India":
                         "data": wrapped_labels,
                         "axisLabel": {
                             "interval": 0,
-                            "fontSize": 7,        # Ukuran font lebih kecil
-                            "rotate": 0,          # Tidak ada rotasi
-                            "lineHeight": 12,     # Mengatur jarak antar baris
-                            "fontWeight": "bold"  # Membuat font bold
+                            "fontSize": 7,
+                            "rotate": 0,
+                            "lineHeight": 12,
+                            "fontWeight": "bold"
                         }
                     },
                     "yAxis": {"type": "value"},
@@ -126,10 +126,10 @@ if location == "India":
                         "data": wrapped_labels,
                         "axisLabel": {
                             "interval": 0,
-                            "fontSize": 7,        # Ukuran font lebih kecil
-                            "rotate": 0,          # Tidak ada rotasi
-                            "lineHeight": 12,     # Mengatur jarak antar baris
-                            "fontWeight": "bold"  # Membuat font bold
+                            "fontSize": 7,
+                            "rotate": 0,
+                            "lineHeight": 12,
+                            "fontWeight": "bold"
                         }
                     },
                     "yAxis": {"type": "value"},
@@ -146,7 +146,83 @@ if location == "India":
 
                 # Render the line chart below the bar chart
                 st_echarts(line_options)
-                                 
+
+            # Chart for Total Payable, Total Paid, and Student Still to Pay
+            elif chart_option == "Total Payable":
+                # Group data by batch start and end dates and calculate the sums
+                batch_totals = data_200hr.groupby(['Batch start date', 'Batch end date']).agg({
+                    'Total Payable (in USD or USD equiv)': 'sum',
+                    'Total paid (as of today)': 'sum',
+                    'Student still to pay': 'sum'
+                }).reset_index()
+
+                # Sort data by Batch start date
+                batch_totals['Batch start date'] = pd.to_datetime(batch_totals['Batch start date'])
+                batch_totals['Batch end date'] = pd.to_datetime(batch_totals['Batch end date'])
+                batch_totals = batch_totals.sort_values(by='Batch start date')
+                
+                # Convert dates back to string format for display purposes
+                batch_totals['Batch'] = batch_totals['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_totals['Batch end date'].dt.strftime('%B %d, %Y')
+
+                # Create wrapped labels
+                wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_totals['Batch']]
+                total_payable = batch_totals['Total Payable (in USD or USD equiv)'].tolist()
+                total_paid = batch_totals['Total paid (as of today)'].tolist()
+                student_still_to_pay = batch_totals['Student still to pay'].tolist()
+
+                # Combo chart for Total Payable, Total Paid, and Student Still to Pay
+                combo_options = {
+                    "title": {
+                        "text": "Financial Overview per Batch",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                    },
+                    "tooltip": {"trigger": "axis"},
+                    "legend": {"data": ["Total Payable", "Total Paid", "Student Still to Pay"]},
+                    "xAxis": {
+                        "type": "category",
+                        "data": wrapped_labels,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 7,
+                            "rotate": 0,
+                            "lineHeight": 12,
+                            "fontWeight": "bold"
+                        }
+                    },
+                    "yAxis": {"type": "value"},
+                    "series": [
+                        {
+                            "name": "Total Payable",
+                            "data": total_payable,
+                            "type": "line",
+                            "itemStyle": {"color": "#5470C6"},
+                            "lineStyle": {"width": 2},
+                            "symbol": "circle"
+                        },
+                        {
+                            "name": "Total Paid",
+                            "data": total_paid,
+                            "type": "line",
+                            "itemStyle": {"color": "#91CC75"},
+                            "lineStyle": {"width": 2, "type": "dashed"},
+                            "symbol": "triangle"
+                        },
+                        {
+                            "name": "Student Still to Pay",
+                            "data": student_still_to_pay,
+                            "type": "line",
+                            "itemStyle": {"color": "#EE6666"},
+                            "lineStyle": {"width": 2},
+                            "symbol": "diamond"
+                        }
+                    ]
+                }
+
+                # Render the combo chart
+                st_echarts(combo_options)
+
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
             st.write(f"Error: {e}")
