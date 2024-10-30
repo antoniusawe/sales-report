@@ -148,8 +148,19 @@ if location == "India":
 
                 # Combo chart for Financial Overview
                 combo_options = {
+                    "title": {
+                        "text": "Financial Overview",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                    },
                     "tooltip": {"trigger": "axis"},
-                    "legend": {"data": ["Total Payable", "Total Paid", "Student Still to Pay"]},
+                    "legend": {
+                        "data": ["Total Payable", "Total Paid", "Student Still to Pay"],
+                        "orient": "horizontal",  # Orientasi horizontal
+                        "bottom": "0",           # Posisikan legend di bawah
+                        "left": "center"         # Rata tengah
+                    },
                     "xAxis": {
                         "type": "category",
                         "data": wrapped_labels,
@@ -192,6 +203,7 @@ if location == "India":
 
                 # Render the combo chart
                 st_echarts(combo_options)
+
 
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
