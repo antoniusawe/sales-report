@@ -179,7 +179,7 @@ if location == "India":
                             "data": total_payable,
                             "type": "line",
                             "itemStyle": {"color": "#5470C6"},
-                            "lineStyle": {"type": "dashed", "width": 2},
+                            "lineStyle": {"type": "dashed", "width": 1},
                             "symbol": "circle",
                             "symbolSize": 2    
                         },
