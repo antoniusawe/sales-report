@@ -88,6 +88,7 @@ if location == "India":
                               "fontSize": 7,  # Ukuran font
                               "rotate": 0,
                               "lineHeight": 12,  # Mengatur jarak antar baris jika ada wrapping
+                              "fontWeight": "bold"
                           }
                       },
                       "yAxis": {"type": "value"},
