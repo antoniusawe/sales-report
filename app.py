@@ -71,7 +71,7 @@ if location == "India":
             options = {
                 "title": {
                     "text": "Number of Students",
-                    "left": "center",
+                    "left": "left",
                     "top": "top",
                     "textStyle": {"fontSize": 18, "fontWeight": "bold"}
                 },
