@@ -176,6 +176,7 @@ if location == "India":
                         "text": "Financial Overview per Batch",
                         "left": "center",
                         "top": "top",
+                        "bottom": "0%",
                         "textStyle": {"fontSize": 18, "fontWeight": "bold"}
                     },
                     "tooltip": {"trigger": "axis"},
