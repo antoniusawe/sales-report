@@ -11,3 +11,9 @@ if location == "India":
     program = st.selectbox("Choose a Program:", ["200HR", "300HR"])
 else:
     st.write("Select 'India' from the sidebar to view program options.")
+    
+    if program == "200HR":
+        # Load the Excel file from the URL without displaying it in Streamlit
+        url = "https://raw.githubusercontent.com/antoniusawe/student_database/main/student_database_200hr.xlsx"
+        data_200hr = pd.read_excel(url)
+
