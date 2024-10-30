@@ -49,6 +49,36 @@ if location == "India":
             </div>
             """, unsafe_allow_html=True)
 
+            # Group data by batch start and end dates and count the number of students
+            batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
+            batch_counts['Batch'] = batch_counts['Batch start date'].astype(str) + " to " + batch_counts['Batch end date'].astype(str)
+            
+            # Prepare data for Echarts
+            batch_labels = batch_counts['Batch'].tolist()
+            student_counts = batch_counts['Name of student'].tolist()
+
+            # Echarts options for Bar Chart
+            options = {
+                "tooltip": {"trigger": "axis"},
+                "xAxis": {
+                    "type": "category",
+                    "data": batch_labels,
+                    "axisLabel": {"interval": 0, "rotate": 45}  # Rotate labels if needed
+                },
+                "yAxis": {"type": "value"},
+                "series": [
+                    {
+                        "data": student_counts,
+                        "type": "bar",
+                        "name": "Student Count",
+                        "itemStyle": {"color": "#5470C6"}
+                    }
+                ]
+            }
+
+            # Render the bar chart
+            st_echarts(options)
+
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
             st.write(f"Error: {e}")
