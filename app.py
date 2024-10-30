@@ -23,12 +23,19 @@ if location == "India":
             data_200hr = pd.read_excel(url)
             # Calculate Total Booking by counting non-null entries in "Name of student"
             total_booking_ctr = data_200hr["Name of student"].count()
+            total_payable_sum = data_200hr["Total Payable (in USD or USD equiv)"].sum()
 
             st.markdown(f"""
-            <div style='display: flex; flex-direction: column; align-items: flex-start; padding-left: 10px;'>
+            <div style='display: flex; flex-direction: column; align-items: flex-start; padding-left: 10px; padding-right: 10px;'>
                 <div style='font-size: 18px; color: #333333;'>Total Booking</div>
                 <div style='font-size: 48px; '>{total_booking_ctr}</div>
                 <div style='color: #202fb2; font-size: 22px; '>Number of students</div>
+            </div>
+            <div style='text-align: left;'>
+                    <div style='font-size: 16px; font-weight: bold; color: #333333;'>Total Payable</div>
+                    <div style='font-size: 48px; font-weight: bold;'>${total_payable_sum:,.2f}</div>
+                    <div style='color: red; font-size: 14px; font-weight: bold;'>Total in USD</div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
