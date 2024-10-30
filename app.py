@@ -22,34 +22,36 @@ if location == "India":
         
         try:
             data_200hr = pd.read_excel(url)
-            # Calculate Total Booking and Total Payable
+            # Calculate Total Booking, Total Payable, and Outstanding
             total_booking_ctr = data_200hr["Name of student"].count()
             total_payable_sum = data_200hr["Total Payable (in USD or USD equiv)"].sum()
             outstanding_sum = data_200hr["Student still to pay"].sum()
-
+            
+            # Calculate the percentage of Outstanding from Total Payable
             outstanding_percentage = (outstanding_sum / total_payable_sum * 100) if total_payable_sum else 0
 
-            # Display Total Booking and Total Payable in a centered format
+            # Display Total Booking, Total Payable, and Outstanding in a centered format
             st.markdown(f"""
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
-                <div style='text-align: left;'>
-                    <div style='font-size: 14px; color: #333333;'>Total Booking</div>
-                    <div style='font-size: 48px; '>{total_booking_ctr}</div>
-                    <div style='color: #202fb2; font-size: 16px; '>Number of Students</div>
+                <div style='text-align: center;'>
+                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
+                    <div style='font-size: 48px;'>{total_booking_ctr}</div>
+                    <div style='color: red; font-size: 18px;'>Number of Students</div>
                 </div>
-                <div style='text-align: left;'>
-                    <div style='font-size: 14px; color: #333333;'>Total Payable</div>
-                    <div style='font-size: 48px; '>{total_payable_sum:,.0f}</div>
-                    <div style='color: #202fb2; font-size: 16px; '>in USD or USD equiv</div>
+                <div style='text-align: center;'>
+                    <div style='font-size: 16px; color: #333333;'>Total Payable</div>
+                    <div style='font-size: 48px;'>{total_payable_sum:,.0f}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>in USD or USD equiv</div>
                 </div>
-                <div style='text-align: left;'>
-                    <div style='font-size: 14px; color: #333333;'>Outstanding</div>
+                <div style='text-align: center;'>
+                    <div style='font-size: 16px; color: #333333;'>Outstanding</div>
                     <div style='font-size: 48px;'>{outstanding_sum:,.0f}</div>
-                    <div style='color: #202fb2; font-size: 16px;'>{outstanding_percentage:.2f}% of Total Payable</div>
+                    <div style='color: #202fb2; font-size: 18px;'>{outstanding_percentage:.2f}% of Total Payable (Student still to pay)</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
+            # Dropdown for chart data selection
             chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable"])
 
             # Only show the Number of Students chart if "Total Booking" is selected
@@ -73,10 +75,45 @@ if location == "India":
                 
                 # Create wrapped labels
                 wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
+                student_counts = batch_counts['Name of student'].tolist()
                 average_bookings_per_day = batch_counts['Average Bookings per Day'].tolist()
 
-                # Echarts options for Bar Chart with title and adjusted x-axis label font weight and size
-                options = {
+                # Bar chart for Number of Students
+                bar_options = {
+                    "title": {
+                        "text": "Number of Students",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                    },
+                    "tooltip": {"trigger": "axis"},
+                    "xAxis": {
+                        "type": "category",
+                        "data": wrapped_labels,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 7,        # Ukuran font lebih kecil
+                            "rotate": 0,          # Tidak ada rotasi
+                            "lineHeight": 12,     # Mengatur jarak antar baris
+                            "fontWeight": "bold"  # Membuat font bold
+                        }
+                    },
+                    "yAxis": {"type": "value"},
+                    "series": [
+                        {
+                            "data": student_counts,
+                            "type": "bar",
+                            "name": "Student Count",
+                            "itemStyle": {"color": "#5470C6"}
+                        }
+                    ]
+                }
+
+                # Render the bar chart
+                st_echarts(bar_options)
+
+                # Line chart for Average Bookings per Day
+                line_options = {
                     "title": {
                         "text": "Average Bookings per Day",
                         "left": "center",
@@ -99,16 +136,16 @@ if location == "India":
                     "series": [
                         {
                             "data": average_bookings_per_day,
-                            "type": "bar",
+                            "type": "line",
                             "name": "Average Bookings per Day",
-                            "itemStyle": {"color": "#5470C6"}
+                            "itemStyle": {"color": "#EE6666"},
+                            "lineStyle": {"width": 2}
                         }
                     ]
                 }
 
-                # Render the bar chart
-                st_echarts(options)
-
+                # Render the line chart below the bar chart
+                st_echarts(line_options)
 
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
