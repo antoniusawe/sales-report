@@ -35,7 +35,7 @@ if location == "India":
                 </div>
                 <div style='text-align: left;'>
                     <div style='font-size: 16px; color: #333333;'>Total Payable</div>
-                    <div style='font-size: 48px; '>{total_payable_sum}</div>
+                    <div style='font-size: 48px; '>{total_payable_sum:,.0f}</div>
                     <div style='color: #202fb2; font-size: 18px; '>in USD or USD equiv</div>
                 </div>
             </div>
