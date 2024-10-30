@@ -29,13 +29,13 @@ if location == "India":
             st.markdown(f"""
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
                 <div style='text-align: left;'>
-                    <div style='font-size: 16px; font-weight: bold; color: #333333;'>Total Booking</div>
-                    <div style='font-size: 48px; font-weight: bold;'>{total_booking_ctr}</div>
+                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
+                    <div style='font-size: 48px; '>{total_booking_ctr}</div>
                     <div style='color: red; font-size: 14px; font-weight: bold;'>Number of Students</div>
                 </div>
                 <div style='text-align: left;'>
-                    <div style='font-size: 16px; font-weight: bold; color: #333333;'>Total Payable</div>
-                    <div style='font-size: 48px; font-weight: bold;'>${total_payable_sum:,.2f}</div>
+                    <div style='font-size: 16px; color: #333333;'>Total Payable</div>
+                    <div style='font-size: 48px; '>${total_payable_sum:,.2f}</div>
                     <div style='color: red; font-size: 14px; font-weight: bold;'>Total in USD</div>
                 </div>
             </div>
