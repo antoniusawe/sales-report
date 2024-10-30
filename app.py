@@ -73,31 +73,36 @@ if location == "India":
 
                 # Bar chart for Number of Students
                 bar_options = {
-                    "tooltip": {"trigger": "axis"},
-                    "xAxis": {
-                        "type": "category",
-                        "data": wrapped_labels,
-                        "axisLabel": {
-                            "interval": 0,
-                            "fontSize": 7,
-                            "rotate": 0,
-                            "lineHeight": 12,
-                            "fontWeight": "bold"
-                        }
-                    },
-                    "yAxis": {"type": "value"},
-                    "series": [
-                        {
-                            "data": student_counts,
-                            "type": "bar",
-                            "name": "Student Count",
-                            "itemStyle": {"color": "#5470C6"}
-                        }
-                    ]
-                }
+                "title": {
+                    "text": "Total Booking",  # Adding the title for the bar chart
+                    "left": "center",          # Center the title
+                    "top": "top",              # Position it at the top of the chart
+                    "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                },
+                "tooltip": {"trigger": "axis"},
+                "xAxis": {
+                    "type": "category",
+                    "data": wrapped_labels,
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 7,
+                        "rotate": 0,
+                        "lineHeight": 12,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {"type": "value"},
+                "series": [
+                    {
+                        "data": student_counts,
+                        "type": "bar",
+                        "name": "Student Count",
+                        "itemStyle": {"color": "#5470C6"}
+                    }
+                ]
+            }
 
                 # Render the bar chart
-                st.markdown("### Total Booking")
                 st_echarts(bar_options)
 
                 # Line chart for Average Bookings per Day
@@ -127,7 +132,6 @@ if location == "India":
                 }
 
                 # Render the line chart below the bar chart
-                st.markdown("### Average Booking per Day")
                 st_echarts(line_options)
 
             elif chart_option == "Total Payable":
