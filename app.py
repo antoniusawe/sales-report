@@ -181,7 +181,7 @@ if location == "India":
                             "itemStyle": {"color": "#5470C6"},
                             "lineStyle": {"type": "dashed", "width": 1},
                             "symbol": "circle",
-                            "symbolSize": 2    
+                            "symbolSize": 5    
                         },
                         {
                             "name": "Total Paid",
@@ -190,7 +190,7 @@ if location == "India":
                             "itemStyle": {"color": "#91CC75"},
                             "lineStyle": {"width": 2},
                             "symbol": "circle",
-                            "symbolSize": 2     
+                            "symbolSize": 5     
                         },
                         {
                             "name": "Student Still to Pay",
@@ -199,7 +199,7 @@ if location == "India":
                             "lineStyle": {"width": 1, "type": "dotted"},     
                             "itemStyle": {"color": "grey"},
                             "symbol": "circle",
-                            "symbolSize": 2     
+                            "symbolSize": 5     
                         }
                     ]
                 }
