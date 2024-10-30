@@ -69,6 +69,12 @@ if location == "India":
 
             # Echarts options for Bar Chart with wrapped labels
             options = {
+                "title": {
+                    "text": "Number of Students",
+                    "left": "center",
+                    "top": "top",
+                    "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                },
                 "tooltip": {"trigger": "axis"},
                 "xAxis": {
                     "type": "category",
