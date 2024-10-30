@@ -207,13 +207,16 @@ if location == "India":
                 # Render the combo chart
                 st_echarts(combo_options)
 
+                # Display the grouped summary table below the Financial Overview chart
+                st.write("### Financial Summary by Batch")
+
             # Logika untuk "Data"
             elif chart_option == "Data":
                 # Remove the 'S.No.' column from data_200hr before displaying
                 data_200hr_display = data_200hr.drop(columns=['S.No.'])
 
                 # Display the modified dataframe as a table
-                st.write("RYP 200HR Students Database")
+                st.write("Detailed Data View")
                 st.dataframe(data_200hr_display) 
             
         except Exception as e:
