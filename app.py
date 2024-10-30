@@ -108,7 +108,7 @@ if location == "India":
                 # Line chart for Average Bookings per Day
                 line_options = {
                 "title": {
-                    "text": "Average Booking per Day",  # Adding the title for the line chart
+                    "text": "Average Booking",  # Adding the title for the line chart
                     "left": "center",           # Center the title
                     "top": "top",               # Position it at the top of the chart
                     "textStyle": {"fontSize": 18, "fontWeight": "bold"}
