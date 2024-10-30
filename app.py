@@ -146,9 +146,7 @@ if location == "India":
 
                 # Render the line chart below the bar chart
                 st_echarts(line_options)
-                     
-            elif chart_option == "Total Payable":
-            elif chart_option == "Data":             
+                                 
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
             st.write(f"Error: {e}")
