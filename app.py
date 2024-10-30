@@ -52,54 +52,56 @@ if location == "India":
 
             chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable"])
 
-            # Group data by batch start and end dates and count the number of students
-            batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
-            
-            # Convert Batch start and end dates to datetime format for sorting
-            batch_counts['Batch start date'] = pd.to_datetime(batch_counts['Batch start date'])
-            batch_counts['Batch end date'] = pd.to_datetime(batch_counts['Batch end date'])
-            
-            # Sort data by Batch start date to ensure chronological order
-            batch_counts = batch_counts.sort_values(by='Batch start date')
-            
-            # Convert dates back to string format for display purposes
-            batch_counts['Batch'] = batch_counts['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_counts['Batch end date'].dt.strftime('%B %d, %Y')
-            
-            # Create wrapped labels
-            wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
-            student_counts = batch_counts['Name of student'].tolist()
+            # Only show the Number of Students chart if "Total Booking" is selected
+            if chart_option == "Total Booking":
+                # Group data by batch start and end dates and count the number of students
+                batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
+                
+                # Convert Batch start and end dates to datetime format for sorting
+                batch_counts['Batch start date'] = pd.to_datetime(batch_counts['Batch start date'])
+                batch_counts['Batch end date'] = pd.to_datetime(batch_counts['Batch end date'])
+                
+                # Sort data by Batch start date to ensure chronological order
+                batch_counts = batch_counts.sort_values(by='Batch start date')
+                
+                # Convert dates back to string format for display purposes
+                batch_counts['Batch'] = batch_counts['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_counts['Batch end date'].dt.strftime('%B %d, %Y')
+                
+                # Create wrapped labels
+                wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
+                student_counts = batch_counts['Name of student'].tolist()
 
-            # Echarts options for Bar Chart with wrapped labels
-            options = {
-                "title": {
-                    "text": "Number of Students",
-                    "left": "center",
-                    "top": "top",
-                    "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                },
-                "tooltip": {"trigger": "axis"},
-                "xAxis": {
-                    "type": "category",
-                    "data": wrapped_labels,
-                    "axisLabel": {
-                        "interval": 0,
-                        "fontSize": 10,  # Smaller font size for x-axis labels
-                        "lineHeight": 12,  # Adjust line height if needed
-                    }
-                },
-                "yAxis": {"type": "value"},
-                "series": [
-                    {
-                        "data": student_counts,
-                        "type": "bar",
-                        "name": "Student Count",
-                        "itemStyle": {"color": "#5470C6"}
-                    }
-                ]
-            }
+                # Echarts options for Bar Chart with title and smaller x-axis label font
+                options = {
+                    "title": {
+                        "text": "Number of Students",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                    },
+                    "tooltip": {"trigger": "axis"},
+                    "xAxis": {
+                        "type": "category",
+                        "data": wrapped_labels,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 10,  # Smaller font size for x-axis labels
+                            "lineHeight": 12,  # Adjust line height if needed
+                        }
+                    },
+                    "yAxis": {"type": "value"},
+                    "series": [
+                        {
+                            "data": student_counts,
+                            "type": "bar",
+                            "name": "Student Count",
+                            "itemStyle": {"color": "#5470C6"}
+                        }
+                    ]
+                }
 
-            # Render the bar chart
-            st_echarts(options)
+                # Render the bar chart
+                st_echarts(options)
 
 
         except Exception as e:
