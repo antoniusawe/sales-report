@@ -107,29 +107,35 @@ if location == "India":
 
                 # Line chart for Average Bookings per Day
                 line_options = {
-                    "tooltip": {"trigger": "axis"},
-                    "xAxis": {
-                        "type": "category",
-                        "data": wrapped_labels,
-                        "axisLabel": {
-                            "interval": 0,
-                            "fontSize": 7,
-                            "rotate": 0,
-                            "lineHeight": 12,
-                            "fontWeight": "bold"
-                        }
-                    },
-                    "yAxis": {"type": "value"},
-                    "series": [
-                        {
-                            "data": average_bookings_per_day,
-                            "type": "line",
-                            "name": "Average Bookings per Day",
-                            "itemStyle": {"color": "#EE6666"},
-                            "lineStyle": {"width": 2}
-                        }
-                    ]
-                }
+                "title": {
+                    "text": "Average Booking per Day",  # Adding the title for the line chart
+                    "left": "center",           # Center the title
+                    "top": "top",               # Position it at the top of the chart
+                    "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                },
+                "tooltip": {"trigger": "axis"},
+                "xAxis": {
+                    "type": "category",
+                    "data": wrapped_labels,
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 7,
+                        "rotate": 0,
+                        "lineHeight": 12,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {"type": "value"},
+                "series": [
+                    {
+                        "data": average_bookings_per_day,
+                        "type": "line",
+                        "name": "Average Bookings per Day",
+                        "itemStyle": {"color": "#EE6666"},
+                        "lineStyle": {"width": 2}
+                    }
+                ]
+            }
 
                 # Render the line chart below the bar chart
                 st_echarts(line_options)
@@ -303,57 +309,69 @@ if location == "India":
 
                 # Bar chart for Number of Students
                 bar_options = {
-                    "tooltip": {"trigger": "axis"},
-                    "xAxis": {
-                        "type": "category",
-                        "data": wrapped_labels,
-                        "axisLabel": {
-                            "interval": 0,
-                            "fontSize": 7,
-                            "rotate": 0,
-                            "lineHeight": 12,
-                            "fontWeight": "bold"
-                        }
-                    },
-                    "yAxis": {"type": "value"},
-                    "series": [
-                        {
-                            "data": student_counts,
-                            "type": "bar",
-                            "name": "Student Count",
-                            "itemStyle": {"color": "#5470C6"}
-                        }
-                    ]
-                }
+                "title": {
+                    "text": "Total Booking",  # Adding the title for the bar chart
+                    "left": "center",          # Center the title
+                    "top": "top",              # Position it at the top of the chart
+                    "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                },
+                "tooltip": {"trigger": "axis"},
+                "xAxis": {
+                    "type": "category",
+                    "data": wrapped_labels,
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 7,
+                        "rotate": 0,
+                        "lineHeight": 12,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {"type": "value"},
+                "series": [
+                    {
+                        "data": student_counts,
+                        "type": "bar",
+                        "name": "Student Count",
+                        "itemStyle": {"color": "#5470C6"}
+                    }
+                ]
+            }
 
                 # Render the bar chart
                 st_echarts(bar_options)
 
                 # Line chart for Average Bookings per Day
                 line_options = {
-                    "tooltip": {"trigger": "axis"},
-                    "xAxis": {
-                        "type": "category",
-                        "data": wrapped_labels,
-                        "axisLabel": {
-                            "interval": 0,
-                            "fontSize": 7,
-                            "rotate": 0,
-                            "lineHeight": 12,
-                            "fontWeight": "bold"
-                        }
-                    },
-                    "yAxis": {"type": "value"},
-                    "series": [
-                        {
-                            "data": average_bookings_per_day,
-                            "type": "line",
-                            "name": "Average Bookings per Day",
-                            "itemStyle": {"color": "#EE6666"},
-                            "lineStyle": {"width": 2}
-                        }
-                    ]
-                }
+                "title": {
+                    "text": "Average Booking",  # Adding the title for the line chart
+                    "left": "center",           # Center the title
+                    "top": "top",               # Position it at the top of the chart
+                    "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                },
+                "tooltip": {"trigger": "axis"},
+                "xAxis": {
+                    "type": "category",
+                    "data": wrapped_labels,
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 7,
+                        "rotate": 0,
+                        "lineHeight": 12,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {"type": "value"},
+                "series": [
+                    {
+                        "data": average_bookings_per_day,
+                        "type": "line",
+                        "name": "Average Bookings per Day",
+                        "itemStyle": {"color": "#EE6666"},
+                        "lineStyle": {"width": 2}
+                    }
+                ]
+            }
 
                 # Render the line chart below the bar chart
                 st_echarts(line_options)
