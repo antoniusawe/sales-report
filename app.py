@@ -26,6 +26,8 @@ if location == "India":
             total_payable_sum = data_200hr["Total Payable (in USD or USD equiv)"].sum()
             outstanding_sum = data_200hr["Student still to pay"].sum()
 
+            outstanding_percentage = (outstanding_sum / total_payable_sum * 100) if total_payable_sum else 0
+
             # Display Total Booking and Total Payable in a centered format
             st.markdown(f"""
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
@@ -42,7 +44,7 @@ if location == "India":
                 <div style='text-align: left;'>
                     <div style='font-size: 16px; color: #333333;'>Outstanding</div>
                     <div style='font-size: 48px;'>{outstanding_sum:,.0f}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>in USD or USD equiv</div>
+                    <div style='color: #202fb2; font-size: 18px;'>{outstanding_percentage:.2f}% of Total Payable (Student still to pay)</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
