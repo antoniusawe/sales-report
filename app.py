@@ -33,9 +33,9 @@ if location == "India":
                     <div style='font-size: 48px; font-weight: bold;'>{total_booking_ctr}</div>
                     <div style='color: red; font-size: 14px; font-weight: bold;'>Number of Students</div>
                 </div>
-                <div style='text-align: center;'>
+                <div style='text-align: left;'>
                     <div style='font-size: 16px; color: #333333;'>Total Payable</div>
-                    <div style='font-size: 48px; font-weight: bold;'>${total_payable_sum:,.2f}</div>
+                    <div style='font-size: 48px; '>${total_payable_sum:,.2f}</div>
                     <div style='color: red; font-size: 14px; font-weight: bold;'>Total in USD</div>
                 </div>
             </div>
