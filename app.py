@@ -179,8 +179,9 @@ if location == "India":
                             "data": total_payable,
                             "type": "line",
                             "itemStyle": {"color": "#5470C6"},
-                            "lineStyle": {"width": 2},
-                            "symbol": "circle"
+                            "lineStyle": {"type": "dashed", "width": 2},
+                            "symbol": "circle",
+                            "symbolSize": 2    
                         },
                         {
                             "name": "Total Paid",
