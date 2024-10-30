@@ -73,32 +73,33 @@ if location == "India":
 
                 # Echarts options for Bar Chart with title and smaller x-axis label font
                 options = {
-                    "title": {
-                        "text": "Number of Students",
-                        "left": "center",
-                        "top": "top",
-                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                    },
-                    "tooltip": {"trigger": "axis"},
-                    "xAxis": {
-                        "type": "category",
-                        "data": wrapped_labels,
-                        "axisLabel": {
-                            "interval": 0,
-                            "fontSize": 10,  # Smaller font size for x-axis labels
-                            "lineHeight": 12,  # Adjust line height if needed
-                        }
-                    },
-                    "yAxis": {"type": "value"},
-                    "series": [
-                        {
-                            "data": student_counts,
-                            "type": "bar",
-                            "name": "Student Count",
-                            "itemStyle": {"color": "#5470C6"}
-                        }
-                    ]
-                }
+                      "title": {
+                          "text": "Number of Students",
+                          "left": "center",
+                          "top": "top",
+                          "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                      },
+                      "tooltip": {"trigger": "axis"},
+                      "xAxis": {
+                          "type": "category",
+                          "data": wrapped_labels,
+                          "axisLabel": {
+                              "interval": 1,  # Menampilkan label secara berkala
+                              "fontSize": 10,  # Ukuran font lebih kecil
+                              "rotate": 45,    # Memutar label 45 derajat untuk menghindari tabrakan
+                              "lineHeight": 12,  # Mengatur jarak antar baris jika ada wrapping
+                          }
+                      },
+                      "yAxis": {"type": "value"},
+                      "series": [
+                          {
+                              "data": student_counts,
+                              "type": "bar",
+                              "name": "Student Count",
+                              "itemStyle": {"color": "#5470C6"}
+                          }
+                      ]
+                  }
 
                 # Render the bar chart
                 st_echarts(options)
