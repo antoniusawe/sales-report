@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from streamlit_echarts import st_echarts
 
 # Sidebar dropdown for location
 location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
@@ -24,16 +25,47 @@ if location == "India":
             # Calculate Total Booking by counting non-null entries in "Name of student"
             total_booking_ctr = data_200hr["Name of student"].count()
 
-            # Display Total Booking
-            st.markdown("""
-            <div style='display: flex; justify-content: space-around; align-items: center; font-size: 24px; font-weight: bold;'>
-                <div style='text-align: center;'>
-                    Total Booking
-                    <div style='color: #333333; font-size: 48px;'>{}</div>
-                </div>
-            </div>
-            """.format(total_booking_ctr), unsafe_allow_html=True)
-        
+            # Use Echarts to display Total Booking
+            option = {
+                "title": {
+                    "text": "Total Booking",
+                    "left": "center",
+                    "top": "20",
+                    "textStyle": {
+                        "fontSize": 24,
+                        "fontWeight": "bold"
+                    }
+                },
+                "tooltip": {
+                    "formatter": "{a} <br/>{b} : {c}"
+                },
+                "series": [
+                    {
+                        "name": "Total Booking",
+                        "type": "gauge",
+                        "detail": {"formatter": "{value}"},
+                        "data": [{"value": total_booking_ctr, "name": "Bookings"}],
+                        "axisLine": {
+                            "lineStyle": {
+                                "width": 10
+                            }
+                        },
+                        "pointer": {
+                            "width": 5
+                        },
+                        "title": {
+                            "fontSize": 20
+                        },
+                        "detail": {
+                            "fontSize": 30
+                        }
+                    }
+                ]
+            }
+
+            # Render the chart using streamlit_echarts
+            st_echarts(option)
+
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
             st.write(f"Error: {e}")
