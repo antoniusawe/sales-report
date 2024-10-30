@@ -24,16 +24,16 @@ if location == "India":
             # Calculate Total Booking by counting non-null entries in "Name of student"
             total_booking_ctr = data_200hr["Name of student"].count()
 
-            # Display Total Booking
-            st.markdown("""
-            <div style='display: flex; justify-content: space-around; align-items: left; font-size: 24px'>
+            # Display Total Booking in the specified format
+            st.markdown(f"""
+            <div style='display: flex; justify-content: space-around;'>
                 <div style='text-align: center;'>
-                    Total Booking
-                    <div style='color: #333333; font-size: 48px; font-weight: bold; margin-left: 10px;'>{}</div>
+                    <div style='font-size: 16px; font-weight: bold; color: #333333;'>Total Booking</div>
+                    <div style='font-size: 48px; font-weight: bold;'>{total_booking_ctr}</div>
                 </div>
             </div>
-            """.format(total_booking_ctr), unsafe_allow_html=True)
-        
+            """, unsafe_allow_html=True)
+
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
             st.write(f"Error: {e}")
