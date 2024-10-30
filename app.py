@@ -208,7 +208,20 @@ if location == "India":
                 st_echarts(combo_options)
 
                 # Display the grouped summary table below the Financial Overview chart
-                st.write("### Financial Summary by Batch")
+                # st.write("### Financial Summary by Batch")
+
+                # Display the aggregated data as a table
+                financial_summary = batch_counts[['Batch start date', 'Batch end date', 
+                                                  'Total Payable (in USD or USD equiv)', 
+                                                  'Total paid (as of today)', 
+                                                  'Student still to pay']]
+                
+                # Rename columns for readability
+                financial_summary.columns = ["Batch Start Date", "Batch End Date", "Total Payable (USD)", 
+                                             "Total Paid (USD)", "Outstanding (USD)"]
+                
+                # Display the table
+                st.dataframe(financial_summary)
 
             # Logika untuk "Data"
             elif chart_option == "Data":
