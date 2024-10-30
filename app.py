@@ -1,7 +1,7 @@
 import streamlit as st
 
 # st.sidebar.title("Sidebar Title")
-st.sidebar.write("Choose location")
+location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
 
 st.image("https://raw.githubusercontent.com/antoniusawe/student_database/main/images/house%20of%20om.png",  
          use_column_width=True)
