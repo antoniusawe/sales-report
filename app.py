@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from streamlit_echarts import st_echarts
 
 # Sidebar dropdown for location
 location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
