@@ -188,16 +188,18 @@ if location == "India":
                             "data": total_paid,
                             "type": "line",
                             "itemStyle": {"color": "#91CC75"},
-                            "lineStyle": {"width": 2, "type": "dashed"},
-                            "symbol": "triangle"
+                            "lineStyle": {"width": 2},
+                            "symbol": "circle",
+                            "symbolSize": 2     
                         },
                         {
                             "name": "Student Still to Pay",
                             "data": student_still_to_pay,
                             "type": "line",
-                            "itemStyle": {"color": "#EE6666"},
+                            "itemStyle": {"color": "grey"},
                             "lineStyle": {"width": 2},
-                            "symbol": "diamond"
+                            "symbol": "circle",
+                            "symbolSize": 2     
                         }
                     ]
                 }
