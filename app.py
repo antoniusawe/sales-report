@@ -465,4 +465,4 @@ if location == "India":
 
 
 else:
-    st.write("Select 'India' from the sidebar to view program options.")
+    st.write("Data currently unavailable.")
