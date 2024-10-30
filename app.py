@@ -220,6 +220,9 @@ if location == "India":
                 financial_summary.columns = ["Batch Start Date", "Batch End Date", "Total Payable (USD)", 
                                              "Total Paid (USD)", "Outstanding (USD)"]
                 
+                financial_summary['Batch Start Date'] = financial_summary['Batch Start Date'].dt.strftime('%B %d, %Y')
+                financial_summary['Batch End Date'] = financial_summary['Batch End Date'].dt.strftime('%B %d, %Y')
+                
                 # Display the table
                 st.dataframe(financial_summary)
 
