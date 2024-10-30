@@ -18,20 +18,25 @@ if location == "India":
     if program == "200HR":
         # Load the Excel file from the URL
         url = "https://raw.githubusercontent.com/antoniusawe/student_database/main/student_database_200hr.xlsx"
-        data_200hr = pd.read_excel(url)
+        
+        try:
+            data_200hr = pd.read_excel(url)
+            # Calculate Total Booking by counting non-null entries in "Name of student"
+            total_booking_ctr = data_200hr["Name of student"].count()
 
-        # Calculate Total Booking by counting non-null entries in "Name of student"
-        total_booking_ctr = data_200hr["Name of student"].count()
-
-        # Display Total Booking
-        st.markdown("""
-        <div style='display: flex; justify-content: space-around; align-items: center; font-size: 24px; font-weight: bold;'>
-            <div style='text-align: center;'>
-                Total Booking
-                <div style='color: #333333; font-size: 48px;'>{}</div>
+            # Display Total Booking
+            st.markdown("""
+            <div style='display: flex; justify-content: space-around; align-items: center; font-size: 24px; font-weight: bold;'>
+                <div style='text-align: center;'>
+                    Total Booking
+                    <div style='color: #333333; font-size: 48px;'>{}</div>
+                </div>
             </div>
-        </div>
-        """.format(total_booking_ctr), unsafe_allow_html=True)
+            """.format(total_booking_ctr), unsafe_allow_html=True)
+        
+        except Exception as e:
+            st.error("Failed to load data. Please check the URL or your connection.")
+            st.write(f"Error: {e}")
 
 else:
     st.write("Select 'India' from the sidebar to view program options.")
