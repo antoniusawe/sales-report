@@ -54,17 +54,17 @@ if location == "India":
             batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
             batch_counts['Batch'] = batch_counts['Batch start date'].astype(str) + " to " + batch_counts['Batch end date'].astype(str)
             
-            # Prepare data for Echarts
-            batch_labels = batch_counts['Batch'].tolist()
+            # Create wrapped labels
+            wrapped_labels = [label.replace(" to ", "\nto\n").replace(" ", "\n", 1) for label in batch_counts['Batch']]
             student_counts = batch_counts['Name of student'].tolist()
 
-            # Echarts options for Bar Chart
+            # Echarts options for Bar Chart with wrapped labels
             options = {
                 "tooltip": {"trigger": "axis"},
                 "xAxis": {
                     "type": "category",
-                    "data": batch_labels,
-                    "axisLabel": {"interval": 0, "rotate": 45}  # Rotate labels if needed
+                    "data": wrapped_labels,
+                    "axisLabel": {"interval": 0}  # Keep wrapped labels without rotation
                 },
                 "yAxis": {"type": "value"},
                 "series": [
