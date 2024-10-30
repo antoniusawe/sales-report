@@ -84,9 +84,9 @@ if location == "India":
                           "type": "category",
                           "data": wrapped_labels,
                           "axisLabel": {
-                              "interval": 0,  # Menampilkan label secara berkala
-                              "fontSize": 12,  # Ukuran font lebih kecil
-                              "rotate": 0,    # Memutar label 45 derajat untuk menghindari tabrakan
+                              "interval": 1,  # Menampilkan label secara berkala
+                              "fontSize": 12,  # Ukuran font
+                              "rotate": 0,
                               "lineHeight": 12,  # Mengatur jarak antar baris jika ada wrapping
                           }
                       },
