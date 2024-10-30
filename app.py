@@ -52,40 +52,27 @@ if location == "India":
             """, unsafe_allow_html=True)
 
             # Dropdown for chart data selection
-            chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable", "Data"])
+            chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable"])
 
-            # Only show the Number of Students chart if "Total Booking" is selected
             if chart_option == "Total Booking":
-                # Group data by batch start and end dates and count the number of students
+                # Process data for Number of Students chart
                 batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
                 
-                # Calculate the number of days in each batch
                 batch_counts['Batch start date'] = pd.to_datetime(batch_counts['Batch start date'])
                 batch_counts['Batch end date'] = pd.to_datetime(batch_counts['Batch end date'])
                 batch_counts['Days in Batch'] = (batch_counts['Batch end date'] - batch_counts['Batch start date']).dt.days + 1
                 
-                # Calculate average bookings per day per batch
                 batch_counts['Average Bookings per Day'] = batch_counts['Name of student'] / batch_counts['Days in Batch']
-                
-                # Sort data by Batch start date to ensure chronological order
                 batch_counts = batch_counts.sort_values(by='Batch start date')
                 
-                # Convert dates back to string format for display purposes
                 batch_counts['Batch'] = batch_counts['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_counts['Batch end date'].dt.strftime('%B %d, %Y')
                 
-                # Create wrapped labels
                 wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
                 student_counts = batch_counts['Name of student'].tolist()
                 average_bookings_per_day = batch_counts['Average Bookings per Day'].tolist()
 
                 # Bar chart for Number of Students
                 bar_options = {
-                    "title": {
-                        "text": "Number of Students",
-                        "left": "center",
-                        "top": "top",
-                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                    },
                     "tooltip": {"trigger": "axis"},
                     "xAxis": {
                         "type": "category",
@@ -114,12 +101,6 @@ if location == "India":
 
                 # Line chart for Average Bookings per Day
                 line_options = {
-                    "title": {
-                        "text": "Average Bookings per Day",
-                        "left": "center",
-                        "top": "top",
-                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                    },
                     "tooltip": {"trigger": "axis"},
                     "xAxis": {
                         "type": "category",
@@ -147,81 +128,70 @@ if location == "India":
                 # Render the line chart below the bar chart
                 st_echarts(line_options)
 
-            # Chart for Total Payable, Total Paid, and Student Still to Pay
             elif chart_option == "Total Payable":
-                # Group data by batch start and end dates and calculate the sums
-                batch_totals = data_200hr.groupby(['Batch start date', 'Batch end date']).agg({
-                    'Total Payable (in USD or USD equiv)': 'sum',
-                    'Total paid (as of today)': 'sum',
-                    'Student still to pay': 'sum'
-                }).reset_index()
+                # Process data for Financial Overview chart
+                batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date']).agg(
+                    {"Total Payable (in USD or USD equiv)": "sum",
+                     "Total paid (as of today)": "sum",
+                     "Student still to pay": "sum"}).reset_index()
 
-                # Sort data by Batch start date
-                batch_totals['Batch start date'] = pd.to_datetime(batch_totals['Batch start date'])
-                batch_totals['Batch end date'] = pd.to_datetime(batch_totals['Batch end date'])
-                batch_totals = batch_totals.sort_values(by='Batch start date')
+                batch_counts['Batch start date'] = pd.to_datetime(batch_counts['Batch start date'])
+                batch_counts['Batch end date'] = pd.to_datetime(batch_counts['Batch end date'])
+                batch_counts = batch_counts.sort_values(by='Batch start date')
                 
-                # Convert dates back to string format for display purposes
-                batch_totals['Batch'] = batch_totals['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_totals['Batch end date'].dt.strftime('%B %d, %Y')
+                batch_counts['Batch'] = batch_counts['Batch start date'].dt.strftime('%B %d, %Y') + " to " + batch_counts['Batch end date'].dt.strftime('%B %d, %Y')
+                
+                wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
+                total_payable = batch_counts["Total Payable (in USD or USD equiv)"].tolist()
+                total_paid = batch_counts["Total paid (as of today)"].tolist()
+                student_still_to_pay = batch_counts["Student still to pay"].tolist()
 
-                # Create wrapped labels
-                wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_totals['Batch']]
-                total_payable = batch_totals['Total Payable (in USD or USD equiv)'].tolist()
-                total_paid = batch_totals['Total paid (as of today)'].tolist()
-                student_still_to_pay = batch_totals['Student still to pay'].tolist()
-
-                # Combo chart for Total Payable, Total Paid, and Student Still to Pay
+                # Combo chart for Financial Overview
                 combo_options = {
-                      "title": {
-                          "text": "Financial Overview per Batch",
-                          "left": "center",
-                          "bottom": "0%",  # Memindahkan judul ke bagian bawah
-                          "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                      },
-                      "tooltip": {"trigger": "axis"},
-                      "legend": {"data": ["Total Payable", "Total Paid", "Student Still to Pay"]},
-                      "xAxis": {
-                          "type": "category",
-                          "data": wrapped_labels,
-                          "axisLabel": {
-                              "interval": 0,
-                              "fontSize": 7,
-                              "rotate": 0,
-                              "lineHeight": 12,
-                              "fontWeight": "bold"
-                          }
-                      },
-                      "yAxis": {"type": "value"},
-                      "series": [
-                          {
-                              "name": "Total Payable",
-                              "data": total_payable,
-                              "type": "line",
-                              "itemStyle": {"color": "#5470C6"},
-                              "lineStyle": {"width": 2},
-                              "symbol": "circle"
-                          },
-                          {
-                              "name": "Total Paid",
-                              "data": total_paid,
-                              "type": "line",
-                              "itemStyle": {"color": "#91CC75"},
-                              "lineStyle": {"width": 2, "type": "dashed"},
-                              "symbol": "triangle"
-                          },
-                          {
-                              "name": "Student Still to Pay",
-                              "data": student_still_to_pay,
-                              "type": "line",
-                              "itemStyle": {"color": "#EE6666"},
-                              "lineStyle": {"width": 2},
-                              "symbol": "diamond"
-                          }
-                      ]
-                  }
-                  
-                  # Render the combo chart
-                  st_echarts(combo_options)
+                    "tooltip": {"trigger": "axis"},
+                    "legend": {"data": ["Total Payable", "Total Paid", "Student Still to Pay"]},
+                    "xAxis": {
+                        "type": "category",
+                        "data": wrapped_labels,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 7,
+                            "rotate": 0,
+                            "lineHeight": 12,
+                            "fontWeight": "bold"
+                        }
+                    },
+                    "yAxis": {"type": "value"},
+                    "series": [
+                        {
+                            "name": "Total Payable",
+                            "data": total_payable,
+                            "type": "line",
+                            "itemStyle": {"color": "#5470C6"},
+                            "lineStyle": {"width": 2},
+                            "symbol": "circle"
+                        },
+                        {
+                            "name": "Total Paid",
+                            "data": total_paid,
+                            "type": "line",
+                            "itemStyle": {"color": "#91CC75"},
+                            "lineStyle": {"width": 2, "type": "dashed"},
+                            "symbol": "triangle"
+                        },
+                        {
+                            "name": "Student Still to Pay",
+                            "data": student_still_to_pay,
+                            "type": "line",
+                            "itemStyle": {"color": "#EE6666"},
+                            "lineStyle": {"width": 2},
+                            "symbol": "diamond"
+                        }
+                    ]
+                }
+
+                # Render the combo chart
+                st_echarts(combo_options)
 
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
