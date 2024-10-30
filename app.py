@@ -24,13 +24,11 @@ if location == "India":
             # Calculate Total Booking by counting non-null entries in "Name of student"
             total_booking_ctr = data_200hr["Name of student"].count()
 
-            # Display Total Booking in the specified format
+            # Display Total Booking in the specified format with left alignment
             st.markdown(f"""
-            <div style='display: flex; justify-content: space-around;'>
-                <div style='text-align: center;'>
-                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
-                    <div style='font-size: 48px; font-weight: bold;'>{total_booking_ctr}</div>
-                </div>
+            <div style='display: flex; flex-direction: column; align-items: flex-start; padding-left: 10px;'>
+                <div style='font-size: 16px; font-weight: bold; color: #333333;'>Total Booking</div>
+                <div style='font-size: 48px; font-weight: bold;'>{total_booking_ctr}</div>
             </div>
             """, unsafe_allow_html=True)
 
