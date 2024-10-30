@@ -196,8 +196,8 @@ if location == "India":
                             "name": "Student Still to Pay",
                             "data": student_still_to_pay,
                             "type": "line",
+                            "lineStyle": {"width": 1, "type": "dotted"},     
                             "itemStyle": {"color": "grey"},
-                            "lineStyle": {"width": 2},
                             "symbol": "circle",
                             "symbolSize": 2     
                         }
