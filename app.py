@@ -24,6 +24,7 @@ if location == "India":
             # Calculate Total Booking and Total Payable
             total_booking_ctr = data_200hr["Name of student"].count()
             total_payable_sum = data_200hr["Total Payable (in USD or USD equiv)"].sum()
+            outstanding_sum = data_200hr["Student still to pay"].sum()
 
             # Display Total Booking and Total Payable in a centered format
             st.markdown(f"""
@@ -37,6 +38,11 @@ if location == "India":
                     <div style='font-size: 16px; color: #333333;'>Total Payable</div>
                     <div style='font-size: 48px; '>{total_payable_sum:,.0f}</div>
                     <div style='color: #202fb2; font-size: 18px; '>in USD or USD equiv</div>
+                </div>
+                <div style='text-align: center;'>
+                    <div style='font-size: 16px; color: #333333;'>Outstanding</div>
+                    <div style='font-size: 48px;'>{outstanding_sum:,.0f}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>in USD or USD equiv</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
