@@ -172,57 +172,56 @@ if location == "India":
 
                 # Combo chart for Total Payable, Total Paid, and Student Still to Pay
                 combo_options = {
-                    "title": {
-                        "text": "Financial Overview per Batch",
-                        "left": "center",
-                        "top": "top",
-                        "bottom": "0%",
-                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                    },
-                    "tooltip": {"trigger": "axis"},
-                    "legend": {"data": ["Total Payable", "Total Paid", "Student Still to Pay"]},
-                    "xAxis": {
-                        "type": "category",
-                        "data": wrapped_labels,
-                        "axisLabel": {
-                            "interval": 0,
-                            "fontSize": 7,
-                            "rotate": 0,
-                            "lineHeight": 12,
-                            "fontWeight": "bold"
-                        }
-                    },
-                    "yAxis": {"type": "value"},
-                    "series": [
-                        {
-                            "name": "Total Payable",
-                            "data": total_payable,
-                            "type": "line",
-                            "itemStyle": {"color": "#5470C6"},
-                            "lineStyle": {"width": 2},
-                            "symbol": "circle"
-                        },
-                        {
-                            "name": "Total Paid",
-                            "data": total_paid,
-                            "type": "line",
-                            "itemStyle": {"color": "#91CC75"},
-                            "lineStyle": {"width": 2, "type": "dashed"},
-                            "symbol": "triangle"
-                        },
-                        {
-                            "name": "Student Still to Pay",
-                            "data": student_still_to_pay,
-                            "type": "line",
-                            "itemStyle": {"color": "#EE6666"},
-                            "lineStyle": {"width": 2},
-                            "symbol": "diamond"
-                        }
-                    ]
-                }
-
-                # Render the combo chart
-                st_echarts(combo_options)
+                      "title": {
+                          "text": "Financial Overview per Batch",
+                          "left": "center",
+                          "bottom": "0%",  # Memindahkan judul ke bagian bawah
+                          "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                      },
+                      "tooltip": {"trigger": "axis"},
+                      "legend": {"data": ["Total Payable", "Total Paid", "Student Still to Pay"]},
+                      "xAxis": {
+                          "type": "category",
+                          "data": wrapped_labels,
+                          "axisLabel": {
+                              "interval": 0,
+                              "fontSize": 7,
+                              "rotate": 0,
+                              "lineHeight": 12,
+                              "fontWeight": "bold"
+                          }
+                      },
+                      "yAxis": {"type": "value"},
+                      "series": [
+                          {
+                              "name": "Total Payable",
+                              "data": total_payable,
+                              "type": "line",
+                              "itemStyle": {"color": "#5470C6"},
+                              "lineStyle": {"width": 2},
+                              "symbol": "circle"
+                          },
+                          {
+                              "name": "Total Paid",
+                              "data": total_paid,
+                              "type": "line",
+                              "itemStyle": {"color": "#91CC75"},
+                              "lineStyle": {"width": 2, "type": "dashed"},
+                              "symbol": "triangle"
+                          },
+                          {
+                              "name": "Student Still to Pay",
+                              "data": student_still_to_pay,
+                              "type": "line",
+                              "itemStyle": {"color": "#EE6666"},
+                              "lineStyle": {"width": 2},
+                              "symbol": "diamond"
+                          }
+                      ]
+                  }
+                  
+                  # Render the combo chart
+                  st_echarts(combo_options)
 
         except Exception as e:
             st.error("Failed to load data. Please check the URL or your connection.")
