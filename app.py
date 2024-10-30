@@ -57,9 +57,13 @@ if location == "India":
                 # Group data by batch start and end dates and count the number of students
                 batch_counts = data_200hr.groupby(['Batch start date', 'Batch end date'])['Name of student'].count().reset_index()
                 
-                # Convert Batch start and end dates to datetime format for sorting
+                # Calculate the number of days in each batch
                 batch_counts['Batch start date'] = pd.to_datetime(batch_counts['Batch start date'])
                 batch_counts['Batch end date'] = pd.to_datetime(batch_counts['Batch end date'])
+                batch_counts['Days in Batch'] = (batch_counts['Batch end date'] - batch_counts['Batch start date']).dt.days + 1
+                
+                # Calculate average bookings per day per batch
+                batch_counts['Average Bookings per Day'] = batch_counts['Name of student'] / batch_counts['Days in Batch']
                 
                 # Sort data by Batch start date to ensure chronological order
                 batch_counts = batch_counts.sort_values(by='Batch start date')
@@ -69,38 +73,38 @@ if location == "India":
                 
                 # Create wrapped labels
                 wrapped_labels = [label.replace(" to ", "\nto\n") for label in batch_counts['Batch']]
-                student_counts = batch_counts['Name of student'].tolist()
+                average_bookings_per_day = batch_counts['Average Bookings per Day'].tolist()
 
-                # Echarts options for Bar Chart with title and smaller x-axis label font
+                # Echarts options for Bar Chart with title and adjusted x-axis label font weight and size
                 options = {
-                      "title": {
-                          "text": "Number of Students",
-                          "left": "center",
-                          "top": "top",
-                          "textStyle": {"fontSize": 18, "fontWeight": "bold"}
-                      },
-                      "tooltip": {"trigger": "axis"},
-                      "xAxis": {
-                          "type": "category",
-                          "data": wrapped_labels,
-                          "axisLabel": {
-                              "interval": 0,  # Menampilkan label secara berkala
-                              "fontSize": 7,  # Ukuran font
-                              "rotate": 0,
-                              "lineHeight": 12,  # Mengatur jarak antar baris jika ada wrapping
-                              "fontWeight": "bold"
-                          }
-                      },
-                      "yAxis": {"type": "value"},
-                      "series": [
-                          {
-                              "data": student_counts,
-                              "type": "bar",
-                              "name": "Student Count",
-                              "itemStyle": {"color": "#5470C6"}
-                          }
-                      ]
-                  }
+                    "title": {
+                        "text": "Average Bookings per Day",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 18, "fontWeight": "bold"}
+                    },
+                    "tooltip": {"trigger": "axis"},
+                    "xAxis": {
+                        "type": "category",
+                        "data": wrapped_labels,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 7,        # Ukuran font lebih kecil
+                            "rotate": 0,          # Tidak ada rotasi
+                            "lineHeight": 12,     # Mengatur jarak antar baris
+                            "fontWeight": "bold"  # Membuat font bold
+                        }
+                    },
+                    "yAxis": {"type": "value"},
+                    "series": [
+                        {
+                            "data": average_bookings_per_day,
+                            "type": "bar",
+                            "name": "Average Bookings per Day",
+                            "itemStyle": {"color": "#5470C6"}
+                        }
+                    ]
+                }
 
                 # Render the bar chart
                 st_echarts(options)
