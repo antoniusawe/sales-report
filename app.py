@@ -52,7 +52,7 @@ if location == "India":
             """, unsafe_allow_html=True)
 
             # Dropdown for chart data selection
-            chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable"])
+            chart_option = st.selectbox("Choose Data to Display:", ["Total Booking", "Total Payable", "Data"])
 
             if chart_option == "Total Booking":
                 # Process data for Number of Students chart
