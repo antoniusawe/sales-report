@@ -18,7 +18,7 @@ if location == "India":
     # Load and process data if "200HR" is selected
     if program == "200HR":
         # Load the Excel file from the URL
-        url = "https://raw.githubusercontent.com/antoniusawe/student_database/main/student_database_200hr.xlsx"
+        url = "https://github.com/antoniusawe/sales-report/blob/main/RYP%20data/ryp_student_database_200hr.xlsx"
         
         try:
             data_200hr = pd.read_excel(url)
@@ -242,7 +242,7 @@ if location == "India":
     # Load and process data if "200HR" is selected
     elif program == "300HR":
         # Load the Excel file from the URL
-        url = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/RYP%20data/student_database_300hr.xlsx"
+        url = "https://github.com/antoniusawe/sales-report/blob/main/RYP%20data/ryp_student_database_300hr.xlsx"
         
         try:
             data_300hr = pd.read_excel(url)
