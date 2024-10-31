@@ -8,7 +8,7 @@ location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
 # Display the main image and title
 st.image("https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png",  
          use_column_width=True)
-st.markdown("<h1 style='text-align: center; font-size: 50px;'>HOUSE OF OM - DASHBOARD</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; font-size: 50px;'>SALES DASHBOARD</h1>", unsafe_allow_html=True)
 
 # Conditional logic based on location selection
 if location == "India":
