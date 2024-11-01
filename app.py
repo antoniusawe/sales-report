@@ -93,7 +93,8 @@ if location == "Bali":
             # Identify the highest value for color differentiation
             highest_fill_value = site_fill_data['Fill'].max()
 
-            # Prepare data for the bar chart with color adjustment
+
+            # Prepare data for the bar chart with conditional color
             bar_chart_data = {
                 "xAxis": {
                     "type": "category",
@@ -104,27 +105,15 @@ if location == "Bali":
                 },
                 "series": [{
                     "data": [
-                        {"value": fill, "itemStyle": {"color": "#FF5733" if fill == highest_fill_value else "#5470C6"}}
+                        {
+                            "value": fill,
+                            "itemStyle": {
+                                "color": "#FF5733" if fill == highest_fill_value else "#5470C6"
+                            }
+                        }
                         for fill in site_fill_data['Fill']
                     ],
                     "type": "bar",
-                    "barWidth": "50%"  # Make bars narrower for a denser look
-                }]
-            }
-
-            # Prepare data for the bar chart
-            bar_chart_data = {
-                "xAxis": {
-                    "type": "category",
-                    "data": site_fill_data['Site'].tolist()
-                },
-                "yAxis": {
-                    "type": "value"
-                },
-                "series": [{
-                    "data": site_fill_data['Fill'].tolist(),
-                    "type": "bar",
-                    "itemStyle": {"color": "#5470C6"},
                     "label": {
                         "show": True,               # Show label on each bar
                         "position": "top",          # Position label at the top of the bar
