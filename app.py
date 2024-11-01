@@ -96,6 +96,15 @@ if location == "Bali":
 
             # Prepare data for the bar chart with conditional color
             bar_chart_data = {
+                "title": {
+                    "text": "Top Frequent Sites",   # Title of the chart
+                    "left": "left",                 # Align title to the left
+                    "textStyle": {
+                        "fontSize": 16,             # Font size of the title
+                        "fontWeight": "bold",
+                        "color": "#333333"          # Color of the title
+                    }
+                },
                 "xAxis": {
                     "type": "category",
                     "data": site_fill_data['Site'].tolist()
