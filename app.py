@@ -109,7 +109,7 @@ if location == "Bali":
             site_bar_chart_data = {
                 "title": {
                     "text": "Top Frequent Sites",
-                    "left": "left",
+                    "left": "center",
                     "textStyle": {
                         "fontSize": 16,
                         "fontWeight": "bold",
@@ -156,7 +156,7 @@ if location == "Bali":
             room_bar_chart_data = {
                 "title": {
                     "text": "Top Frequent Rooms",
-                    "left": "left",
+                    "left": "center",
                     "textStyle": {
                         "fontSize": 16,
                         "fontWeight": "bold",
@@ -203,7 +203,7 @@ if location == "Bali":
             month_bar_chart_data = {
                 "title": {
                     "text": "Top Months",
-                    "left": "left",
+                    "left": "center",
                     "textStyle": {
                         "fontSize": 16,
                         "fontWeight": "bold",
