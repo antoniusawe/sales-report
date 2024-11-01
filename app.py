@@ -264,7 +264,7 @@ if location == "Bali":
         # Menampilkan tombol "Generate Data" di tengah
         center_button = """
         <div style='display: flex; justify-content: center; padding-top: 20px;'>
-            <button style='font-size: 16px; padding: 10px 20px; background-color: #FF5733; color: white; border: none; border-radius: 5px; cursor: pointer;'>
+            <button style='font-size: 16px; padding: 10px 20px; background-color: #5470C6; color: white; border: none; border-radius: 5px; cursor: pointer;'>
                 Generate Data
             </button>
         </div>
