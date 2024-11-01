@@ -260,6 +260,10 @@ if location == "Bali":
             with col3:
                 # Render bar chart Month for fully paid students
                 st_echarts(options=month_bar_chart_data, height="300px")
+        
+        # Menampilkan tombol "Generate Data"
+        if st.button("Generate Data"):
+            st.write("Data generation initiated.")
 
     elif bali_option == "Location":
         st.write("Displaying Location section for Bali.")
