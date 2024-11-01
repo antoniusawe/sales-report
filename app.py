@@ -94,11 +94,14 @@ if location == "Bali":
             room_fill_data = bali_occupancy_data.groupby('Room')['Fill'].sum().reset_index()
             room_fill_data = room_fill_data.sort_values(by='Fill', ascending=False)
 
+            # Aggregate data for Month from bali_sales_data
+            month_fill_data = bali_sales_data.groupby('Month')['Fill'].sum().reset_index()
+            month_fill_data = month_fill_data.sort_values(by='Fill', ascending=False)
+
             # Identify the highest value for color differentiation
             highest_fill_value_site = site_fill_data['Fill'].max()
-
-            # Identifikasi nilai tertinggi untuk chart Room
             highest_fill_value_room = room_fill_data['Fill'].max()
+            highest_fill_value_month = month_fill_data['Fill'].max()
 
 
             # Konfigurasi bar chart untuk Site dengan tooltip
@@ -114,7 +117,7 @@ if location == "Bali":
                 },
                 "tooltip": {
                     "trigger": "item",
-                    "formatter": "{b}: {c}"  # Show Site name and Fill value in tooltip
+                    "formatter": "{b}: {c}"
                 },
                 "xAxis": {
                     "type": "category",
@@ -144,7 +147,7 @@ if location == "Bali":
                 }]
             }
 
-            # Konfigurasi bar chart untuk Room dengan tooltip
+            # Configuration for Room chart
             room_bar_chart_data = {
                 "title": {
                     "text": "Top Frequent Rooms",
@@ -157,7 +160,7 @@ if location == "Bali":
                 },
                 "tooltip": {
                     "trigger": "item",
-                    "formatter": "{b}: {c}"  # Show Room name and Fill value in tooltip
+                    "formatter": "{b}: {c}"
                 },
                 "xAxis": {
                     "type": "category",
@@ -187,16 +190,63 @@ if location == "Bali":
                 }]
             }
 
-            # Menampilkan kedua grafik berdampingan
-            col1, col2 = st.columns(2)
+            # Configuration for Month chart
+            month_bar_chart_data = {
+                "title": {
+                    "text": "Monthly Frequency",
+                    "left": "left",
+                    "textStyle": {
+                        "fontSize": 16,
+                        "fontWeight": "bold",
+                        "color": "#333333"
+                    }
+                },
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{b}: {c}"
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": month_fill_data['Month'].tolist()
+                },
+                "yAxis": {
+                    "type": "value"
+                },
+                "series": [{
+                    "data": [
+                        {
+                            "value": fill,
+                            "itemStyle": {
+                                "color": "#FF5733" if fill == highest_fill_value_month else "#5470C6"
+                            }
+                        }
+                        for fill in month_fill_data['Fill']
+                    ],
+                    "type": "bar",
+                    "label": {
+                        "show": True,
+                        "position": "top",
+                        "formatter": "{c}",
+                        "fontSize": 10,
+                        "color": "#333333"
+                    }
+                }]
+            }
+
+            # Display the three charts in a row
+            col1, col2, col3 = st.columns(3)
 
             with col1:
-                # Render bar chart Site
+                # Render Site chart
                 st_echarts(options=site_bar_chart_data, height="300px")
 
             with col2:
-                # Render bar chart Room
+                # Render Room chart
                 st_echarts(options=room_bar_chart_data, height="300px")
+
+            with col3:
+                # Render Month chart
+                st_echarts(options=month_bar_chart_data, height="300px")
 
     elif bali_option == "Location":
         st.write("Displaying Location section for Bali.")
