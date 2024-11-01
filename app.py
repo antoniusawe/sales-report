@@ -101,16 +101,20 @@ if location == "Bali":
             highest_fill_value_room = room_fill_data['Fill'].max()
 
 
-            # Prepare data for the bar chart with conditional color
-            bar_chart_data = {
+            # Konfigurasi bar chart untuk Site dengan tooltip
+            site_bar_chart_data = {
                 "title": {
-                    "text": "Top Frequent Sites",   # Title of the chart
-                    "left": "left",                 # Align title to the left
+                    "text": "Top Frequent Sites",
+                    "left": "left",
                     "textStyle": {
-                        "fontSize": 16,             # Font size of the title
+                        "fontSize": 16,
                         "fontWeight": "bold",
-                        "color": "#333333"          # Color of the title
+                        "color": "#333333"
                     }
+                },
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{b}: {c}"  # Show Site name and Fill value in tooltip
                 },
                 "xAxis": {
                     "type": "category",
@@ -124,23 +128,23 @@ if location == "Bali":
                         {
                             "value": fill,
                             "itemStyle": {
-                                "color": "#FF5733" if fill == highest_fill_value else "#5470C6"
+                                "color": "#FF5733" if fill == highest_fill_value_site else "#5470C6"
                             }
                         }
                         for fill in site_fill_data['Fill']
                     ],
                     "type": "bar",
                     "label": {
-                        "show": True,               # Show label on each bar
-                        "position": "top",          # Position label at the top of the bar
-                        "formatter": "{c}",         # Display the value
-                        "fontSize": 10,             # Size of the label font
-                        "color": "#333333"          # Color of the label text
+                        "show": True,
+                        "position": "top",
+                        "formatter": "{c}",
+                        "fontSize": 10,
+                        "color": "#333333"
                     }
                 }]
             }
 
-            # Konfigurasi bar chart untuk Room
+            # Konfigurasi bar chart untuk Room dengan tooltip
             room_bar_chart_data = {
                 "title": {
                     "text": "Top Frequent Rooms",
@@ -150,6 +154,10 @@ if location == "Bali":
                         "fontWeight": "bold",
                         "color": "#333333"
                     }
+                },
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{b}: {c}"  # Show Room name and Fill value in tooltip
                 },
                 "xAxis": {
                     "type": "category",
@@ -184,7 +192,7 @@ if location == "Bali":
 
             with col1:
                 # Render bar chart Site
-                st_echarts(options=bar_chart_data, height="300px")
+                st_echarts(options=site_bar_chart_data, height="300px")
 
             with col2:
                 # Render bar chart Room
