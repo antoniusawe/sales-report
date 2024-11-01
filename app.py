@@ -266,6 +266,7 @@ if location == "Bali":
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
+            bali_sales_data['Batch start date'] = bali_sales_data['Batch start date'].dt.strftime('%B %d, %Y')
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Sales Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_sales_data)
 
