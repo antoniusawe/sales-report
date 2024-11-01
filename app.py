@@ -262,14 +262,13 @@ if location == "Bali":
                 st_echarts(options=month_bar_chart_data, height="300px")
         
         # Menampilkan tombol "Generate Data" di tengah
-        center_button = """
-        <div style='display: flex; justify-content: center; padding-top: 20px;'>
-            <button style='font-size: 16px; padding: 10px 20px; background-color: #5470C6; color: white; border: none; border-radius: 5px; cursor: pointer;'>
-                Generate Data
-            </button>
-        </div>
-        """
-        st.markdown(center_button, unsafe_allow_html=True)
+        if st.button("Generate Data"):
+            # Display titles and dataframes
+            st.markdown("<h2 style='text-align: center; font-size: 24px; color: #4CAF50;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
+            st.dataframe(bali_occupancy_data)
+
+            st.markdown("<h2 style='text-align: center; font-size: 24px; color: #4CAF50;'>Bali Sales Data</h2>", unsafe_allow_html=True)
+            st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
         st.write("Displaying Location section for Bali.")
