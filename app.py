@@ -13,7 +13,7 @@ st.markdown("<h1 style='text-align: center; font-size: 50px;'>HOUSE OF OM - DASH
 
 # Display today's date
 today = datetime.today()
-st.markdown(f"<h3 style='text-align: center; font-size: 16px;'>{today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
+st.markdown(f"<h3 style='text-align: center;'>Tanggal Hari Ini: {today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
 
 # Extract month from today's date for comparison
 current_month = today.month
@@ -21,6 +21,7 @@ current_month = today.month
 if location == "Bali":
     # Sub-dropdown for specific options under "Bali"
     bali_option = st.sidebar.selectbox("Choose a Section:", ["Overview", "Location", "Batch"])
+    program = st.selectbox("Choose a Program:", ["200HR", "300HR"])
 
     # Display content based on selected sub-option
     if bali_option == "Overview":
