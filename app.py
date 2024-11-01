@@ -266,24 +266,49 @@ if location == "Bali":
             st.session_state['show_data'] = False
 
         # Display Generate Data and Clear buttons side by side
-        col1, col2, col3 = st.columns([1, 0.2, 1])
-        
-        with col1:
-            # Generate Data button
-            if st.button("Generate Data", key="generate_button"):
-                st.session_state['show_data'] = True  # Set to True to display data
+        st.markdown(
+            """
+            <style>
+            .button-container {
+                display: flex;
+                justify-content: center;
+                gap: 20px;  /* Memberikan jarak antara tombol */
+                margin-top: 20px;
+            }
+            .button-style {
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
-        with col2:
-            # Clear button
-            if st.button("Clear", key="clear_button"):
-                st.session_state['show_data'] = False  # Set to False to hide data
+        # Membuat container untuk tombol
+        st.markdown("<div class='button-container'>", unsafe_allow_html=True)
 
-        # Conditionally display data based on session state
-        if st.session_state['show_data']:
+        # Tombol Generate Data dan Clear
+        generate = st.button("Generate Data", key="generate_button", args={"class": "button-style"})
+        clear = st.button("Clear", key="clear_button", args={"class": "button-style"})
+
+        # Menutup container div untuk tombol
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # Mengelola logika tombol
+        if generate:
+            st.session_state['show_data'] = True
+
+        if clear:
+            st.session_state['show_data'] = False
+
+        # Kondisi untuk menampilkan data jika Generate Data ditekan
+        if st.session_state.get('show_data', False):
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
-            # Format the 'Batch start date' column in Bali Sales Data as string for consistency
+            # Format kolom 'Batch start date' untuk konsistensi
             bali_sales_data['Batch start date'] = bali_sales_data['Batch start date'].dt.strftime('%d %b %Y')
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Sales Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_sales_data)
