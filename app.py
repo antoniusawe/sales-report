@@ -125,7 +125,10 @@ if location == "Bali":
                     "data": site_fill_data['Site'].tolist()
                 },
                 "yAxis": {
-                    "type": "value"
+                    "type": "value",
+                    "axisLabel": {
+                        "margin": 10  # Adjust margin to provide more space for y-axis labels
+                    }
                 },
                 "series": [{
                     "data": [
@@ -168,7 +171,10 @@ if location == "Bali":
                     "data": room_fill_data['Room'].tolist()
                 },
                 "yAxis": {
-                    "type": "value"
+                    "type": "value",
+                    "axisLabel": {
+                        "margin": 10  # Adjust margin to provide more space for y-axis labels
+                    }
                 },
                 "series": [{
                     "data": [
@@ -211,7 +217,10 @@ if location == "Bali":
                     "data": month_counts['Month'].tolist()
                 },
                 "yAxis": {
-                    "type": "value"
+                    "type": "value",
+                    "axisLabel": {
+                        "margin": 10  # Adjust margin to provide more space for y-axis labels
+                    }
                 },
                 "series": [{
                     "data": [
