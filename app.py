@@ -94,12 +94,16 @@ if location == "Bali":
             room_fill_data = bali_occupancy_data.groupby('Room')['Fill'].sum().reset_index()
             room_fill_data = room_fill_data.sort_values(by='Fill', ascending=False)
 
+            balance_zero_data = bali_sales_data[bali_sales_data['BALANCE'] == 0]
+            month_counts = balance_zero_data.groupby('Month')['NAME'].count().reset_index()
+            month_counts = month_counts.sort_values(by='NAME', ascending=False)
+
             # Identify the highest value for color differentiation
             highest_fill_value_site = site_fill_data['Fill'].max()
-
-            # Identifikasi nilai tertinggi untuk chart Room
             highest_fill_value_room = room_fill_data['Fill'].max()
 
+            # Identifikasi nilai tertinggi untuk chart Month
+            highest_value_month = month_counts['NAME'].max()
 
             # Konfigurasi bar chart untuk Site dengan tooltip
             site_bar_chart_data = {
@@ -187,8 +191,44 @@ if location == "Bali":
                 }]
             }
 
-            # Menampilkan kedua grafik berdampingan
-            col1, col2 = st.columns(2)
+            # Konfigurasi bar chart untuk Month dengan tooltip
+            month_bar_chart_data = {
+                "title": {
+                    "text": "Top Months (Fully Paid Students)",
+                    "left": "left",
+                    "textStyle": {
+                        "fontSize": 16,
+                        "fontWeight": "bold",
+                        "color": "#333333"
+                    }
+                },
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{b}: {c}"  # Show Month and count of students with Balance = 0
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": month_counts['Month'].tolist()
+                },
+                "yAxis": {
+                    "type": "value"
+                },
+                "series": [{
+                    "data": month_counts['NAME'].tolist(),
+                    "type": "bar",
+                    "itemStyle": {"color": "#5470C6"},
+                    "label": {
+                        "show": True,
+                        "position": "top",
+                        "formatter": "{c}",
+                        "fontSize": 10,
+                        "color": "#333333"
+                    }
+                }]
+            }
+
+            # Menampilkan ketiga grafik berdampingan
+            col1, col2, col3 = st.columns(3)
 
             with col1:
                 # Render bar chart Site
@@ -197,6 +237,10 @@ if location == "Bali":
             with col2:
                 # Render bar chart Room
                 st_echarts(options=room_bar_chart_data, height="300px")
+
+            with col3:
+                # Render bar chart Month for fully paid students
+                st_echarts(options=month_bar_chart_data, height="300px")
 
     elif bali_option == "Location":
         st.write("Displaying Location section for Bali.")
