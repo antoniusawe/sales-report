@@ -214,9 +214,16 @@ if location == "Bali":
                     "type": "value"
                 },
                 "series": [{
-                    "data": month_counts['NAME'].tolist(),
+                    "data": [
+                        {
+                            "value": count,
+                            "itemStyle": {
+                                "color": "#FF5733" if count == highest_value_month else "#5470C6"
+                            }
+                        }
+                        for count in month_counts['NAME']
+                    ],
                     "type": "bar",
-                    "itemStyle": {"color": "#5470C6"},
                     "label": {
                         "show": True,
                         "position": "top",
