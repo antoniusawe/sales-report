@@ -101,7 +101,7 @@ if location == "Bali":
                     "axisLabel": {
                         "fontSize": 8,  # Smaller font for x-axis labels
                         "interval": 0,  # Show all labels
-                        "rotate": 45   # Rotate labels for better readability
+                        "rotate": 90   # Rotate labels for better readability
                     }
                 },
                 "yAxis": {
