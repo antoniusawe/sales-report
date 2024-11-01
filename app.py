@@ -272,7 +272,7 @@ if location == "Bali":
             .button-container {
                 display: flex;
                 justify-content: center;
-                gap: 20px;  /* Memberikan jarak antara tombol */
+                gap: 5px;  /* Memberikan jarak antara tombol */
                 margin-top: 20px;
             }
             .button-style {
