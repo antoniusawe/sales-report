@@ -57,7 +57,7 @@ if location == "Bali":
             
             # Display Cut-off date and Total Booking in a centered format
             st.markdown(f"""
-            <div style='text-align: center;'>
+            <div style='text-align: left;'>
                 <div style='font-size: 16px; color: #333333;'>Cut-off data: {cut_off_date}</div>
             </div>
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
