@@ -10,6 +10,13 @@ st.image("https://raw.githubusercontent.com/antoniusawe/sales-report/main/images
          use_column_width=True)
 st.markdown("<h1 style='text-align: center; font-size: 50px;'>SALES DASHBOARD</h1>", unsafe_allow_html=True)
 
+# Display today's date
+today = datetime.today()
+st.markdown(f"<h3 style='text-align: center;'>Date: {today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
+
+# Extract month from today's date for comparison
+current_month = today.month
+
 # Conditional logic based on location selection
 if location == "India":
     # Dropdown for program selection when location is "India"
