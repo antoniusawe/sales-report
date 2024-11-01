@@ -260,15 +260,6 @@ if location == "Bali":
             with col3:
                 # Render bar chart Month for fully paid students
                 st_echarts(options=month_bar_chart_data, height="300px")
-        
-        # Menampilkan tombol "Generate Data" di tengah
-        button_centered_html = """
-        <div style='display: flex; justify-content: center; padding-top: 20px;'>
-            <button style='font-size: 16px; padding: 10px 20px; background-color: #5470C6; color: white; border: none; border-radius: 5px; cursor: pointer;'
-                onclick="window.location.href='/?action=generate'">Generate Data</button>
-        </div>
-        """
-        st.markdown(button_centered_html, unsafe_allow_html=True)
 
         # Menggunakan `st.button` untuk menambahkan fungsi interaktif
         if st.button("Generate Data", key="generate_button"):
