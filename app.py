@@ -263,10 +263,10 @@ if location == "Bali":
 
         # Menggunakan `st.button` untuk menambahkan fungsi interaktif
         if st.button("Generate Data", key="generate_button"):
-            st.markdown("<h2 style='text-align: center; font-size: 24px; color: #5470C6;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
-            st.markdown("<h2 style='text-align: center; font-size: 24px; color: #5470C6;'>Bali Sales Data</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Sales Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
