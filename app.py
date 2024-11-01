@@ -262,15 +262,6 @@ if location == "Bali":
                 st_echarts(options=month_bar_chart_data, height="300px")
         
         # Menampilkan tombol "Generate Data" di tengah
-        button_html = """
-        <div style='display: flex; justify-content: center; padding-top: 20px;'>
-            <button onclick="window.location.href='/?action=generate'" 
-                style='font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;'>
-                Generate Data
-            </button>
-        </div>
-        """
-        st.markdown(button_html, unsafe_allow_html=True)
 
         # If "Generate Data" button is clicked, display dataframes
         col1, col2, col3 = st.columns([1, 2, 1])
