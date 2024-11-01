@@ -87,7 +87,7 @@ if location == "Bali":
             """, unsafe_allow_html=True)
 
             # Tambahkan jarak antar bagian
-            st.markdown("<br>", unsafe_allow_html=True)  # Menambahkan jeda vertikal
+            st.markdown("<br><br>", unsafe_allow_html=True)  # Menambahkan jeda vertikal
 
             # Create bar chart for Site popularity based on 'Fill'
             site_fill_data = bali_occupancy_data.groupby('Site')['Fill'].sum().reset_index()
