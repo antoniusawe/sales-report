@@ -62,9 +62,9 @@ if location == "Bali":
             </div>
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
                 <div style='text-align: left;'>
-                    <div style='font-size: 16px; color: #333333;'>Total Booking (By Contract)</div>
+                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
                     <div style='font-size: 48px;'>{total_booking_ctr}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Students with BALANCE = 0</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Number of students</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
