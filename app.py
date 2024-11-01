@@ -13,7 +13,7 @@ st.markdown("<h1 style='text-align: center; font-size: 50px;'>SALES DASHBOARD</h
 
 # Display today's date
 today = datetime.today()
-st.markdown(f"<h3 style='text-align: center;'>Date: {today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
+st.markdown(f"<h3 style='text-align: center;'>{today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
 
 # Extract month from today's date for comparison
 current_month = today.month
