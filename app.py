@@ -104,11 +104,22 @@ if location == "Bali":
                 },
                 "series": [{
                     "data": [
-                        {"value": fill, "itemStyle": {"color": "#FF5733" if fill == highest_fill_value else "#5470C6"}}
+                        {
+                            "value": fill, 
+                            "itemStyle": {"color": "#FF5733" if fill == highest_fill_value else "#5470C6"},
+                            "label": {
+                                "show": True,
+                                "position": "top",
+                                "formatter": f"{fill}",
+                                "fontSize": 10,
+                                "color": "#333333"
+                            }
+                        }
                         for fill in site_fill_data['Fill']
                     ],
                     "type": "bar",
-                    "barWidth": "50%"  # Make bars narrower for a denser look
+                    "barWidth": "30%",      # Make bars narrower for a denser look
+                    "barGap": "-100%",      # Make bars closer to each other
                 }]
             }
 
