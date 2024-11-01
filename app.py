@@ -97,10 +97,17 @@ if location == "Bali":
             bar_chart_data = {
                 "xAxis": {
                     "type": "category",
-                    "data": site_fill_data['Site'].tolist()
+                    "data": site_fill_data['Site'].tolist(),
+                    "axisLabel": {
+                        "fontSize": 8,   # Smaller font for x-axis labels
+                        "rotate": 45     # Rotate labels slightly for better readability
+                    }
                 },
                 "yAxis": {
-                    "type": "value"
+                    "type": "value",
+                    "axisLabel": {
+                        "fontSize": 8    # Smaller font for y-axis labels
+                    }
                 },
                 "series": [{
                     "data": [
@@ -108,7 +115,7 @@ if location == "Bali":
                         for fill in site_fill_data['Fill']
                     ],
                     "type": "bar",
-                    "barWidth": "50%"  # Make bars narrower for a denser look
+                    "barWidth": "10%",  # Narrower bars for a more compact look
                 }]
             }
 
