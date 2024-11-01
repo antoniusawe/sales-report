@@ -127,7 +127,7 @@ if location == "Bali":
                 "yAxis": {
                     "type": "value",
                     "axisLabel": {
-                        "fontSize": 8,
+                        "fontSize": 7,
                         "margin": 10  # Adjust margin to provide more space for y-axis labels
                     }
                 },
@@ -146,7 +146,7 @@ if location == "Bali":
                         "show": True,
                         "position": "top",
                         "formatter": "{c}",
-                        "fontSize": 8,
+                        "fontSize": 7,
                         "color": "#333333"
                     }
                 }]
@@ -174,7 +174,7 @@ if location == "Bali":
                 "yAxis": {
                     "type": "value",
                     "axisLabel": {
-                        "fontSize": 8,
+                        "fontSize": 7,
                         "margin": 10  # Adjust margin to provide more space for y-axis labels
                     }
                 },
