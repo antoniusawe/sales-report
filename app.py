@@ -86,6 +86,29 @@ if location == "Bali":
             </div>
             """, unsafe_allow_html=True)
 
+            # Create bar chart for Site popularity based on 'Fill'
+            site_fill_data = bali_occupancy_data.groupby('Site')['Fill'].sum().reset_index()
+            site_fill_data = site_fill_data.sort_values(by='Fill', ascending=False)
+
+            # Prepare data for the bar chart
+            bar_chart_data = {
+                "xAxis": {
+                    "type": "category",
+                    "data": site_fill_data['Site'].tolist()
+                },
+                "yAxis": {
+                    "type": "value"
+                },
+                "series": [{
+                    "data": site_fill_data['Fill'].tolist(),
+                    "type": "bar",
+                    "itemStyle": {"color": "#5470C6"}
+                }]
+            }
+
+            # Render the bar chart
+            st_echarts(options=bar_chart_data, height="400px")
+
     elif bali_option == "Location":
         st.write("Displaying Location section for Bali.")
         # Add specific code or functionalities for the Location section
