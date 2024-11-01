@@ -262,8 +262,18 @@ if location == "Bali":
                 st_echarts(options=month_bar_chart_data, height="300px")
         
         # Menampilkan tombol "Generate Data" di tengah
-        if st.button("Generate Data"):
-            # Display titles and dataframes
+        button_html = """
+        <div style='display: flex; justify-content: center; padding-top: 20px;'>
+            <button onclick="window.location.href='/?action=generate'" 
+                style='font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;'>
+                Generate Data
+            </button>
+        </div>
+        """
+        st.markdown(button_html, unsafe_allow_html=True)
+
+        # If "Generate Data" button is clicked, display dataframes
+        if st.session_state.get('action') == 'generate':
             st.markdown("<h2 style='text-align: center; font-size: 24px; color: #4CAF50;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
