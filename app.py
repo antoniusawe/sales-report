@@ -29,6 +29,11 @@ if location == "Bali":
         # Load data for occupancy and sales
         bali_occupancy_data = pd.read_excel(occupancy_url)
         bali_sales_data = pd.read_excel(sales_url)
+        
+        # Convert 'Batch start date' to datetime if it's not already
+        if 'Batch start date' in bali_sales_data.columns:
+            bali_sales_data['Batch start date'] = pd.to_datetime(bali_sales_data['Batch start date'], errors='coerce')
+        
     except Exception as e:
         st.error("Failed to load data. Please check the URL or your connection.")
         st.write(f"Error: {e}")
@@ -37,20 +42,23 @@ if location == "Bali":
 
     # Display content based on selected sub-option
     if bali_option == "Overview":
-        st.write("Displaying Overview section for Bali.")
-
         if program == "200HR":
             # Filter data for 200HR category
             data_200hr_bali = bali_sales_data[bali_sales_data['Category'] == '200HR']
+            
+            # Find the newest Batch start date for 200HR category
             newest_batch_date = data_200hr_bali['Batch start date'].max()
+            
+            # Format the newest date to a string for display
+            cut_off_date = newest_batch_date.strftime('%B %d, %Y') if pd.notnull(newest_batch_date) else "No date available"
             
             # Calculate Total Booking as count of NAME with BALANCE = 0
             total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
             
-            # Display Total Booking in a centered format
+            # Display Cut-off date and Total Booking in a centered format
             st.markdown(f"""
             <div style='text-align: center;'>
-                <div style='font-size: 16px; color: #333333;'>Cut-off data: {newest_batch_date.strftime('%B %d, %Y')}</div>
+                <div style='font-size: 16px; color: #333333;'>Cut-off data: {cut_off_date}</div>
             </div>
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
                 <div style='text-align: left;'>
