@@ -126,8 +126,8 @@ if location == "Bali":
                         for fill in site_fill_data['Fill']
                     ],
                     "type": "bar",
-                    "barWidth": "15%",       # Narrower bars for compact look
-                    "barGap": "-50%",        # Reduce gap between bars for a denser layout
+                    "barWidth": "10%",       # Narrower bars for compact look
+                    "barGap": "-80%",        # Reduce gap between bars for a denser layout
                 }]
             }
 
