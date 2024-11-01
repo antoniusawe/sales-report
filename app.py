@@ -54,6 +54,8 @@ if location == "Bali":
             
             # Calculate Total Booking as count of NAME with BALANCE = 0
             total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
+            # Calculate Amount as sum of PAID where BALANCE = 0
+            total_paid_amount = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["PAID"].sum()
             
             # Display Cut-off date and Total Booking in a centered format
             st.markdown(f"""
@@ -65,6 +67,11 @@ if location == "Bali":
                     <div style='font-size: 16px; color: #333333;'>Total Booking</div>
                     <div style='font-size: 48px;'>{total_booking_ctr}</div>
                     <div style='color: #202fb2; font-size: 18px;'>Number of students</div>
+                </div>
+                <div style='text-align: left;'>
+                    <div style='font-size: 16px; color: #333333;'>Amount</div>
+                    <div style='font-size: 48px;'>${total_paid_amount:,.2f}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Total Paid Amount</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
