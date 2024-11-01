@@ -42,17 +42,21 @@ if location == "Bali":
         if program == "200HR":
             # Filter data for 200HR category
             data_200hr_bali = bali_sales_data[bali_sales_data['Category'] == '200HR']
+            newest_batch_date = data_200hr_bali['Batch start date'].max()
             
             # Calculate Total Booking as count of NAME with BALANCE = 0
             total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
             
             # Display Total Booking in a centered format
             st.markdown(f"""
+            <div style='text-align: center;'>
+                <div style='font-size: 16px; color: #333333;'>Cut-off data: {newest_batch_date.strftime('%B %d, %Y')}</div>
+            </div>
             <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
                 <div style='text-align: left;'>
-                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
+                    <div style='font-size: 16px; color: #333333;'>Total Booking (By Contract)</div>
                     <div style='font-size: 48px;'>{total_booking_ctr}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Number of Students</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Students with BALANCE = 0</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
