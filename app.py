@@ -99,7 +99,7 @@ if location == "Bali":
                     "type": "category",
                     "data": site_fill_data['Site'].tolist(),
                     "axisLabel": {
-                        "fontSize": 8,  # Smaller font for x-axis labels
+                        "fontSize": 12,  # Smaller font for x-axis labels
                         "interval": 0,  # Show all labels
                         "rotate": 90   # Rotate labels for better readability
                     }
@@ -107,7 +107,7 @@ if location == "Bali":
                 "yAxis": {
                     "type": "value",
                     "axisLabel": {
-                        "fontSize": 8  # Smaller font for y-axis labels
+                        "fontSize": 12  # Smaller font for y-axis labels
                     }
                 },
                 "series": [{
@@ -119,7 +119,7 @@ if location == "Bali":
                                 "show": True,
                                 "position": "top",
                                 "formatter": f"{fill}",
-                                "fontSize": 8,  # Smaller font for bar labels
+                                "fontSize": 12,  # Smaller font for bar labels
                                 "color": "#333333"
                             }
                         }
@@ -127,7 +127,7 @@ if location == "Bali":
                     ],
                     "type": "bar",
                     "barWidth": "10%",       # Narrower bars for compact look
-                    "barGap": "-80%",        # Reduce gap between bars for a denser layout
+                    "barGap": "-100%",        # Reduce gap between bars for a denser layout
                 }]
             }
 
