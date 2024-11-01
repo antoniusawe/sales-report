@@ -95,7 +95,7 @@ if location == "Bali":
             room_fill_data = room_fill_data.sort_values(by='Fill', ascending=False)
 
             # Identify the highest value for color differentiation
-            highest_fill_value = site_fill_data['Fill'].max()
+            highest_fill_value_site = site_fill_data['Fill'].max()
 
             # Identifikasi nilai tertinggi untuk chart Room
             highest_fill_value_room = room_fill_data['Fill'].max()
