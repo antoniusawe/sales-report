@@ -21,6 +21,18 @@ current_month = today.month
 if location == "Bali":
     # Sub-dropdown for specific options under "Bali"
     bali_option = st.sidebar.selectbox("Choose a Section:", ["Overview", "Location", "Batch"])
+    
+    occupancy_url = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/Bali%20data/bali_occupancy.xlsx"
+    sales_url = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/Bali%20data/bali_sales.xlsx"
+    
+    try:
+        # Load data for occupancy and sales
+        bali_occupancy_data = pd.read_excel(occupancy_url)
+        bali_sales_data = pd.read_excel(sales_url)
+    except Exception as e:
+        st.error("Failed to load data. Please check the URL or your connection.")
+        st.write(f"Error: {e}")
+
     program = st.selectbox("Choose a Program:", ["200HR", "300HR"])
 
     # Display content based on selected sub-option
