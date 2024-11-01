@@ -262,10 +262,28 @@ if location == "Bali":
                 st_echarts(options=month_bar_chart_data, height="300px")
 
         # Menggunakan `st.button` untuk menambahkan fungsi interaktif
-        if st.button("Generate Data", key="generate_button"):
+        if 'show_data' not in st.session_state:
+            st.session_state['show_data'] = False
+
+        # Display Generate Data and Clear buttons side by side
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Generate Data button
+            if st.button("Generate Data", key="generate_button"):
+                st.session_state['show_data'] = True  # Set to True to display data
+
+        with col2:
+            # Clear button
+            if st.button("Clear", key="clear_button"):
+                st.session_state['show_data'] = False  # Set to False to hide data
+
+        # Conditionally display data based on session state
+        if st.session_state['show_data']:
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
+            # Format the 'Batch start date' column in Bali Sales Data as string for consistency
             bali_sales_data['Batch start date'] = bali_sales_data['Batch start date'].dt.strftime('%d %b %Y')
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Sales Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_sales_data)
