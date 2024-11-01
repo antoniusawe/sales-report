@@ -53,7 +53,7 @@ if location == "Bali":
             newest_batch_date = data_200hr_bali['Batch start date'].max()
             
             # Format the newest date to a string for display
-            cut_off_date = newest_batch_date.strftime('%B %d, %Y') if pd.notnull(newest_batch_date) else "No date available"
+            cut_off_date = newest_batch_date.strftime('%d %b %Y') if pd.notnull(newest_batch_date) else "No date available"
             
             # Calculate Total Booking as count of NAME with BALANCE = 0
             total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
@@ -266,7 +266,7 @@ if location == "Bali":
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
-            bali_sales_data['Batch start date'] = bali_sales_data['Batch start date'].dt.strftime('%B %d, %Y')
+            bali_sales_data['Batch start date'] = bali_sales_data['Batch start date'].dt.strftime('%d %b %Y')
             st.markdown("<h2 style='text-align: left; font-size: 16px;'>Bali Sales Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_sales_data)
 
