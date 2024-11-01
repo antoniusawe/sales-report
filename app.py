@@ -9,17 +9,34 @@ location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
 # Display the main image and title
 st.image("https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png",  
          use_column_width=True)
-st.markdown("<h1 style='text-align: center; font-size: 50px;'>SALES DASHBOARD</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; font-size: 50px;'>HOUSE OF OM - DASHBOARD</h1>", unsafe_allow_html=True)
 
 # Display today's date
 today = datetime.today()
-st.markdown(f"<h3 style='text-align: center;'>{today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
+st.markdown(f"<h3 style='text-align: center;'>Tanggal Hari Ini: {today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
 
 # Extract month from today's date for comparison
 current_month = today.month
 
+if location == "Bali":
+    # Sub-dropdown for specific options under "Bali"
+    bali_option = st.sidebar.selectbox("Choose a Section:", ["Overview", "Location", "Batch"])
+
+    # Display content based on selected sub-option
+    if bali_option == "Overview":
+        st.write("Displaying Overview section for Bali.")
+        # Add specific code or functionalities for the Overview section
+
+    elif bali_option == "Location":
+        st.write("Displaying Location section for Bali.")
+        # Add specific code or functionalities for the Location section
+
+    elif bali_option == "Batch":
+        st.write("Displaying Batch section for Bali.")
+        # Add specific code or functionalities for the Batch section
+
 # Conditional logic based on location selection
-if location == "India":
+elif location == "India":
     # Dropdown for program selection when location is "India"
     program = st.selectbox("Choose a Program:", ["200HR", "300HR"])
 
