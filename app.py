@@ -273,7 +273,12 @@ if location == "Bali":
         st.markdown(button_html, unsafe_allow_html=True)
 
         # If "Generate Data" button is clicked, display dataframes
-        if st.session_state.get('action') == 'generate':
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            generate = st.button("Generate Data")
+
+        # If "Generate Data" button is clicked, display dataframes
+        if generate:
             st.markdown("<h2 style='text-align: center; font-size: 24px; color: #4CAF50;'>Bali Occupancy Data</h2>", unsafe_allow_html=True)
             st.dataframe(bali_occupancy_data)
 
