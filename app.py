@@ -97,17 +97,10 @@ if location == "Bali":
             bar_chart_data = {
                 "xAxis": {
                     "type": "category",
-                    "data": site_fill_data['Site'].tolist(),
-                    "axisLabel": {
-                        "fontSize": 8,   # Smaller font for x-axis labels
-                        "rotate": 45     # Rotate labels slightly for better readability
-                    }
+                    "data": site_fill_data['Site'].tolist()
                 },
                 "yAxis": {
-                    "type": "value",
-                    "axisLabel": {
-                        "fontSize": 8    # Smaller font for y-axis labels
-                    }
+                    "type": "value"
                 },
                 "series": [{
                     "data": [
@@ -115,7 +108,30 @@ if location == "Bali":
                         for fill in site_fill_data['Fill']
                     ],
                     "type": "bar",
-                    "barWidth": "10%",  # Narrower bars for a more compact look
+                    "barWidth": "50%"  # Make bars narrower for a denser look
+                }]
+            }
+
+            # Prepare data for the bar chart
+            bar_chart_data = {
+                "xAxis": {
+                    "type": "category",
+                    "data": site_fill_data['Site'].tolist()
+                },
+                "yAxis": {
+                    "type": "value"
+                },
+                "series": [{
+                    "data": site_fill_data['Fill'].tolist(),
+                    "type": "bar",
+                    "itemStyle": {"color": "#5470C6"},
+                    "label": {
+                        "show": True,               # Show label on each bar
+                        "position": "top",          # Position label at the top of the bar
+                        "formatter": "{c}",         # Display the value
+                        "fontSize": 10,             # Size of the label font
+                        "color": "#333333"          # Color of the label text
+                    }
                 }]
             }
 
