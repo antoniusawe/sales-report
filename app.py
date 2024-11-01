@@ -38,7 +38,24 @@ if location == "Bali":
     # Display content based on selected sub-option
     if bali_option == "Overview":
         st.write("Displaying Overview section for Bali.")
-        # Add specific code or functionalities for the Overview section
+
+        if program == "200HR":
+            # Filter data for 200HR category
+            data_200hr_bali = bali_sales_data[bali_sales_data['Category'] == '200HR']
+            
+            # Calculate Total Booking as count of NAME with BALANCE = 0
+            total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
+            
+            # Display Total Booking in a centered format
+            st.markdown(f"""
+            <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
+                <div style='text-align: left;'>
+                    <div style='font-size: 16px; color: #333333;'>Total Booking (By Contract)</div>
+                    <div style='font-size: 48px;'>{total_booking_ctr}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Students with BALANCE = 0</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
     elif bali_option == "Location":
         st.write("Displaying Location section for Bali.")
