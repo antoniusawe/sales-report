@@ -142,7 +142,7 @@ if location == "Bali":
                         "show": True,
                         "position": "top",
                         "formatter": "{c}",
-                        "fontSize": 10,
+                        "fontSize": 8,
                         "color": "#333333"
                     }
                 }]
@@ -185,7 +185,7 @@ if location == "Bali":
                         "show": True,
                         "position": "top",
                         "formatter": "{c}",
-                        "fontSize": 10,
+                        "fontSize": 8,
                         "color": "#333333"
                     }
                 }]
@@ -194,7 +194,7 @@ if location == "Bali":
             # Konfigurasi bar chart untuk Month dengan tooltip
             month_bar_chart_data = {
                 "title": {
-                    "text": "Top Months (Fully Paid Students)",
+                    "text": "Top Months",
                     "left": "left",
                     "textStyle": {
                         "fontSize": 16,
@@ -228,7 +228,7 @@ if location == "Bali":
                         "show": True,
                         "position": "top",
                         "formatter": "{c}",
-                        "fontSize": 10,
+                        "fontSize": 8,
                         "color": "#333333"
                     }
                 }]
