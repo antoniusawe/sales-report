@@ -90,7 +90,10 @@ if location == "Bali":
             site_fill_data = bali_occupancy_data.groupby('Site')['Fill'].sum().reset_index()
             site_fill_data = site_fill_data.sort_values(by='Fill', ascending=False)
 
-            # Prepare data for the bar chart
+            # Identify the highest value for color differentiation
+            highest_fill_value = site_fill_data['Fill'].max()
+
+            # Prepare data for the bar chart with color adjustment
             bar_chart_data = {
                 "xAxis": {
                     "type": "category",
@@ -100,9 +103,12 @@ if location == "Bali":
                     "type": "value"
                 },
                 "series": [{
-                    "data": site_fill_data['Fill'].tolist(),
+                    "data": [
+                        {"value": fill, "itemStyle": {"color": "#FF5733" if fill == highest_fill_value else "#5470C6"}}
+                        for fill in site_fill_data['Fill']
+                    ],
                     "type": "bar",
-                    "itemStyle": {"color": "#5470C6"}
+                    "barWidth": "50%"  # Make bars narrower for a denser look
                 }]
             }
 
