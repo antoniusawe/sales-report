@@ -70,8 +70,8 @@ if location == "Bali":
                 </div>
                 <div style='text-align: left;'>
                     <div style='font-size: 16px; color: #333333;'>Amount</div>
-                    <div style='font-size: 48px;'>${total_paid_amount:,.2f}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Total Paid Amount</div>
+                    <div style='font-size: 48px;'>{total_paid_amount:,.0f}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>in USD or USD equiv</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
