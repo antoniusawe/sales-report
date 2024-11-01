@@ -86,6 +86,9 @@ if location == "Bali":
             </div>
             """, unsafe_allow_html=True)
 
+            # Tambahkan jarak antar bagian
+            st.markdown("<br><br>", unsafe_allow_html=True)  # Menambahkan jeda vertikal
+
             # Create bar chart for Site popularity based on 'Fill'
             site_fill_data = bali_occupancy_data.groupby('Site')['Fill'].sum().reset_index()
             site_fill_data = site_fill_data.sort_values(by='Fill', ascending=False)
@@ -272,7 +275,7 @@ if location == "Bali":
             .button-container {
                 display: flex;
                 justify-content: center;
-                gap: 5px;  /* Memberikan jarak antara tombol */
+                gap: 20px;  /* Memberikan jarak antara tombol */
                 margin-top: 20px;
             }
             .button-style {
