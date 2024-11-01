@@ -81,7 +81,7 @@ if location == "Bali":
                 <div style='text-align: left;'>
                     <div style='font-size: 16px; color: #333333;'>Occupancy</div>
                     <div style='font-size: 48px;'>{average_occupancy:.2f}%</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Average Occupancy</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Occupancy Rate</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
