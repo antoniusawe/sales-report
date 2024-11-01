@@ -33,7 +33,10 @@ if location == "Bali":
         # Convert 'Batch start date' to datetime if it's not already
         if 'Batch start date' in bali_sales_data.columns:
             bali_sales_data['Batch start date'] = pd.to_datetime(bali_sales_data['Batch start date'], errors='coerce')
-        
+        # Convert 'Occupancy' column to numeric if it's not already (remove % and convert to float)
+        if 'Occupancy' in bali_occupancy_data.columns:
+            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].replace('%', '', regex=True).astype(float)
+
     except Exception as e:
         st.error("Failed to load data. Please check the URL or your connection.")
         st.write(f"Error: {e}")
@@ -56,6 +59,8 @@ if location == "Bali":
             total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
             # Calculate Amount as sum of PAID where BALANCE = 0
             total_paid_amount = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["PAID"].sum()
+            # Calculate average Occupancy
+            average_occupancy = bali_occupancy_data['Occupancy'].mean()
             
             # Display Cut-off date and Total Booking in a centered format
             st.markdown(f"""
@@ -72,6 +77,11 @@ if location == "Bali":
                     <div style='font-size: 16px; color: #333333;'>Amount</div>
                     <div style='font-size: 48px;'>{total_paid_amount:,.0f}</div>
                     <div style='color: #202fb2; font-size: 18px;'>in USD or USD equiv</div>
+                </div>
+                <div style='text-align: left;'>
+                    <div style='font-size: 16px; color: #333333;'>Occupancy</div>
+                    <div style='font-size: 48px;'>{average_occupancy:.2f}%</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Average Occupancy</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
