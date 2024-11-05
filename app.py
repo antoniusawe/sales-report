@@ -475,6 +475,31 @@ if location == "Bali":
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
         # Add specific code or functionalities for the Batch section
+        # Filter occupancy data for the current month and the previous two months
+        current_month = datetime.now().strftime('%B')
+        previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
+        previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
+        base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
+
+        # Create "Site Filled" table based on "Fill" values
+        fill_summary = bali_occupancy_data.pivot_table(
+            index='Site',
+            columns='Month',
+            values='Fill',
+            aggfunc='sum'
+        ).fillna(0)
+        fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
+
+        # Display the "Site Filled" and "Average Occupancy" tables side by side
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown(
+                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+                f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                unsafe_allow_html=True
+            )
+            st.dataframe(fill_summary)
 
 # Conditional logic based on location selection
 elif location == "India":
