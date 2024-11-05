@@ -474,23 +474,6 @@ if location == "Bali":
             fill_summary = fill_summary[[base_month, previous_month_2, previous_month_1, current_month]].copy()
             fill_summary = fill_summary.astype(int)  # Ensure all values are integers
 
-            # Display "Site Filled" table
-            st.markdown(
-                f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
-                f"<div style='text-align: center;'>"
-                f"<p style='font-size: 14px; font-weight: bold; color: #333;'>"
-                f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</p>"
-                f"</div></div>",
-                unsafe_allow_html=True
-            )
-
-            st.markdown(
-                f"<div style='display: flex; justify-content: center;'>"
-                f"{fill_summary.to_html(index=True, classes='dataframe', border=0)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
-
             # Calculate Growth Summary (difference between months)
             growth_summary = fill_summary.diff(axis=1).iloc[:, 1:]  # Calculate differences between consecutive months
             
@@ -507,81 +490,101 @@ if location == "Bali":
             # Apply styling to growth summary
             growth_display = growth_summary.applymap(style_growth)
 
-            # Display Growth Summary table centered
-            st.markdown(
-                f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
-                f"Growth in Number of Students from Previous Months</div>",
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
-                f"{growth_display.to_html(escape=False, index=True)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
+            # Display tables and chart using columns layout
+            col1, col2, col3 = st.columns([1, 2, 1])
 
-            # Prepare data for the bar chart
-            sites = fill_summary.index.tolist()  # List of sites (rows)
-            months = [previous_month_2, previous_month_1, current_month]  # List of months
+            # Display "Site Filled" table in the first column
+            with col1:
+                st.markdown(
+                    f"<p style='font-size: 14px; font-weight: bold; text-align: center; color: #333;'>"
+                    f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                    unsafe_allow_html=True
+                )
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center;'>"
+                    f"{fill_summary.to_html(index=True, classes='dataframe', border=0)}"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
 
-            # Initialize series data for each month
-            series_data = []
-            for month in months:
-                # Extract Fill values for each site
-                fill_values = fill_summary[month].values.tolist()
-                
-                # Create a series entry for the chart with tooltip enabled
-                series_data.append({
-                    "name": month,
-                    "type": "bar",
-                    "data": fill_values,
-                })
+            # Display the bar chart in the center column
+            with col2:
+                # Prepare data for the bar chart (using original fill_summary data)
+                sites = fill_summary.index.tolist()  # List of sites (rows)
+                months = [previous_month_2, previous_month_1, current_month]  # List of months
 
-            # Define chart options with tooltip
-            chart_options = {
-                "title": {
-                    "text": "Number of Students by Month",
-                    "left": "center",
-                    "top": "top",
-                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
-                },
-                "tooltip": {
-                    "trigger": "item",
-                    "formatter": "{a} <br/>{b}: {c}",  # Show month (series name), site, and value
-                    "axisPointer": {
-                        "type": "shadow"
+                # Initialize series data for each month
+                series_data = []
+                for month in months:
+                    # Extract Fill values for each site
+                    fill_values = fill_summary[month].values.tolist()
+                    
+                    # Create a series entry for the chart with tooltip enabled
+                    series_data.append({
+                        "name": month,
+                        "type": "bar",
+                        "data": fill_values,
+                    })
+
+                # Define chart options with tooltip
+                chart_options = {
+                    "title": {
+                        "text": "Number of Students by Month",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 16, "fontWeight": "bold"}
                     },
-                },
-                "legend": {
-                    "data": months,
-                    "orient": "horizontal",
-                    "bottom": "0",
-                    "left": "center"
-                },
-                "xAxis": {
-                    "type": "category",
-                    "data": sites,
-                    "axisLabel": {
-                        "interval": 0,
-                        "fontSize": 12,
-                        "rotate": 0,
-                        "fontWeight": "bold"
-                    }
-                },
-                "yAxis": {
-                    "type": "value",
-                    "axisLabel": {
-                        "formatter": "{value}",  # Show values as integers
-                        "fontSize": 12
-                    }
-                },
-                "series": series_data
-            }
+                    "tooltip": {
+                        "trigger": "item",
+                        "formatter": "{a} <br/>{b}: {c}",  # Show month (series name), site, and value
+                        "axisPointer": {
+                            "type": "shadow"
+                        },
+                    },
+                    "legend": {
+                        "data": months,
+                        "orient": "horizontal",
+                        "bottom": "0",
+                        "left": "center"
+                    },
+                    "xAxis": {
+                        "type": "category",
+                        "data": sites,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 12,
+                            "rotate": 0,
+                            "fontWeight": "bold"
+                        }
+                    },
+                    "yAxis": {
+                        "type": "value",
+                        "axisLabel": {
+                            "formatter": "{value}",  # Show values as integers
+                            "fontSize": 12
+                        }
+                    },
+                    "series": series_data
+                }
 
-            # Render the bar chart
-            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-            st_echarts(options=chart_options, height="400px")
-            st.markdown("</div>", unsafe_allow_html=True)
+                # Render the bar chart
+                st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+                st_echarts(options=chart_options, height="400px")
+                st.markdown("</div>", unsafe_allow_html=True)
+
+            # Display Growth Summary table in the third column
+            with col3:
+                st.markdown(
+                    f"<p style='font-size: 14px; font-weight: bold; text-align: center; color: #333;'>"
+                    f"Growth in Number of Students from Previous Months</p>",
+                    unsafe_allow_html=True
+                )
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+                    f"{growth_display.to_html(escape=False, index=True)}"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
         
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
