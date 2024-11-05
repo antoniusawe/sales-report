@@ -371,7 +371,68 @@ if location == "Bali":
             # Apply the styling function to each cell in the DataFrame to create `growth_display`
             growth_display = growth_summary.applymap(style_growth)
 
-            # --- Display Tables Only (No Chart) ---
+            # Prepare data for the bar chart
+            sites = occupancy_summary.index.tolist()  # List of sites (rows)
+            months = [previous_month_2, previous_month_1, current_month]  # List of months
+
+            # Initialize series data for each month
+            series_data = []
+            for month in months:
+                # Extract Avg Occupancy values for each site
+                avg_values = occupancy_summary[month].values.tolist()
+                
+                # Create a series entry for the chart
+                series_data.append({
+                    "name": month,
+                    "type": "bar",
+                    "data": avg_values,
+                })
+
+            # Define chart options
+            chart_options = {
+                "title": {
+                    "text": "Average Occupancy for Recent Months",
+                    "left": "center",
+                    "top": "top",
+                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+                },
+                "tooltip": {
+                    "trigger": "axis",
+                    "axisPointer": {"type": "shadow"},
+                    "formatter": "{b} - {a}: {c}%"  # Show month and avg occupancy as tooltip
+                },
+                "legend": {
+                    "data": months,
+                    "orient": "horizontal",
+                    "bottom": "0",
+                    "left": "center"
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": sites,
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 12,
+                        "rotate": 0,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {
+                    "type": "value",
+                    "axisLabel": {
+                        "formatter": "{value}%",  # Show percentage
+                        "fontSize": 12
+                    }
+                },
+                "series": series_data
+            }
+
+            # Render the bar chart
+            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+            st_echarts(options=chart_options, height="400px")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+            # --- Display Tables Below the Chart ---
             
             # Display the "Site Filled" and "Average Occupancy" tables side by side
             col1, col2 = st.columns(2)
