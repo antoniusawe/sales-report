@@ -331,22 +331,45 @@ if location == "Bali":
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
             
             # Generate the occupancy summary table from bali_occupancy_data
-            filtered_occupancy_summary = bali_occupancy_data.pivot_table(
+            # Convert the Occupancy column to numeric by stripping '%' and converting to float
+            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].str.replace('%', '').astype(float)
+            
+            # Create table 1: Total Fill for each Site
+            fill_summary = bali_occupancy_data.pivot_table(
                 index='Site',
                 columns='Month',
                 values='Fill',
                 aggfunc='sum'
             ).fillna(0)
+            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
             
-            # Filter to only the current and previous two months
-            filtered_occupancy_summary = filtered_occupancy_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            # Create table 2: Average Occupancy for each Site
+            occupancy_summary = bali_occupancy_data.pivot_table(
+                index='Site',
+                columns='Month',
+                values='Occupancy',
+                aggfunc='mean'
+            ).fillna(0)
+            occupancy_summary = occupancy_summary[[previous_month_2, previous_month_1, current_month]].copy()
             
-            # Display the filtered table
-            st.markdown(
-            f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-            unsafe_allow_html=True
-        )   
-            st.dataframe(filtered_occupancy_summary)
+            # Display the tables side by side
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown(
+                    f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+                    f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(fill_summary)
+            
+            with col2:
+                st.markdown(
+                    f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+                    f"Average Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(occupancy_summary)
         
 
     elif bali_option == "Batch":
