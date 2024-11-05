@@ -328,7 +328,8 @@ if location == "Bali":
 
         # Placeholder for displaying content based on the selected option
         if location_analysis_option == "Occupancy Rate":
-            # st.write("Occupancy Rate analysis selected.")
+            st.write("Occupancy Rate analysis selected.")
+            
             # Assuming bali_occupancy_data is already loaded with required data
             # Convert Year and Month to datetime for sorting
             bali_occupancy_data['Date'] = pd.to_datetime(
@@ -349,24 +350,33 @@ if location == "Bali":
             # Convert Occupancy to numeric for averaging, and aggregate data
             filtered_data['Occupancy'] = pd.to_numeric(filtered_data['Occupancy'], errors='coerce')
             aggregated_data = filtered_data.groupby(['Year', 'Month', 'Site']).agg({
-                'Fill': 'sum',
-                'Available': 'sum',
                 'Occupancy': 'mean'
             }).reset_index()
             
-            # Rename columns for clarity
-            aggregated_data = aggregated_data.rename(columns={
-                'Available': 'Empty Spots',
-                'Occupancy': 'Occupancy (%)'
-            })
-            
-            # Format Occupancy as a percentage string for display
-            aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
-            aggregated_data['Year'] = aggregated_data['Year'].astype(int).astype(str)
+            # Pivot data to create the table format
+            occupancy_pivot = aggregated_data.pivot(index='Site', columns='Month', values='Occupancy')
 
-            # Display the aggregated data for the last three months
-            st.write("### Occupancy Rate Data for the Last 3 Months")
-            st.dataframe(aggregated_data[['Year', 'Month', 'Site', 'Fill', 'Empty Spots', 'Occupancy (%)']])
+            # Calculate growth status for September and October compared to November
+            occupancy_pivot['September'] = occupancy_pivot.apply(
+                lambda row: "Growth" if row['September'] < row['November'] else "No Growth", axis=1
+            )
+            occupancy_pivot['October'] = occupancy_pivot.apply(
+                lambda row: "Growth" if row['October'] < row['November'] else "No Growth", axis=1
+            )
+            
+            # Format November as average occupancy with percentage
+            occupancy_pivot['November'] = occupancy_pivot['November'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
+
+            # Rename columns for display
+            occupancy_pivot = occupancy_pivot.rename(columns={
+                'September': 'September Growth',
+                'October': 'October Growth',
+                'November': 'Average Occupancy (November)'
+            })
+
+            # Display the result
+            st.write("### Occupancy Growth Comparison for the Last 3 Months")
+            st.dataframe(occupancy_pivot.reset_index())
 
         elif location_analysis_option == "Location Performance":
             st.write("Location Performance analysis selected.")
