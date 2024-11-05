@@ -458,7 +458,7 @@ if location == "Bali":
             )
 
         elif location_analysis_option == "Location Performance":
-            st.markdown("<h2 style='text-align: center; font-size: 18px;'>Location Performance Analysis</h2>", unsafe_allow_html=True)
+            # st.markdown("<h2 style='text-align: center; font-size: 18px;'>Location Performance Analysis</h2>", unsafe_allow_html=True)
             current_month = datetime.now().strftime('%B')
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
