@@ -368,7 +368,7 @@ if location == "Bali":
             with col2:
                 st.markdown(
                     f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                    f"Average Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                    f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
                     unsafe_allow_html=True
                 )
                 st.dataframe(occupancy_summary)
