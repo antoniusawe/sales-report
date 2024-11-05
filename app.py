@@ -469,8 +469,8 @@ if location == "Bali":
             unsafe_allow_html=True
         )
 
-        elif location_analysis_option == "Location Rate":
-            
+        
+        
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
         # Add specific code or functionalities for the Batch section
