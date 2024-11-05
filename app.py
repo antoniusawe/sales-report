@@ -356,27 +356,34 @@ if location == "Bali":
             # Pivot data to create the table format
             occupancy_pivot = aggregated_data.pivot(index='Site', columns='Month', values='Occupancy')
 
-            # Calculate growth status for September and October compared to November
-            occupancy_pivot['September'] = occupancy_pivot.apply(
-                lambda row: "Growth" if row['September'] < row['November'] else "No Growth", axis=1
+            # Calculate growth percentage for September and October compared to November
+            occupancy_pivot['September Growth'] = (
+                (occupancy_pivot['November'] - occupancy_pivot['September']) / occupancy_pivot['September'] * 100
             )
-            occupancy_pivot['October'] = occupancy_pivot.apply(
-                lambda row: "Growth" if row['October'] < row['November'] else "No Growth", axis=1
+            occupancy_pivot['October Growth'] = (
+                (occupancy_pivot['November'] - occupancy_pivot['October']) / occupancy_pivot['October'] * 100
             )
             
             # Format November as average occupancy with percentage
-            occupancy_pivot['November'] = occupancy_pivot['November'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
+            occupancy_pivot['Average Occupancy (November)'] = occupancy_pivot['November'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
 
-            # Rename columns for display
-            occupancy_pivot = occupancy_pivot.rename(columns={
-                'September': 'September Growth',
-                'October': 'October Growth',
-                'November': 'Average Occupancy (November)'
-            })
+            # Apply styling for Growth and No Growth
+            def format_growth(value):
+                if pd.notnull(value):
+                    color = "green" if value > 0 else "red"
+                    sign = "+" if value > 0 else ""
+                    return f"<span style='color:{color}'>{sign}{value:.2f}%</span>"
+                return "N/A"
 
-            # Display the result
+            occupancy_pivot['September Growth'] = occupancy_pivot['September Growth'].apply(format_growth)
+            occupancy_pivot['October Growth'] = occupancy_pivot['October Growth'].apply(format_growth)
+            
+            # Select only the columns to display in the final table
+            display_data = occupancy_pivot[['Average Occupancy (November)', 'October Growth', 'September Growth']].reset_index()
+
+            # Display the table with formatted HTML
             st.write("### Occupancy Growth Comparison for the Last 3 Months")
-            st.dataframe(occupancy_pivot.reset_index())
+            st.markdown(display_data.to_html(escape=False, index=False), unsafe_allow_html=True)
 
         elif location_analysis_option == "Location Performance":
             st.write("Location Performance analysis selected.")
