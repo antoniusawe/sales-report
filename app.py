@@ -368,8 +368,11 @@ if location == "Bali":
                     color = "black"
                 return f"<span style='color: {color};'>{value:.2f}%</span>"
 
-            # Apply the styling function to each cell in the DataFrame
+            # Apply the styling function to each cell in the DataFrame to create `growth_display`
             growth_display = growth_summary.applymap(style_growth)
+
+            # --- Add the Line Chart at the Top ---
+            from streamlit_echarts import st_echarts
 
             # Prepare data for the line chart using the Avg Occupancy data and Growth labels
             sites = occupancy_summary.index.tolist()  # List of sites (rows)
@@ -390,10 +393,9 @@ if location == "Bali":
                     "name": site,
                     "type": "line",
                     "data": avg_values,
-                    "label": {
-                        "show": True,
-                        "formatter": lambda params, growth=growth_labels: growth[params.dataIndex],  # Use growth as the label
-                        "color": "auto"  # Auto color based on theme
+                    "label": {"show": True},
+                    "tooltip": {
+                        "formatter": lambda params, labels=growth_labels: f"{params.value}% ({labels[params.dataIndex]})"
                     }
                 })
 
@@ -474,7 +476,6 @@ if location == "Bali":
                 unsafe_allow_html=True
             )
         
-
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
         # Add specific code or functionalities for the Batch section
