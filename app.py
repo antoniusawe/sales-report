@@ -325,6 +325,8 @@ if location == "Bali":
         )
         
         if location_analysis_option == "Occupancy Rate":
+            # Kode untuk Occupancy Rate tetap seperti yang ada
+            
             # Filter occupancy data for the current month and the previous two months
             current_month = datetime.now().strftime('%B')
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
@@ -390,86 +392,77 @@ if location == "Bali":
                 )
                 st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
 
-        # Prepare data for the bar chart
-        sites = occupancy_summary.index.tolist()  # List of sites (rows)
-        months = [previous_month_2, previous_month_1, current_month]  # List of months
+        elif location_analysis_option == "Location Performance":
+            # Code for Location Performance section
+            st.markdown("<h2 style='text-align: center; font-size: 18px;'>Location Performance Analysis</h2>", unsafe_allow_html=True)
 
-        # Initialize series data for each month
-        series_data = []
-        for month in months:
-            # Extract Avg Occupancy values for each site
-            avg_values = occupancy_summary[month].values.tolist()
-            
-            # Create a series entry for the chart with tooltip enabled
-            series_data.append({
-                "name": month,
-                "type": "bar",
-                "data": avg_values,
-            })
+            # Example of KPI display: Average occupancy across all sites for the selected months
+            avg_occupancy_by_month = occupancy_summary.mean().round(2)
+            st.markdown(f"<p style='font-size: 14px; font-weight: bold;'>Average Occupancy by Month:</p>", unsafe_allow_html=True)
+            for month in [previous_month_2, previous_month_1, current_month]:
+                st.markdown(f"<p>{month}: {avg_occupancy_by_month[month]}%</p>", unsafe_allow_html=True)
 
-        # Define chart options with tooltip
-        chart_options = {
-            "title": {
-                "text": "Occupancy Rate",
-                "left": "center",
-                "top": "top",
-                "textStyle": {"fontSize": 16, "fontWeight": "bold"}
-            },
-            "tooltip": {
-                "trigger": "item",  # Change to "item" to display each data point
-                "formatter": "{a} <br/>{b}: {c}%",  # Show month (series name), site, and value
-                "axisPointer": {  # Set the axis pointer type
-                    "type": "shadow"  # Display shadow as axis indicator
+            # Display top 3 and bottom 3 performing sites based on the latest month's occupancy
+            current_month_occupancy = occupancy_summary[current_month]
+            top_3_sites = current_month_occupancy.nlargest(3)
+            bottom_3_sites = current_month_occupancy.nsmallest(3)
+
+            st.markdown("<h3>Top 3 Performing Sites</h3>", unsafe_allow_html=True)
+            for site, value in top_3_sites.items():
+                st.markdown(f"<p>{site}: {value:.2f}%</p>", unsafe_allow_html=True)
+
+            st.markdown("<h3>Bottom 3 Performing Sites</h3>", unsafe_allow_html=True)
+            for site, value in bottom_3_sites.items():
+                st.markdown(f"<p>{site}: {value:.2f}%</p>", unsafe_allow_html=True)
+
+            # Display a bar chart for performance comparison of each site for the latest month
+            performance_chart_data = {
+                "title": {
+                    "text": f"Performance Comparison for {current_month}",
+                    "left": "center",
+                    "top": "top",
+                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
                 },
-            },
-            "legend": {
-                "data": months,
-                "orient": "horizontal",
-                "bottom": "0",
-                "left": "center"
-            },
-            "xAxis": {
-                "type": "category",
-                "data": sites,
-                "axisLabel": {
-                    "interval": 0,
-                    "fontSize": 12,
-                    "rotate": 0,
-                    "fontWeight": "bold"
-                }
-            },
-            "yAxis": {
-                "type": "value",
-                "axisLabel": {
-                    "formatter": "{value}%",  # Show percentage
-                    "fontSize": 12
-                }
-            },
-            "series": series_data
-        }
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{b}: {c}%",  # Show site and occupancy rate
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": occupancy_summary.index.tolist(),  # List of sites
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 12,
+                        "rotate": 45,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {
+                    "type": "value",
+                    "axisLabel": {
+                        "formatter": "{value}%",  # Show percentage
+                        "fontSize": 12
+                    }
+                },
+                "series": [{
+                    "data": current_month_occupancy.values.tolist(),
+                    "type": "bar",
+                    "label": {
+                        "show": True,
+                        "position": "top",
+                        "formatter": "{c}%",
+                        "fontSize": 10
+                    },
+                    "itemStyle": {
+                        "color": "#5470C6"
+                    }
+                }]
+            }
 
-        # Render the bar chart
-        st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-        st_echarts(options=chart_options, height="400px")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-
-        # Centered growth table below the two tables and chart
-        st.markdown(
-            f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
-            f"Growth Occupancy Rate from Previous Months</div>",
-            unsafe_allow_html=True
-        )
-
-        # Center the growth table with a div wrapper
-        st.markdown(
-            f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
-            f"{growth_display.to_html(escape=False, index=True)}"
-            f"</div>",
-            unsafe_allow_html=True
-        )
-
-        
+            # Render the performance comparison bar chart
+            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+            st_echarts(options=performance_chart_data, height="400px")
+            st.markdown("</div>", unsafe_allow_html=True)
         
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
