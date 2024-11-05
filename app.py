@@ -318,15 +318,16 @@ if location == "Bali":
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
-        st.write("Displaying Batch section for Bali.")
+        # st.write("Displaying Batch section for Bali.")
 
         # CSS styling to display radio buttons inline
         st.markdown("""
             <style>
-            .stRadio > label {
+            /* Menyusun radio button agar horizontal */
+            div[data-baseweb="radio"] > div {
                 display: flex;
                 flex-direction: row;
-                gap: 20px; /* Adjust gap between options */
+                gap: 20px; /* Menambahkan jarak antara pilihan */
             }
             </style>
             """, unsafe_allow_html=True)
