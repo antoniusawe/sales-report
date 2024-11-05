@@ -552,8 +552,8 @@ if location == "Bali":
             st_echarts(options=chart_options, height="400px")
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Calculate Growth Summary using base_month but exclude it from display
-            growth_summary = fill_summary.pct_change(axis=1) * 100  # Calculate percentage change
+            # Calculate Growth Summary as difference in numbers (not percentage) for the last three months only
+            growth_summary = fill_summary.diff(axis=1)  # Calculate differences between consecutive months
             growth_summary = growth_summary[[previous_month_2, previous_month_1, current_month]].copy()  # Exclude base_month from display
             
             # Styling growth values for display
@@ -564,7 +564,7 @@ if location == "Bali":
                     color = "red"
                 else:
                     color = "black"
-                return f"<span style='color: {color};'>{value:.2f}%</span>"
+                return f"<span style='color: {color};'>{value}</span>"
 
             # Apply styling to growth summary
             growth_display = growth_summary.applymap(style_growth)
