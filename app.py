@@ -396,7 +396,14 @@ if location == "Bali":
                 f"Growth Occupancy Rate from Previous Months</div>",
                 unsafe_allow_html=True
             )
-            st.markdown(growth_display.to_html(escape=False, index=True), unsafe_allow_html=True)
+            
+            # Center the growth table with a div wrapper
+            st.markdown(
+                f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+                f"{growth_display.to_html(escape=False, index=True)}"
+                f"</div>",
+                unsafe_allow_html=True
+            )
         
 
     elif bali_option == "Batch":
