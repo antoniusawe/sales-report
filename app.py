@@ -472,6 +472,74 @@ if location == "Bali":
         elif location_analysis_option == "Location Performance":
             # Code for Location Performance section
             st.markdown("<h2 style='text-align: center; font-size: 18px;'>Location Performance Analysis</h2>", unsafe_allow_html=True)
+
+            # Example of KPI display: Average occupancy across all sites for the selected months
+            avg_occupancy_by_month = occupancy_summary.mean().round(2)
+            st.markdown(f"<p style='font-size: 14px; font-weight: bold;'>Average Occupancy by Month:</p>", unsafe_allow_html=True)
+            for month in [previous_month_2, previous_month_1, current_month]:
+                st.markdown(f"<p>{month}: {avg_occupancy_by_month[month]}%</p>", unsafe_allow_html=True)
+
+            # Display top 3 and bottom 3 performing sites based on the latest month's occupancy
+            current_month_occupancy = occupancy_summary[current_month]
+            top_3_sites = current_month_occupancy.nlargest(3)
+            bottom_3_sites = current_month_occupancy.nsmallest(3)
+
+            st.markdown("<h3>Top 3 Performing Sites</h3>", unsafe_allow_html=True)
+            for site, value in top_3_sites.items():
+                st.markdown(f"<p>{site}: {value:.2f}%</p>", unsafe_allow_html=True)
+
+            st.markdown("<h3>Bottom 3 Performing Sites</h3>", unsafe_allow_html=True)
+            for site, value in bottom_3_sites.items():
+                st.markdown(f"<p>{site}: {value:.2f}%</p>", unsafe_allow_html=True)
+
+            # Display a bar chart for performance comparison of each site for the latest month
+            performance_chart_data = {
+                "title": {
+                    "text": f"Performance Comparison for {current_month}",
+                    "left": "center",
+                    "top": "top",
+                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+                },
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{b}: {c}%",  # Show site and occupancy rate
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": occupancy_summary.index.tolist(),  # List of sites
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 12,
+                        "rotate": 45,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {
+                    "type": "value",
+                    "axisLabel": {
+                        "formatter": "{value}%",  # Show percentage
+                        "fontSize": 12
+                    }
+                },
+                "series": [{
+                    "data": current_month_occupancy.values.tolist(),
+                    "type": "bar",
+                    "label": {
+                        "show": True,
+                        "position": "top",
+                        "formatter": "{c}%",
+                        "fontSize": 10
+                    },
+                    "itemStyle": {
+                        "color": "#5470C6"
+                    }
+                }]
+            }
+
+            # Render the performance comparison bar chart
+            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+            st_echarts(options=performance_chart_data, height="400px")
+            st.markdown("</div>", unsafe_allow_html=True)
         
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
