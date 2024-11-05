@@ -453,6 +453,23 @@ if location == "Bali":
         st_echarts(options=chart_options, height="400px")
         st.markdown("</div>", unsafe_allow_html=True)
 
+        # --- Display Growth Occupancy Rate Table Below Chart ---
+
+        # Centered growth table below the two tables and chart
+        st.markdown(
+            f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
+            f"Growth Occupancy Rate from Previous Months</div>",
+            unsafe_allow_html=True
+        )
+
+        # Center the growth table with a div wrapper
+        st.markdown(
+            f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+            f"{growth_display.to_html(escape=False, index=True)}"
+            f"</div>",
+            unsafe_allow_html=True
+        )
+
         
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
