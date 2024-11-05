@@ -334,15 +334,6 @@ if location == "Bali":
             # Ensure 'Occupancy' column is converted to numeric after removing '%' and then calculate mean
             bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
 
-            # Create "Site Filled" table based on "Fill" values
-            fill_summary = bali_occupancy_data.pivot_table(
-                index='Site',
-                columns='Month',
-                values='Fill',
-                aggfunc='sum'
-            ).fillna(0)
-            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
-
             # Creating occupancy summary table for baseline month and the three displayed months
             occupancy_summary = bali_occupancy_data.pivot_table(
                 index='Site',
@@ -371,24 +362,12 @@ if location == "Bali":
             # Apply the styling function to each cell in the DataFrame to create `growth_display`
             growth_display = growth_summary.applymap(style_growth)
 
-            # Display the "Site Filled" and "Average Occupancy" tables side by side
-            col1, col2 = st.columns(2)
-
-            with col1:
-                st.markdown(
-                    f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                    f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                    unsafe_allow_html=True
-                )
-                st.dataframe(fill_summary)
-
-            with col2:
-                st.markdown(
-                    f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                    f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                    unsafe_allow_html=True
-                )
-                st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
+            st.markdown(
+                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+                f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                unsafe_allow_html=True
+            )
+            st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
 
             # Prepare data for the bar chart
             sites = occupancy_summary.index.tolist()  # List of sites (rows)
