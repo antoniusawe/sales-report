@@ -394,33 +394,33 @@ if location == "Bali":
         sites = occupancy_summary.index.tolist()  # List of sites (rows)
         months = [previous_month_2, previous_month_1, current_month]  # List of months
 
-        # Initialize series data for each month with labels
+        # Initialize series data for each month
         series_data = []
         for month in months:
             # Extract Avg Occupancy values for each site
             avg_values = occupancy_summary[month].values.tolist()
             
-            # Create a series entry for the chart with labels enabled
+            # Create a series entry for the chart with tooltip enabled
             series_data.append({
                 "name": month,
                 "type": "bar",
                 "data": avg_values,
-                "label": {
-                    "show": True,
-                    "position": "top",  # Position label at the top of each bar
-                    "formatter": "{c}%",  # Display value with % sign
-                    "fontSize": 10,
-                    "color": "#333"  # Optional: Set a color for the label text
-                }
             })
 
-        # Define chart options without tooltip
+        # Define chart options with tooltip
         chart_options = {
             "title": {
                 "text": "Occupancy Rate",
                 "left": "center",
                 "top": "top",
                 "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+            },
+            "tooltip": {
+                "trigger": "axis",
+                "axisPointer": {  # Set the axis pointer type
+                    "type": "shadow"  # Display shadow as axis indicator
+                },
+                "formatter": "{b}: {c}%"  # Tooltip format to show value with %
             },
             "legend": {
                 "data": months,
