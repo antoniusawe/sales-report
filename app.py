@@ -458,7 +458,7 @@ if location == "Bali":
             )
 
         elif location_analysis_option == "Location Performance":
-            # st.markdown("<h2 style='text-align: center; font-size: 18px;'>Location Performance Analysis</h2>", unsafe_allow_html=True)
+            # Setup months for analysis
             current_month = datetime.now().strftime('%B')
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
@@ -471,9 +471,10 @@ if location == "Bali":
                 values='Fill',
                 aggfunc='sum'
             ).fillna(0)
-            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
-            # Convert values to integers
-            fill_summary = fill_summary.astype(int)
+            fill_summary = fill_summary[[base_month, previous_month_2, previous_month_1, current_month]].copy()
+            fill_summary = fill_summary.astype(int)  # Ensure all values are integers
+
+            # Display "Site Filled" table
             st.markdown(
                 f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
                 f"<div style='text-align: center;'>"
@@ -486,6 +487,35 @@ if location == "Bali":
             st.markdown(
                 f"<div style='display: flex; justify-content: center;'>"
                 f"{fill_summary.to_html(index=True, classes='dataframe', border=0)}"
+                f"</div>",
+                unsafe_allow_html=True
+            )
+
+            # Calculate Growth Summary (difference between months)
+            growth_summary = fill_summary.diff(axis=1).iloc[:, 1:]  # Calculate differences between consecutive months
+            
+            # Styling growth values for display
+            def style_growth(value):
+                if value > 0:
+                    color = "green"
+                elif value < 0:
+                    color = "red"
+                else:
+                    color = "black"
+                return f"<span style='color: {color};'>{value}</span>"
+
+            # Apply styling to growth summary
+            growth_display = growth_summary.applymap(style_growth)
+
+            # Display Growth Summary table centered
+            st.markdown(
+                f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
+                f"Growth in Number of Students from Previous Months</div>",
+                unsafe_allow_html=True
+            )
+            st.markdown(
+                f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+                f"{growth_display.to_html(escape=False, index=True)}"
                 f"</div>",
                 unsafe_allow_html=True
             )
