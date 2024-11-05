@@ -330,8 +330,8 @@ if location == "Bali":
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
             
-            # Convert 'Occupancy' column to numeric after removing '%' if necessary
-            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].str.replace('%', '', regex=True).astype(float)
+            # Ensure 'Occupancy' column is converted to string first, then remove '%', and finally convert to float
+            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
             
             # Create table 1: Total Fill for each Site
             fill_summary = bali_occupancy_data.pivot_table(
