@@ -320,19 +320,7 @@ if location == "Bali":
     elif bali_option == "Location":
         # st.write("Displaying Batch section for Bali.")
 
-        # CSS styling to display radio buttons inline
-        st.markdown("""
-            <style>
-            /* Menyusun radio button agar horizontal */
-            div[data-baseweb="radio"] > div {
-                display: flex;
-                flex-direction: row;
-                gap: 20px; /* Menambahkan jarak antara pilihan */
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
-        # Radio button for selecting analysis type, now displayed inline
+        # Radio button for selecting analysis type
         location_analysis_option = st.radio(
             "Select Analysis Type:",
             ["Occupancy Rate", "Location Performance"]
