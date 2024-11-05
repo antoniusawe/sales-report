@@ -3,37 +3,37 @@ import pandas as pd
 from streamlit_echarts import st_echarts
 from datetime import datetime
 
-# sidebar untuk pemilihan lokasi
+# Sidebar dropdown for location
 location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
 
-# title
+# Display the main image and title
 st.image("https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png",  
          use_column_width=True)
 st.markdown("<h1 style='text-align: center; font-size: 50px;'>HOUSE OF OM - DASHBOARD</h1>", unsafe_allow_html=True)
 
-# tanggal hari berjalan
+# Display today's date
 today = datetime.today()
 st.markdown(f"<h3 style='text-align: center; font-size: 16px;'>{today.strftime('%d %B %Y')}</h3>", unsafe_allow_html=True)
 
-# mengambil bulan dari hari berjalan
+# Extract month from today's date for comparison
 current_month = today.month
 
 if location == "Bali":
-    # Sub-dropdown under "Bali"
+    # Sub-dropdown for specific options under "Bali"
     bali_option = st.sidebar.selectbox("Choose a Section:", ["Overview", "Location", "Batch"])
     
     occupancy_url = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/Bali%20data/bali_occupancy.xlsx"
     sales_url = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/Bali%20data/bali_sales.xlsx"
     
     try:
-        # Load data occupancy and sales
+        # Load data for occupancy and sales
         bali_occupancy_data = pd.read_excel(occupancy_url)
         bali_sales_data = pd.read_excel(sales_url)
         
-        # konversi 'Batch start date' menjadi format datetime
+        # Convert 'Batch start date' to datetime if it's not already
         if 'Batch start date' in bali_sales_data.columns:
             bali_sales_data['Batch start date'] = pd.to_datetime(bali_sales_data['Batch start date'], errors='coerce')
-        # konversi kolom 'Occupancy' ke format numeric
+        # Convert 'Occupancy' column to numeric if it's not already (remove % and convert to float)
         if 'Occupancy' in bali_occupancy_data.columns:
             bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].replace('%', '', regex=True).astype(float)
 
@@ -43,26 +43,26 @@ if location == "Bali":
 
     program = st.selectbox("Choose a Program:", ["200HR", "300HR"])
 
-    # menampilkan content dari sub-option
+    # Display content based on selected sub-option
     if bali_option == "Overview":
         if program == "200HR":
-            # Filter data dimana Category = 200HR
+            # Filter data for 200HR category
             data_200hr_bali = bali_sales_data[bali_sales_data['Category'] == '200HR']
             
-            # newest Batch start date 200HR
+            # Find the newest Batch start date for 200HR category
             newest_batch_date = data_200hr_bali['Batch start date'].max()
             
-            # Format the newest date menjadi string (untuk visualisasi)
+            # Format the newest date to a string for display
             cut_off_date = newest_batch_date.strftime('%d %b %Y') if pd.notnull(newest_batch_date) else "No date available"
             
-            # calculate Total Booking dari jumlah NAME dengan BALANCE = 0
+            # Calculate Total Booking as count of NAME with BALANCE = 0
             total_booking_ctr = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["NAME"].count()
             # Calculate Amount as sum of PAID where BALANCE = 0
             total_paid_amount = data_200hr_bali[data_200hr_bali["BALANCE"] == 0]["PAID"].sum()
             # Calculate average Occupancy
             average_occupancy = bali_occupancy_data['Occupancy'].mean()
             
-            # Display Cut-off date and Total Booking
+            # Display Cut-off date and Total Booking in a centered format
             st.markdown(f"""
             <div style='text-align: left;'>
                 <div style='font-size: 16px; color: #333333;'>Cut-off data: {cut_off_date}</div>
@@ -317,8 +317,16 @@ if location == "Bali":
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
-        st.write("Displaying Location section for Bali.")
-        # Add specific code or functionalities for the Location section
+        #  st.write("Displaying Location section for Bali.")
+        # Dropdown for selecting analysis type
+        location_analysis_option = st.selectbox("Choose Analysis Type:", ["Occupancy Rate", "Location Performance"])
+        
+        if location_analysis_option == "Occupancy Rate":
+            st.write("Displaying Occupancy Rate for Bali.")
+
+        elif location_analysis_option == "Location Performance":
+            st.write("Displaying Location Performance for Bali.")
+
 
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
