@@ -485,11 +485,20 @@ if location == "Bali":
             fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
 
             st.markdown(
-                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
+                f"<div style='text-align: center;'>"
+                f"<p style='font-size: 14px; font-weight: bold; color: #333;'>"
+                f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>"
+                f"</div></div>",
                 unsafe_allow_html=True
             )
-            st.dataframe(fill_summary)
+
+            st.markdown(
+                f"<div style='display: flex; justify-content: center;'>"
+                f"{fill_summary.to_html(index=True, classes='dataframe', border=0)}"
+                f"</div>",
+                unsafe_allow_html=True
+            )
 
         
     elif bali_option == "Batch":
