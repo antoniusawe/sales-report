@@ -483,7 +483,8 @@ if location == "Bali":
                 aggfunc='sum'
             ).fillna(0)
             fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
-
+            # Convert values to integers
+            fill_summary = fill_summary.astype(int)
             st.markdown(
                 f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
                 f"<div style='text-align: center;'>"
