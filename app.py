@@ -324,31 +324,49 @@ if location == "Bali":
         if location_analysis_option == "Occupancy Rate":
             st.write(f"Displaying Occupancy Rate for {today.strftime('%B')} in Bali.")
 
-            # Filter the occupancy data for the current month
-            bali_occupancy_data['Month'] = pd.to_datetime(bali_occupancy_data['Month'], format='%B').dt.month  # Ensure 'Month' is in numeric format
-            current_month_data = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
-
-            # Display the relevant columns for Occupancy Rate in the current month
-            if not current_month_data.empty:
-                filtered_data = current_month_data[['Month', 'Site', 'Fill', 'Available', 'Occupancy']]
-                st.write("### Occupancy Rate for Current Month")
-                st.dataframe(filtered_data)
-
-                # Create a bar chart for Occupancy Rate by Site for the current month
-                occupancy_bar_chart_data = {
-                    "title": {"text": f"Occupancy Rate by Site for {today.strftime('%B')}", "left": "center"},
-                    "tooltip": {"trigger": "item", "formatter": "{b}: {c}%"},
-                    "xAxis": {"type": "category", "data": filtered_data['Site'].tolist()},
-                    "yAxis": {"type": "value", "name": "Occupancy (%)"},
-                    "series": [{
-                        "data": filtered_data['Occupancy'].tolist(),
-                        "type": "bar",
-                        "label": {"show": True, "position": "top", "formatter": "{c}%"}
-                    }]
-                }
-                st_echarts(options=occupancy_bar_chart_data, height="400px")
-            else:
-                st.write("No data available for the current month.")
+            # Filter the occupancy data for the current month and year
+            bali_occupancy_data['Date'] = pd.to_datetime(bali_occupancy_data['Year'].astype(str) + '-' + bali_occupancy_data['Month'], format='%Y-%B')
+            current_month_data = bali_occupancy_data[bali_occupancy_data['Date'].dt.month == current_month]
+            
+            # Reformat Month back to string (e.g., "November")
+            current_month_data['Month'] = current_month_data['Date'].dt.strftime('%B')
+            
+            # Convert Occupancy to numeric and calculate the average per Site
+            current_month_data['Occupancy'] = pd.to_numeric(current_month_data['Occupancy'], errors='coerce')
+            
+            # Group by Site to aggregate data
+            aggregated_data = current_month_data.groupby(['Year', 'Month', 'Site']).agg({
+                'Fill': 'sum',
+                'Available': 'sum',
+                'Occupancy': 'mean'
+            }).reset_index()
+            
+            # Rename columns as per requirement
+            aggregated_data = aggregated_data.rename(columns={
+                'Available': 'Empty Spots',
+                'Occupancy': 'Occupancy (%)'
+            })
+            
+            # Convert Occupancy to percentage format
+            aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
+            
+            # Display the data
+            st.write("### Occupancy Rate for Current Month")
+            st.dataframe(aggregated_data[['Year', 'Month', 'Site', 'Fill', 'Empty Spots', 'Occupancy (%)']])
+            
+            # Display a bar chart for Occupancy Rate by Site for the current month
+            occupancy_bar_chart_data = {
+                "title": {"text": f"Occupancy Rate by Site for {today.strftime('%B %Y')}", "left": "center"},
+                "tooltip": {"trigger": "item", "formatter": "{b}: {c}%"},
+                "xAxis": {"type": "category", "data": aggregated_data['Site'].tolist()},
+                "yAxis": {"type": "value", "name": "Occupancy (%)"},
+                "series": [{
+                    "data": [float(x.strip('%')) if x != "N/A" else 0 for x in aggregated_data['Occupancy (%)']],  # Use 0 if N/A
+                    "type": "bar",
+                    "label": {"show": True, "position": "top", "formatter": "{c}%"}
+                }]
+            }
+            st_echarts(options=occupancy_bar_chart_data, height="400px")
 
         elif location_analysis_option == "Location Performance":
             st.write("Displaying Location Performance for Bali.")
