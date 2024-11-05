@@ -371,76 +371,7 @@ if location == "Bali":
             # Apply the styling function to each cell in the DataFrame to create `growth_display`
             growth_display = growth_summary.applymap(style_growth)
 
-            # --- Add the Line Chart at the Top ---
-            from streamlit_echarts import st_echarts
-
-            # Prepare data for the line chart using the Avg Occupancy data and Growth labels
-            sites = occupancy_summary.index.tolist()  # List of sites (rows)
-            months = [previous_month_2, previous_month_1, current_month]  # List of months
-
-            # Initialize series data for each site
-            series_data = []
-            for site in sites:
-                # Extract Avg Occupancy values for the current site
-                avg_values = occupancy_summary.loc[site, [previous_month_2, previous_month_1, current_month]].values.tolist()
-                # Extract Growth labels for the current site
-                growth_labels = growth_summary.loc[site, [previous_month_2, previous_month_1, current_month]].apply(
-                    lambda x: f"{x:.2f}%" if pd.notnull(x) else "0.00%"
-                ).values.tolist()
-                
-                # Create a series entry for the chart
-                series_data.append({
-                    "name": site,
-                    "type": "line",
-                    "data": avg_values,
-                    "label": {"show": True},
-                    "tooltip": {
-                        "formatter": lambda params, labels=growth_labels: f"{params.value}% ({labels[params.dataIndex]})"
-                    }
-                })
-
-            # Define chart options
-            chart_options = {
-                "title": {
-                    "text": "Average Occupancy with Growth Labels",
-                    "left": "center",
-                    "top": "top",
-                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
-                },
-                "tooltip": {
-                    "trigger": "axis",
-                    "formatter": "{b}: {c}%"  # Display month and avg occupancy as tooltip
-                },
-                "legend": {
-                    "data": sites,
-                    "orient": "horizontal",
-                    "bottom": "0",
-                    "left": "center"
-                },
-                "xAxis": {
-                    "type": "category",
-                    "data": months,
-                    "axisLabel": {
-                        "interval": 0,
-                        "fontSize": 12,
-                        "rotate": 0,
-                        "fontWeight": "bold"
-                    }
-                },
-                "yAxis": {
-                    "type": "value",
-                    "axisLabel": {
-                        "formatter": "{value}%",  # Show percentage
-                        "fontSize": 12
-                    }
-                },
-                "series": series_data
-            }
-
-            # Render the chart
-            st_echarts(options=chart_options, height="400px")
-
-            # --- Display Tables Below the Chart ---
+            # --- Display Tables Only (No Chart) ---
             
             # Display the "Site Filled" and "Average Occupancy" tables side by side
             col1, col2 = st.columns(2)
