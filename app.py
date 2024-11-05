@@ -417,7 +417,7 @@ if location == "Bali":
         # Define chart options without tooltip
         chart_options = {
             "title": {
-                "text": "Average Occupancy for Recent Months",
+                "text": "Occupancy Rate",
                 "left": "center",
                 "top": "top",
                 "textStyle": {"fontSize": 16, "fontWeight": "bold"}
@@ -453,7 +453,6 @@ if location == "Bali":
         st_echarts(options=chart_options, height="400px")
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # --- Display Growth Occupancy Rate Table Below Chart ---
 
         # Centered growth table below the two tables and chart
         st.markdown(
