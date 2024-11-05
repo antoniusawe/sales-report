@@ -363,11 +363,21 @@ if location == "Bali":
             growth_display = growth_summary.applymap(style_growth)
 
             st.markdown(
-                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
+                f"<div style='text-align: center;'>"
+                f"<p style='font-size: 14px; font-weight: bold; color: #333;'>"
+                f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>"
+                f"</div></div>",
                 unsafe_allow_html=True
             )
-            st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
+
+            # Display the dataframe centered
+            st.markdown(
+                f"<div style='display: flex; justify-content: center;'>"
+                f"{occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f'{x:.2f}%').to_html(index=True, classes='dataframe', border=0)}"
+                f"</div>",
+                unsafe_allow_html=True
+            )
 
             # Prepare data for the bar chart
             sites = occupancy_summary.index.tolist()  # List of sites (rows)
