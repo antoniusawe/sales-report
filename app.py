@@ -330,9 +330,8 @@ if location == "Bali":
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
             
-            # Generate the occupancy summary table from bali_occupancy_data
-            # Convert the Occupancy column to numeric by stripping '%' and converting to float
-            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].str.replace('%', '').astype(float)
+            # Convert 'Occupancy' column to numeric after removing '%' if necessary
+            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].str.replace('%', '', regex=True).astype(float)
             
             # Create table 1: Total Fill for each Site
             fill_summary = bali_occupancy_data.pivot_table(
@@ -343,14 +342,17 @@ if location == "Bali":
             ).fillna(0)
             fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
             
-            # Create table 2: Average Occupancy for each Site
+            # Create table 2: Average Occupancy for each Site, and convert back to percentage format
             occupancy_summary = bali_occupancy_data.pivot_table(
                 index='Site',
                 columns='Month',
                 values='Occupancy',
                 aggfunc='mean'
             ).fillna(0)
+            
+            # Convert the average occupancy to percentage format
             occupancy_summary = occupancy_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            occupancy_summary = occupancy_summary.applymap(lambda x: f"{x:.2f}%")  # Format as percentage
             
             # Display the tables side by side
             col1, col2 = st.columns(2)
