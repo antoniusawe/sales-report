@@ -391,6 +391,7 @@ if location == "Bali":
                 st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
 
         # Prepare data for the bar chart
+        # Prepare data for the bar chart
         sites = occupancy_summary.index.tolist()  # List of sites (rows)
         months = [previous_month_2, previous_month_1, current_month]  # List of months
 
@@ -398,10 +399,9 @@ if location == "Bali":
         series_data = []
         for month in months:
             # Extract Avg Occupancy values for each site
-            avg_values = [round(value, 2) for value in occupancy_summary[month].values.tolist()]
             avg_values = occupancy_summary[month].values.tolist()
             
-            # Create a series entry for the chart with labels enabled
+            # Create a series entry for the chart with labels enabled and formatted
             series_data.append({
                 "name": month,
                 "type": "bar",
@@ -409,9 +409,14 @@ if location == "Bali":
                 "label": {
                     "show": True,
                     "position": "top",  # Position label at the top of each bar
-                    "formatter": "{c}%",  # Display value with % sign
-                    "fontSize": 10,
-                    "color": "#333"  # Optional: Set a color for the label text
+                    "formatter": "{c|{c} %}",  # Custom formatter to control decimal places
+                    "rich": {
+                        "c": {
+                            "fontSize": 10,
+                            "color": "#333",
+                            "formatter": lambda x: f"{x:.2f}"  # Ensure two decimal places in label
+                        }
+                    }
                 }
             })
 
@@ -453,23 +458,6 @@ if location == "Bali":
         st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
         st_echarts(options=chart_options, height="400px")
         st.markdown("</div>", unsafe_allow_html=True)
-
-        # --- Display Growth Occupancy Rate Table Below Chart ---
-
-        # Centered growth table below the two tables and chart
-        st.markdown(
-            f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
-            f"Growth Occupancy Rate from Previous Months</div>",
-            unsafe_allow_html=True
-        )
-
-        # Center the growth table with a div wrapper
-        st.markdown(
-            f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
-            f"{growth_display.to_html(escape=False, index=True)}"
-            f"</div>",
-            unsafe_allow_html=True
-        )
 
         
     elif bali_option == "Batch":
