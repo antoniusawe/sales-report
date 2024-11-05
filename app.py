@@ -320,11 +320,31 @@ if location == "Bali":
     elif bali_option == "Location":
         st.write("Displaying Batch section for Bali.")
 
-        # Radio button for selecting analysis type
+        # CSS styling to display radio buttons inline
+        st.markdown("""
+            <style>
+            .stRadio > label {
+                display: flex;
+                flex-direction: row;
+                gap: 20px; /* Adjust gap between options */
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+        # Radio button for selecting analysis type, now displayed inline
         location_analysis_option = st.radio(
             "Select Analysis Type:",
             ["Occupancy Rate", "Location Performance"]
         )
+
+        # Placeholder for displaying content based on the selected option
+        if location_analysis_option == "Occupancy Rate":
+            st.write("Occupancy Rate analysis selected.")
+            # Placeholder for Occupancy Rate analysis code
+
+        elif location_analysis_option == "Location Performance":
+            st.write("Location Performance analysis selected.")
+            # Placeholder for Location Performance analysis code
 
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
