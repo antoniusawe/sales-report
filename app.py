@@ -478,8 +478,8 @@ if location == "Bali":
             # Display "Site Filled" table for the last three months only (excluding base_month from display)
             st.markdown(
                 f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333;'>"
-                f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                f"</div></div>",  
+                f"Students for {previous_month_2}, {previous_month_1}, and {current_month}",
+                f"</div>",  
                 unsafe_allow_html=True
             )
             st.markdown(
