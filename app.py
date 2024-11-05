@@ -349,41 +349,53 @@ if location == "Bali":
             
             # Convert Occupancy to numeric for averaging, and aggregate data
             filtered_data['Occupancy'] = pd.to_numeric(filtered_data['Occupancy'], errors='coerce')
-            aggregated_data = filtered_data.groupby(['Year', 'Month', 'Site']).agg({
-                'Occupancy': 'mean'
-            }).reset_index()
             
-            # Pivot data to create the table format
-            occupancy_pivot = aggregated_data.pivot(index='Site', columns='Month', values='Occupancy')
+            # Pastikan 'Site' ada sebelum pengelompokan
+            if 'Site' not in filtered_data.columns:
+                st.error("Kolom 'Site' tidak ditemukan dalam data.")
+            else:
+                aggregated_data = filtered_data.groupby(['Year', 'Month', 'Site']).agg({
+                    'Occupancy': 'mean'
+                }).reset_index()
+                
+                # Pivot data to create the table format, ensuring 'Site' is not the index
+                occupancy_pivot = aggregated_data.pivot(index='Site', columns='Month', values='Occupancy').reset_index()
 
-            # Calculate growth percentage for September and October compared to November
-            occupancy_pivot['September Growth'] = (
-                (occupancy_pivot['November'] - occupancy_pivot['September']) / occupancy_pivot['September'] * 100
-            )
-            occupancy_pivot['October Growth'] = (
-                (occupancy_pivot['November'] - occupancy_pivot['October']) / occupancy_pivot['October'] * 100
-            )
-            
-            # Format November as average occupancy with percentage
-            occupancy_pivot['Average Occupancy (November)'] = occupancy_pivot['November'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
+                # Calculate growth percentage for September and October compared to November
+                if 'September' in occupancy_pivot.columns and 'November' in occupancy_pivot.columns:
+                    occupancy_pivot['September Growth'] = (
+                        (occupancy_pivot['November'] - occupancy_pivot['September']) / occupancy_pivot['September'] * 100
+                    )
+                else:
+                    occupancy_pivot['September Growth'] = "N/A"
+                
+                if 'October' in occupancy_pivot.columns and 'November' in occupancy_pivot.columns:
+                    occupancy_pivot['October Growth'] = (
+                        (occupancy_pivot['November'] - occupancy_pivot['October']) / occupancy_pivot['October'] * 100
+                    )
+                else:
+                    occupancy_pivot['October Growth'] = "N/A"
+                
+                # Format November as average occupancy with percentage
+                occupancy_pivot['Average Occupancy (November)'] = occupancy_pivot['November'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
 
-            # Apply styling for Growth and No Growth
-            def format_growth(value):
-                if pd.notnull(value):
-                    color = "green" if value > 0 else "red"
-                    sign = "+" if value > 0 else ""
-                    return f"<span style='color:{color}'>{sign}{value:.2f}%</span>"
-                return "N/A"
+                # Apply styling for Growth and No Growth
+                def format_growth(value):
+                    if pd.notnull(value):
+                        color = "green" if value > 0 else "red"
+                        sign = "+" if value > 0 else ""
+                        return f"<span style='color:{color}'>{sign}{value:.2f}%</span>"
+                    return "N/A"
 
-            occupancy_pivot['September Growth'] = occupancy_pivot['September Growth'].apply(format_growth)
-            occupancy_pivot['October Growth'] = occupancy_pivot['October Growth'].apply(format_growth)
-            
-            # Menghapus kolom 'Month' dari data untuk tampilan
-            display_data = occupancy_pivot[['Site', 'Average Occupancy (November)', 'October Growth', 'September Growth']].reset_index(drop=True)
+                occupancy_pivot['September Growth'] = occupancy_pivot['September Growth'].apply(format_growth)
+                occupancy_pivot['October Growth'] = occupancy_pivot['October Growth'].apply(format_growth)
+                
+                # Prepare the final data for display without the 'Month' column
+                display_data = occupancy_pivot[['Site', 'Average Occupancy (November)', 'October Growth', 'September Growth']]
 
-            # Tampilkan tabel yang sudah dihapus kolom 'Month'
-            st.write("### Occupancy Growth Comparison for the Last 3 Months")
-            st.markdown(display_data.to_html(escape=False, index=False), unsafe_allow_html=True)
+                # Display the table with formatted HTML
+                st.write("### Occupancy Growth Comparison for the Last 3 Months")
+                st.markdown(display_data.to_html(escape=False, index=False), unsafe_allow_html=True)
 
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
