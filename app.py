@@ -343,7 +343,7 @@ if location == "Bali":
             
             # Display the filtered table
             st.markdown(
-            f"<p style='font-size: 14px; text-align: left; color: #333;'>Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+            f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
             unsafe_allow_html=True
         )   
             st.dataframe(filtered_occupancy_summary)
