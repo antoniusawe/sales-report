@@ -554,6 +554,9 @@ if location == "Bali":
             # Calculate Growth Summary (difference between months) for the last three months only
             growth_summary = fill_summary.diff(axis=1)  # Calculate differences between consecutive months
             
+            # Handle NaN values by filling with 0 or appropriate placeholder
+            growth_summary.fillna(0, inplace=True)  # Fill NaN with 0 to indicate no previous month for calculation
+            
             # Styling growth values for display
             def style_growth(value):
                 if value > 0:
