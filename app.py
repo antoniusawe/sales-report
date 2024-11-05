@@ -471,10 +471,10 @@ if location == "Bali":
                 values='Fill',
                 aggfunc='sum'
             ).fillna(0)
-            fill_summary = fill_summary[[base_month, previous_month_2, previous_month_1, current_month]].copy()
+            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
             fill_summary = fill_summary.astype(int)  # Ensure all values are integers
 
-            # Display "Site Filled" table
+            # Display "Site Filled" table for the last three months only
             st.markdown(
                 f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333;'>"
                 f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</div>",
@@ -551,7 +551,7 @@ if location == "Bali":
             st_echarts(options=chart_options, height="400px")
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Calculate Growth Summary (difference between months)
+            # Calculate Growth Summary (difference between months) for the last three months only
             growth_summary = fill_summary.diff(axis=1).iloc[:, 1:]  # Calculate differences between consecutive months
             
             # Styling growth values for display
