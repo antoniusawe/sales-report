@@ -322,7 +322,7 @@ if location == "Bali":
         location_analysis_option = st.selectbox("Choose Analysis Type:", ["Occupancy Rate", "Location Performance"])
         
         if location_analysis_option == "Occupancy Rate":
-            st.write("Displaying Occupancy Rate for Bali.")
+            st.write(f"Displaying Occupancy Rate for {today.strftime('%B')} in Bali.")
 
         elif location_analysis_option == "Location Performance":
             st.write("Displaying Location Performance for Bali.")
