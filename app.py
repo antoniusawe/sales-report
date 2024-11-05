@@ -464,17 +464,18 @@ if location == "Bali":
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
             base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
 
-            # Create "Site Filled" table based on "Fill" values
+            # Create "Site Filled" table based on "Fill" values including the base month
             fill_summary = bali_occupancy_data.pivot_table(
                 index='Site',
                 columns='Month',
                 values='Fill',
                 aggfunc='sum'
             ).fillna(0)
-            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            # Include base_month for calculation but exclude it from display
+            fill_summary = fill_summary[[base_month, previous_month_2, previous_month_1, current_month]].copy()
             fill_summary = fill_summary.astype(int)  # Ensure all values are integers
 
-            # Display "Site Filled" table for the last three months only
+            # Display "Site Filled" table for the last three months only (excluding base_month from display)
             st.markdown(
                 f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333;'>"
                 f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</div>",
@@ -482,15 +483,15 @@ if location == "Bali":
             )
             st.markdown(
                 f"<div style='display: flex; justify-content: center;'>"
-                f"{fill_summary.to_html(index=True, classes='dataframe', border=0)}"
+                f"{fill_summary[[previous_month_2, previous_month_1, current_month]].to_html(index=True, classes='dataframe', border=0)}"
                 f"</div>",
                 unsafe_allow_html=True
             )
 
             # Display the bar chart below the "Site Filled" table
-            # Prepare data for the bar chart (using original fill_summary data)
+            # Prepare data for the bar chart (using displayed months only, excluding base_month)
             sites = fill_summary.index.tolist()  # List of sites (rows)
-            months = [previous_month_2, previous_month_1, current_month]  # List of months
+            months = [previous_month_2, previous_month_1, current_month]  # List of months for display
 
             # Initialize series data for each month
             series_data = []
@@ -551,11 +552,9 @@ if location == "Bali":
             st_echarts(options=chart_options, height="400px")
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Calculate Growth Summary (difference between months) for the last three months only
-            growth_summary = fill_summary.diff(axis=1)  # Calculate differences between consecutive months
-            
-            # Handle NaN values by filling with 0 or appropriate placeholder
-            growth_summary.fillna(0, inplace=True)  # Fill NaN with 0 to indicate no previous month for calculation
+            # Calculate Growth Summary using base_month but exclude it from display
+            growth_summary = fill_summary.pct_change(axis=1) * 100  # Calculate percentage change
+            growth_summary = growth_summary[[previous_month_2, previous_month_1, current_month]].copy()  # Exclude base_month from display
             
             # Styling growth values for display
             def style_growth(value):
@@ -565,11 +564,10 @@ if location == "Bali":
                     color = "red"
                 else:
                     color = "black"
-                return f"<span style='color: {color};'>{value}</span>"
+                return f"<span style='color: {color};'>{value:.2f}%</span>"
 
-            # Apply styling to growth summary and keep September in display
+            # Apply styling to growth summary
             growth_display = growth_summary.applymap(style_growth)
-            growth_display = growth_display[[previous_month_2, previous_month_1, current_month]].copy()
 
             # Display Growth Summary table at the bottom
             st.markdown(
