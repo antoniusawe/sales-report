@@ -330,7 +330,6 @@ if location == "Bali":
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
             base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
-
             # Ensure 'Occupancy' column is converted to numeric after removing '%' and then calculate mean
             bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
             
@@ -390,86 +389,86 @@ if location == "Bali":
                 )
                 st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
 
-            # Prepare data for the bar chart
-            sites = occupancy_summary.index.tolist()  # List of sites (rows)
-            months = [previous_month_2, previous_month_1, current_month]  # List of months
+        # Prepare data for the bar chart
+        sites = occupancy_summary.index.tolist()  # List of sites (rows)
+        months = [previous_month_2, previous_month_1, current_month]  # List of months
 
-            # Initialize series data for each month
-            series_data = []
-            for month in months:
-                # Extract Avg Occupancy values for each site
-                avg_values = occupancy_summary[month].values.tolist()
-                
-                # Create a series entry for the chart with tooltip enabled
-                series_data.append({
-                    "name": month,
-                    "type": "bar",
-                    "data": avg_values,
-                })
+        # Initialize series data for each month
+        series_data = []
+        for month in months:
+            # Extract Avg Occupancy values for each site
+            avg_values = occupancy_summary[month].values.tolist()
+            
+            # Create a series entry for the chart with tooltip enabled
+            series_data.append({
+                "name": month,
+                "type": "bar",
+                "data": avg_values,
+            })
 
-            # Define chart options with tooltip
-            chart_options = {
-                "title": {
-                    "text": "Occupancy Rate",
-                    "left": "center",
-                    "top": "top",
-                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+        # Define chart options with tooltip
+        chart_options = {
+            "title": {
+                "text": "Occupancy Rate",
+                "left": "center",
+                "top": "top",
+                "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+            },
+            "tooltip": {
+                "trigger": "item",  # Change to "item" to display each data point
+                "formatter": "{a} <br/>{b}: {c}%",  # Show month (series name), site, and value
+                "axisPointer": {  # Set the axis pointer type
+                    "type": "shadow"  # Display shadow as axis indicator
                 },
-                "tooltip": {
-                    "trigger": "item",  # Change to "item" to display each data point
-                    "formatter": "{a} <br/>{b}: {c}%",  # Show month (series name), site, and value
-                    "axisPointer": {  # Set the axis pointer type
-                        "type": "shadow"  # Display shadow as axis indicator
-                    },
-                },
-                "legend": {
-                    "data": months,
-                    "orient": "horizontal",
-                    "bottom": "0",
-                    "left": "center"
-                },
-                "xAxis": {
-                    "type": "category",
-                    "data": sites,
-                    "axisLabel": {
-                        "interval": 0,
-                        "fontSize": 12,
-                        "rotate": 0,
-                        "fontWeight": "bold"
-                    }
-                },
-                "yAxis": {
-                    "type": "value",
-                    "axisLabel": {
-                        "formatter": "{value}%",  # Show percentage
-                        "fontSize": 12
-                    }
-                },
-                "series": series_data
-            }
+            },
+            "legend": {
+                "data": months,
+                "orient": "horizontal",
+                "bottom": "0",
+                "left": "center"
+            },
+            "xAxis": {
+                "type": "category",
+                "data": sites,
+                "axisLabel": {
+                    "interval": 0,
+                    "fontSize": 12,
+                    "rotate": 0,
+                    "fontWeight": "bold"
+                }
+            },
+            "yAxis": {
+                "type": "value",
+                "axisLabel": {
+                    "formatter": "{value}%",  # Show percentage
+                    "fontSize": 12
+                }
+            },
+            "series": series_data
+        }
 
-            # Render the bar chart
-            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-            st_echarts(options=chart_options, height="400px")
-            st.markdown("</div>", unsafe_allow_html=True)
+        # Render the bar chart
+        st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+        st_echarts(options=chart_options, height="400px")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
-            # Centered growth table below the two tables and chart
-            st.markdown(
-                f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
-                f"Growth Occupancy Rate from Previous Months</div>",
-                unsafe_allow_html=True
-            )
+        # Centered growth table below the two tables and chart
+        st.markdown(
+            f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
+            f"Growth Occupancy Rate from Previous Months</div>",
+            unsafe_allow_html=True
+        )
 
-            # Center the growth table with a div wrapper
-            st.markdown(
-                f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
-                f"{growth_display.to_html(escape=False, index=True)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
+        # Center the growth table with a div wrapper
+        st.markdown(
+            f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+            f"{growth_display.to_html(escape=False, index=True)}"
+            f"</div>",
+            unsafe_allow_html=True
+        )
 
-        elif location_analysis_option == "Location Performance":
+        elif location_analysis_option == "Performance Rate":
             
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
