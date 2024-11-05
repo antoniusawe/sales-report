@@ -330,6 +330,7 @@ if location == "Bali":
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
             base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
+
             # Ensure 'Occupancy' column is converted to numeric after removing '%' and then calculate mean
             bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
             
@@ -468,7 +469,7 @@ if location == "Bali":
             unsafe_allow_html=True
         )
 
-        elif location_analysis_option == "Performance Rate":
+        elif location_analysis_option == "Location Rate":
             
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
