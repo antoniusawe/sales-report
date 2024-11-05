@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from streamlit_echarts import st_echarts
 from datetime import datetime
+from datetime import timedelta
 
 # Sidebar dropdown for location
 location = st.sidebar.selectbox("Choose a Location:", ["Bali", "India"])
@@ -326,16 +327,23 @@ if location == "Bali":
 
             # Filter the occupancy data for the current month and year
             bali_occupancy_data['Date'] = pd.to_datetime(bali_occupancy_data['Year'].astype(str) + '-' + bali_occupancy_data['Month'], format='%Y-%B')
-            current_month_data = bali_occupancy_data[bali_occupancy_data['Date'].dt.month == current_month]
             
+            # Filter data for the last three months, including the current month
+            current_date = datetime(today.year, current_month, 1)
+            three_months_ago = current_date - pd.DateOffset(months=2)  # Getting data from three months ago
+            last_three_months_data = bali_occupancy_data[
+                (bali_occupancy_data['Date'] >= three_months_ago) &
+                (bali_occupancy_data['Date'] <= current_date)
+            ]
+
             # Reformat Month back to string (e.g., "November")
-            current_month_data['Month'] = current_month_data['Date'].dt.strftime('%B')
+            last_three_months_data['Month'] = last_three_months_data['Date'].dt.strftime('%B')
             
-            # Convert Occupancy to numeric and calculate the average per Site
-            current_month_data['Occupancy'] = pd.to_numeric(current_month_data['Occupancy'], errors='coerce')
+            # Convert Occupancy to numeric and calculate the average per Site and Month
+            last_three_months_data['Occupancy'] = pd.to_numeric(last_three_months_data['Occupancy'], errors='coerce')
             
-            # Group by Site to aggregate data
-            aggregated_data = current_month_data.groupby(['Year', 'Month', 'Site']).agg({
+            # Group by Year, Month, and Site to aggregate data
+            aggregated_data = last_three_months_data.groupby(['Year', 'Month', 'Site']).agg({
                 'Fill': 'sum',
                 'Available': 'sum',
                 'Occupancy': 'mean'
@@ -347,30 +355,43 @@ if location == "Bali":
                 'Occupancy': 'Occupancy (%)'
             })
             
-            # Convert Occupancy to percentage format
-            aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
-            aggregated_data['Year'] = aggregated_data['Year'].astype(str)
+            # Convert Occupancy to percentage format for display, but keep raw data for calculations
+            aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'] * 100
 
-            # Display the data
-            st.write("### Occupancy Rate for Current Month")
+            # Display Occupancy Rate data for the last 3 months
+            st.write("### Occupancy Rate Comparison Over the Last 3 Months")
             st.dataframe(aggregated_data[['Year', 'Month', 'Site', 'Fill', 'Empty Spots', 'Occupancy (%)']])
-            
-            # Display a bar chart for Occupancy Rate by Site for the current month
-            occupancy_bar_chart_data = {
-                "title": {"text": f"Occupancy Rate by Site for {today.strftime('%B %Y')}", "left": "center"},
-                "tooltip": {"trigger": "item", "formatter": "{b}: {c}%"},
-                "xAxis": {"type": "category", "data": aggregated_data['Site'].tolist()},
-                "yAxis": {"type": "value", "name": "Occupancy (%)"},
-                "series": [{
-                    "data": [float(x.strip('%')) if x != "N/A" else 0 for x in aggregated_data['Occupancy (%)']],  # Use 0 if N/A
-                    "type": "bar",
-                    "label": {"show": True, "position": "top", "formatter": "{c}%"}
-                }]
-            }
-            st_echarts(options=occupancy_bar_chart_data, height="400px")
 
-        elif location_analysis_option == "Location Performance":
-            st.write("Displaying Location Performance for Bali.")
+            # Prepare data for area chart to visualize growth over the last three months
+            # Pivot data to make each Site a separate line on the area chart
+            area_chart_data = aggregated_data.pivot(index=['Year', 'Month'], columns='Site', values='Occupancy (%)').fillna(0)
+
+            # Convert the MultiIndex to a string for Month-Year format
+            area_chart_data.index = area_chart_data.index.map(lambda x: f"{x[1]} {x[0]}")  # e.g., "November 2024"
+
+            # Prepare data for ECharts
+            area_chart_options = {
+                "title": {"text": "Occupancy Rate Growth Over the Last 3 Months", "left": "center"},
+                "tooltip": {"trigger": "axis"},
+                "legend": {"data": area_chart_data.columns.tolist()},
+                "xAxis": {
+                    "type": "category",
+                    "data": area_chart_data.index.tolist(),
+                },
+                "yAxis": {"type": "value", "name": "Occupancy (%)"},
+                "series": [
+                    {
+                        "name": site,
+                        "type": "line",
+                        "stack": "Total",
+                        "areaStyle": {},
+                        "data": area_chart_data[site].tolist()
+                    } for site in area_chart_data.columns
+                ]
+            }
+
+            # Render the area chart
+            st_echarts(options=area_chart_options, height="400px")
 
 
     elif bali_option == "Batch":
