@@ -479,7 +479,7 @@ if location == "Bali":
             st.markdown(
                 f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333;'>"
                 f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                f"</div></div>"  
+                f"</div></div>",  
                 unsafe_allow_html=True
             )
             st.markdown(
