@@ -552,7 +552,7 @@ if location == "Bali":
             st.markdown("</div>", unsafe_allow_html=True)
 
             # Calculate Growth Summary (difference between months) for the last three months only
-            growth_summary = fill_summary.diff(axis=1).iloc[:, 1:]  # Calculate differences between consecutive months
+            growth_summary = fill_summary.diff(axis=1)  # Calculate differences between consecutive months
             
             # Styling growth values for display
             def style_growth(value):
@@ -564,8 +564,9 @@ if location == "Bali":
                     color = "black"
                 return f"<span style='color: {color};'>{value}</span>"
 
-            # Apply styling to growth summary
+            # Apply styling to growth summary and keep September in display
             growth_display = growth_summary.applymap(style_growth)
+            growth_display = growth_display[[previous_month_2, previous_month_1, current_month]].copy()
 
             # Display Growth Summary table at the bottom
             st.markdown(
