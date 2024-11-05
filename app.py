@@ -490,16 +490,12 @@ if location == "Bali":
         ).fillna(0)
         fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
 
-        # Display the "Site Filled" and "Average Occupancy" tables side by side
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.markdown(
-                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                unsafe_allow_html=True
-            )
-            st.dataframe(fill_summary)
+        st.markdown(
+            f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+            f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+            unsafe_allow_html=True
+        )
+        st.dataframe(fill_summary)
 
 # Conditional logic based on location selection
 elif location == "India":
