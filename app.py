@@ -471,7 +471,7 @@ if location == "Bali":
                 values='Fill',
                 aggfunc='sum'
             ).fillna(0)
-            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            fill_summary = fill_summary[[base_month, previous_month_2, previous_month_1, current_month]].copy()
             fill_summary = fill_summary.astype(int)  # Ensure all values are integers
 
             # Display "Site Filled" table
