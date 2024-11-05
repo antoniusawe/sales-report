@@ -398,6 +398,7 @@ if location == "Bali":
         series_data = []
         for month in months:
             # Extract Avg Occupancy values for each site
+            avg_values = [round(value, 2) for value in occupancy_summary[month].values.tolist()]
             avg_values = occupancy_summary[month].values.tolist()
             
             # Create a series entry for the chart with labels enabled
