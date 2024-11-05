@@ -342,7 +342,7 @@ if location == "Bali":
             filtered_occupancy_summary = filtered_occupancy_summary[[previous_month_2, previous_month_1, current_month]].copy()
             
             # Display the filtered table
-            st.markdown(f"### Occupancy Rate for {previous_month_2}, {previous_month_1}, and {current_month}")
+            st.write(f"### Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}")
             st.dataframe(filtered_occupancy_summary)
         
 
