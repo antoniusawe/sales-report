@@ -329,7 +329,43 @@ if location == "Bali":
         # Placeholder for displaying content based on the selected option
         if location_analysis_option == "Occupancy Rate":
             st.write("Occupancy Rate analysis selected.")
-            # Placeholder for Occupancy Rate analysis code
+            # Assuming bali_occupancy_data is already loaded with required data
+            # Convert Year and Month to datetime for sorting
+            bali_occupancy_data['Date'] = pd.to_datetime(
+                bali_occupancy_data['Year'].astype(str) + '-' + bali_occupancy_data['Month'], format='%Y-%B'
+            )
+            
+            # Get the current date and filter for the last three months including the current month
+            current_date = datetime(today.year, today.month, 1)
+            three_months_ago = current_date - pd.DateOffset(months=2)
+            filtered_data = bali_occupancy_data[
+                (bali_occupancy_data['Date'] >= three_months_ago) &
+                (bali_occupancy_data['Date'] <= current_date)
+            ]
+            
+            # Reformat Month back to string (e.g., "November") after sorting
+            filtered_data['Month'] = filtered_data['Date'].dt.strftime('%B')
+            
+            # Convert Occupancy to numeric for averaging, and aggregate data
+            filtered_data['Occupancy'] = pd.to_numeric(filtered_data['Occupancy'], errors='coerce')
+            aggregated_data = filtered_data.groupby(['Year', 'Month', 'Site']).agg({
+                'Fill': 'sum',
+                'Available': 'sum',
+                'Occupancy': 'mean'
+            }).reset_index()
+            
+            # Rename columns for clarity
+            aggregated_data = aggregated_data.rename(columns={
+                'Available': 'Empty Spots',
+                'Occupancy': 'Occupancy (%)'
+            })
+            
+            # Format Occupancy as a percentage string for display
+            aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
+            
+            # Display the aggregated data for the last three months
+            st.write("### Occupancy Rate Data for the Last 3 Months")
+            st.dataframe(aggregated_data[['Year', 'Month', 'Site', 'Fill', 'Empty Spots', 'Occupancy (%)']])
 
         elif location_analysis_option == "Location Performance":
             st.write("Location Performance analysis selected.")
