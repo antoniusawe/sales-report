@@ -378,10 +378,10 @@ if location == "Bali":
             occupancy_pivot['September Growth'] = occupancy_pivot['September Growth'].apply(format_growth)
             occupancy_pivot['October Growth'] = occupancy_pivot['October Growth'].apply(format_growth)
             
-            # Select only the columns to display in the final table, excluding 'Month'
-            display_data = occupancy_pivot[['Average Occupancy (November)', 'October Growth', 'September Growth']].reset_index()
+            # Menghapus kolom 'Month' dari data untuk tampilan
+            display_data = occupancy_pivot[['Site', 'Average Occupancy (November)', 'October Growth', 'September Growth']].reset_index(drop=True)
 
-            # Display the table with formatted HTML
+            # Tampilkan tabel yang sudah dihapus kolom 'Month'
             st.write("### Occupancy Growth Comparison for the Last 3 Months")
             st.markdown(display_data.to_html(escape=False, index=False), unsafe_allow_html=True)
 
