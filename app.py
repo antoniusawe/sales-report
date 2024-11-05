@@ -349,7 +349,7 @@ if location == "Bali":
             
             # Convert Occupancy to percentage format
             aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
-            aggregated_data['Year'] = aggregated_data['Year'].astype(int)
+            aggregated_data['Year'] = aggregated_data['Year'].astype(str)
 
             # Display the data
             st.write("### Occupancy Rate for Current Month")
