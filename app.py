@@ -416,11 +416,11 @@ if location == "Bali":
                 "textStyle": {"fontSize": 16, "fontWeight": "bold"}
             },
             "tooltip": {
-                "trigger": "axis",
+                "trigger": "item",  # Change to "item" to display each data point
+                "formatter": "{a} <br/>{b}: {c}%",  # Show month (series name), site, and value
                 "axisPointer": {  # Set the axis pointer type
                     "type": "shadow"  # Display shadow as axis indicator
                 },
-                "formatter": "{b}: {c}%"  # Tooltip format to show value with %
             },
             "legend": {
                 "data": months,
