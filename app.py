@@ -328,7 +328,7 @@ if location == "Bali":
 
         # Placeholder for displaying content based on the selected option
         if location_analysis_option == "Occupancy Rate":
-            st.write("Occupancy Rate analysis selected.")
+            # st.write("Occupancy Rate analysis selected.")
             # Assuming bali_occupancy_data is already loaded with required data
             # Convert Year and Month to datetime for sorting
             bali_occupancy_data['Date'] = pd.to_datetime(
@@ -363,7 +363,7 @@ if location == "Bali":
             # Format Occupancy as a percentage string for display
             aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'].apply(lambda x: f"{x:.2f}%" if pd.notnull(x) else "N/A")
             aggregated_data['Year'] = aggregated_data['Year'].astype(int).astype(str)
-            
+
             # Display the aggregated data for the last three months
             st.write("### Occupancy Rate Data for the Last 3 Months")
             st.dataframe(aggregated_data[['Year', 'Month', 'Site', 'Fill', 'Empty Spots', 'Occupancy (%)']])
