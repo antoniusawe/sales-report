@@ -501,6 +501,68 @@ if location == "Bali":
                 unsafe_allow_html=True
             )
 
+            # Prepare data for the bar chart
+            sites = fill_summary.index.tolist()  # List of sites (rows)
+            months = [previous_month_2, previous_month_1, current_month]  # List of months
+
+            # Initialize series data for each month
+            series_data = []
+            for month in months:
+                # Extract Fill values for each site
+                fill_values = fill_summary[month].values.tolist()
+                
+                # Create a series entry for the chart with tooltip enabled
+                series_data.append({
+                    "name": month,
+                    "type": "bar",
+                    "data": fill_values,
+                })
+
+            # Define chart options with tooltip
+            chart_options = {
+                "title": {
+                    "text": "Site Filled by Month",
+                    "left": "center",
+                    "top": "top",
+                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+                },
+                "tooltip": {
+                    "trigger": "item",
+                    "formatter": "{a} <br/>{b}: {c}",  # Show month (series name), site, and value
+                    "axisPointer": {
+                        "type": "shadow"
+                    },
+                },
+                "legend": {
+                    "data": months,
+                    "orient": "horizontal",
+                    "bottom": "0",
+                    "left": "center"
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": sites,
+                    "axisLabel": {
+                        "interval": 0,
+                        "fontSize": 12,
+                        "rotate": 0,
+                        "fontWeight": "bold"
+                    }
+                },
+                "yAxis": {
+                    "type": "value",
+                    "axisLabel": {
+                        "formatter": "{value}",  # Show values as integers
+                        "fontSize": 12
+                    }
+                },
+                "series": series_data
+            }
+
+            # Render the bar chart
+            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+            st_echarts(options=chart_options, height="400px")
+            st.markdown("</div>", unsafe_allow_html=True)
         
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
