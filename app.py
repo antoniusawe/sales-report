@@ -478,7 +478,7 @@ if location == "Bali":
                 f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
                 f"<div style='text-align: center;'>"
                 f"<p style='font-size: 14px; font-weight: bold; color: #333;'>"
-                f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>"
+                f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</p>"
                 f"</div></div>",
                 unsafe_allow_html=True
             )
@@ -510,7 +510,7 @@ if location == "Bali":
             # Define chart options with tooltip
             chart_options = {
                 "title": {
-                    "text": "Site Filled by Month",
+                    "text": "Number of Students by Month",
                     "left": "center",
                     "top": "top",
                     "textStyle": {"fontSize": 16, "fontWeight": "bold"}
