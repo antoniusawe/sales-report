@@ -318,122 +318,123 @@ if location == "Bali":
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
-    # Display the Batch section for Bali
-    location_analysis_option = st.radio(
-        "Select Analysis Type:",
-        ["Occupancy Rate", "Location Performance"]
-    )
-    
-    if location_analysis_option == "Occupancy Rate":
-        # Kode untuk Occupancy Rate tetap seperti yang ada
+        # Display the Batch section for Bali
+        location_analysis_option = st.radio(
+            "Select Analysis Type:",
+            ["Occupancy Rate", "Location Performance"]
+        )
         
-        # Filter occupancy data for the current month and the previous two months
-        current_month = datetime.now().strftime('%B')
-        previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
-        previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
-        base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
+        if location_analysis_option == "Occupancy Rate":
+            # Filter occupancy data for the current month and the previous two months
+            current_month = datetime.now().strftime('%B')
+            previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
+            previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
+            base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
 
-        # Ensure 'Occupancy' column is converted to numeric after removing '%' and then calculate mean
-        bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
-        
-        # Create "Site Filled" table based on "Fill" values
-        fill_summary = bali_occupancy_data.pivot_table(
-            index='Site',
-            columns='Month',
-            values='Fill',
-            aggfunc='sum'
-        ).fillna(0)
-        fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
-        
-        # Creating occupancy summary table for baseline month and the three displayed months
-        occupancy_summary = bali_occupancy_data.pivot_table(
-            index='Site',
-            columns='Month',
-            values='Occupancy',
-            aggfunc='mean'
-        ).fillna(0)
-        
-        # Filtering only relevant months (base month for comparison + three displayed months)
-        occupancy_summary = occupancy_summary[[base_month, previous_month_2, previous_month_1, current_month]]
-        
-        # Calculate Growth for each month compared to the previous one
-        growth_summary = occupancy_summary.pct_change(axis=1) * 100  # Calculate as percentage
-        growth_summary = growth_summary[[previous_month_2, previous_month_1, current_month]].copy()
-        
-        # Styling growth values for display
-        def style_growth(value):
-            if value > 0:
-                color = "green"
-            elif value < 0:
-                color = "red"
-            else:
-                color = "black"
-            return f"<span style='color: {color};'>{value:.2f}%</span>"
+            # Ensure 'Occupancy' column is converted to numeric after removing '%' and then calculate mean
+            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
+            
+            # Create "Site Filled" table based on "Fill" values
+            fill_summary = bali_occupancy_data.pivot_table(
+                index='Site',
+                columns='Month',
+                values='Fill',
+                aggfunc='sum'
+            ).fillna(0)
+            fill_summary = fill_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            
+            # Creating occupancy summary table for baseline month and the three displayed months
+            occupancy_summary = bali_occupancy_data.pivot_table(
+                index='Site',
+                columns='Month',
+                values='Occupancy',
+                aggfunc='mean'
+            ).fillna(0)
+            
+            # Filtering only relevant months (base month for comparison + three displayed months)
+            occupancy_summary = occupancy_summary[[base_month, previous_month_2, previous_month_1, current_month]]
+            
+            # Calculate Growth for each month compared to the previous one
+            growth_summary = occupancy_summary.pct_change(axis=1) * 100  # Calculate as percentage
+            growth_summary = growth_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            
+            # Styling growth values for display
+            def style_growth(value):
+                if value > 0:
+                    color = "green"
+                elif value < 0:
+                    color = "red"
+                else:
+                    color = "black"
+                return f"<span style='color: {color};'>{value:.2f}%</span>"
 
-        # Apply the styling function to each cell in the DataFrame to create `growth_display`
-        growth_display = growth_summary.applymap(style_growth)
+            # Apply the styling function to each cell in the DataFrame to create `growth_display`
+            growth_display = growth_summary.applymap(style_growth)
 
-        # Display the "Site Filled" and "Average Occupancy" tables side by side
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown(
-                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                unsafe_allow_html=True
-            )
-            st.dataframe(fill_summary)
-        
-        with col2:
-            st.markdown(
-                f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
-                f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
-                unsafe_allow_html=True
-            )
-            st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
+            # Display the "Site Filled" and "Average Occupancy" tables side by side
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown(
+                    f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+                    f"Site Filled for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(fill_summary)
+            
+            with col2:
+                st.markdown(
+                    f"<p style='font-size: 14px; font-weight: bold; text-align: left; color: #333;'>"
+                    f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>",
+                    unsafe_allow_html=True
+                )
+                st.dataframe(occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f"{x:.2f}%"))
 
-    elif location_analysis_option == "Location Performance":
-        # Code for Location Performance section
-        st.markdown("<h2 style='text-align: center; font-size: 18px;'>Location Performance Analysis</h2>", unsafe_allow_html=True)
+        # Prepare data for the bar chart
+        sites = occupancy_summary.index.tolist()  # List of sites (rows)
+        months = [previous_month_2, previous_month_1, current_month]  # List of months
 
-        # Example of KPI display: Average occupancy across all sites for the selected months
-        avg_occupancy_by_month = occupancy_summary.mean().round(2)
-        st.markdown(f"<p style='font-size: 14px; font-weight: bold;'>Average Occupancy by Month:</p>", unsafe_allow_html=True)
-        for month in [previous_month_2, previous_month_1, current_month]:
-            st.markdown(f"<p>{month}: {avg_occupancy_by_month[month]}%</p>", unsafe_allow_html=True)
+        # Initialize series data for each month
+        series_data = []
+        for month in months:
+            # Extract Avg Occupancy values for each site
+            avg_values = occupancy_summary[month].values.tolist()
+            
+            # Create a series entry for the chart with tooltip enabled
+            series_data.append({
+                "name": month,
+                "type": "bar",
+                "data": avg_values,
+            })
 
-        # Display top 3 and bottom 3 performing sites based on the latest month's occupancy
-        current_month_occupancy = occupancy_summary[current_month]
-        top_3_sites = current_month_occupancy.nlargest(3)
-        bottom_3_sites = current_month_occupancy.nsmallest(3)
-
-        st.markdown("<h3>Top 3 Performing Sites</h3>", unsafe_allow_html=True)
-        for site, value in top_3_sites.items():
-            st.markdown(f"<p>{site}: {value:.2f}%</p>", unsafe_allow_html=True)
-
-        st.markdown("<h3>Bottom 3 Performing Sites</h3>", unsafe_allow_html=True)
-        for site, value in bottom_3_sites.items():
-            st.markdown(f"<p>{site}: {value:.2f}%</p>", unsafe_allow_html=True)
-
-        # Display a bar chart for performance comparison of each site for the latest month
-        performance_chart_data = {
+        # Define chart options with tooltip
+        chart_options = {
             "title": {
-                "text": f"Performance Comparison for {current_month}",
+                "text": "Occupancy Rate",
                 "left": "center",
                 "top": "top",
                 "textStyle": {"fontSize": 16, "fontWeight": "bold"}
             },
             "tooltip": {
-                "trigger": "item",
-                "formatter": "{b}: {c}%",  # Show site and occupancy rate
+                "trigger": "item",  # Change to "item" to display each data point
+                "formatter": "{a} <br/>{b}: {c}%",  # Show month (series name), site, and value
+                "axisPointer": {  # Set the axis pointer type
+                    "type": "shadow"  # Display shadow as axis indicator
+                },
+            },
+            "legend": {
+                "data": months,
+                "orient": "horizontal",
+                "bottom": "0",
+                "left": "center"
             },
             "xAxis": {
                 "type": "category",
-                "data": occupancy_summary.index.tolist(),  # List of sites
+                "data": sites,
                 "axisLabel": {
                     "interval": 0,
                     "fontSize": 12,
-                    "rotate": 45,
+                    "rotate": 0,
                     "fontWeight": "bold"
                 }
             },
@@ -444,25 +445,29 @@ if location == "Bali":
                     "fontSize": 12
                 }
             },
-            "series": [{
-                "data": current_month_occupancy.values.tolist(),
-                "type": "bar",
-                "label": {
-                    "show": True,
-                    "position": "top",
-                    "formatter": "{c}%",
-                    "fontSize": 10
-                },
-                "itemStyle": {
-                    "color": "#5470C6"
-                }
-            }]
+            "series": series_data
         }
 
-        # Render the performance comparison bar chart
+        # Render the bar chart
         st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-        st_echarts(options=performance_chart_data, height="400px")
+        st_echarts(options=chart_options, height="400px")
         st.markdown("</div>", unsafe_allow_html=True)
+
+
+        # Centered growth table below the two tables and chart
+        st.markdown(
+            f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
+            f"Growth Occupancy Rate from Previous Months</div>",
+            unsafe_allow_html=True
+            )
+
+            # Center the growth table with a div wrapper
+        st.markdown(
+            f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+            f"{growth_display.to_html(escape=False, index=True)}"
+            f"</div>",
+            unsafe_allow_html=True
+            )
 
         
     elif bali_option == "Batch":
