@@ -318,86 +318,13 @@ if location == "Bali":
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
-        #  st.write("Displaying Location section for Bali.")
-        # Dropdown for selecting analysis type
-        location_analysis_option = st.selectbox("Choose Analysis Type:", ["Occupancy Rate", "Location Performance"])
-        
-        if location_analysis_option == "Occupancy Rate":
-            st.write(f"Displaying Occupancy Rate for {today.strftime('%B')} in Bali.")
+        st.write("Displaying Batch section for Bali.")
 
-            # Filter the occupancy data for the current month and previous two months
-            bali_occupancy_data['Date'] = pd.to_datetime(bali_occupancy_data['Year'].astype(str) + '-' + bali_occupancy_data['Month'], format='%Y-%B')
-            
-            # Filter data for the last three months, including the current month
-            current_date = datetime(today.year, current_month, 1)
-            three_months_ago = current_date - pd.DateOffset(months=2)  # Getting data from three months ago
-            last_three_months_data = bali_occupancy_data[
-                (bali_occupancy_data['Date'] >= three_months_ago) &
-                (bali_occupancy_data['Date'] <= current_date)
-            ]
-
-            # Reformat Month back to string (e.g., "November")
-            last_three_months_data['Month'] = last_three_months_data['Date'].dt.strftime('%B')
-            
-            # Convert Occupancy to numeric and calculate the average per Site and Month
-            last_three_months_data['Occupancy'] = pd.to_numeric(last_three_months_data['Occupancy'], errors='coerce')
-            
-            # Group by Year, Month, and Site to aggregate data
-            aggregated_data = last_three_months_data.groupby(['Year', 'Month', 'Site']).agg({
-                'Fill': 'sum',
-                'Available': 'sum',
-                'Occupancy': 'mean'
-            }).reset_index()
-            
-            # Rename columns as per requirement
-            aggregated_data = aggregated_data.rename(columns={
-                'Available': 'Empty Spots',
-                'Occupancy': 'Occupancy (%)'
-            })
-            
-            # Convert Occupancy to percentage format for display and calculations
-            aggregated_data['Occupancy (%)'] = aggregated_data['Occupancy (%)'] * 100
-            aggregated_data['Year'] = aggregated_data['Year'].astype(str)
-
-            # Calculate growth for previous months except the current month
-            pivot_data = aggregated_data.pivot(index=['Month', 'Year'], columns='Site', values='Occupancy (%)').sort_index(ascending=True)
-            growth_data = pivot_data.pct_change() * 100  # Calculate growth in percentage
-
-            # Replace values in pivot_data with growth for the first two months and occupancy for the current month
-            for i in range(len(pivot_data.index)):
-                if i < len(pivot_data.index) - 1:  # For the first two months, keep growth
-                    pivot_data.iloc[i] = growth_data.iloc[i + 1]  # Shift growth data upwards
-                else:
-                    pivot_data.iloc[i] = pivot_data.iloc[i]  # For the current month, keep actual occupancy
-            
-            # Prepare data for display, combining occupancy and growth
-            display_data = pivot_data.reset_index()
-            display_data['Label'] = display_data['Month'] + ' ' + display_data['Year']
-            st.write("### Occupancy Rate and Growth Comparison Over the Last 3 Months")
-            st.dataframe(display_data)
-
-            # Prepare data for area chart to visualize occupancy and growth over the last three months
-            area_chart_options = {
-                "title": {"text": "Occupancy Rate and Growth Over the Last 3 Months", "left": "center"},
-                "tooltip": {"trigger": "axis", "formatter": "{b}: {c}%"},
-                "xAxis": {
-                    "type": "category",
-                    "data": display_data['Label'].tolist(),
-                },
-                "yAxis": {"type": "value", "name": "Occupancy / Growth (%)"},
-                "series": [
-                    {
-                        "name": site,
-                        "type": "line",
-                        "stack": "Total",
-                        "areaStyle": {},
-                        "data": display_data[site].tolist()
-                    } for site in pivot_data.columns
-                ]
-            }
-
-            # Render the area chart
-            st_echarts(options=area_chart_options, height="400px")
+        # Radio button for selecting analysis type
+        location_analysis_option = st.radio(
+            "Select Analysis Type:",
+            ["Occupancy Rate", "Location Performance"]
+        )
 
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
