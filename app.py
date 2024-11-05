@@ -318,13 +318,33 @@ if location == "Bali":
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
-        # st.write("Displaying Batch section for Bali.")
-
-        # Radio button for selecting analysis type
+        # Display the Batch section for Bali
         location_analysis_option = st.radio(
             "Select Analysis Type:",
             ["Occupancy Rate", "Location Performance"]
         )
+        
+        if location_analysis_option == "Occupancy Rate":
+            # Filter occupancy data for the current month and the previous two months
+            current_month = datetime.now().strftime('%B')
+            previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
+            previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
+            
+            # Generate the occupancy summary table from bali_occupancy_data
+            filtered_occupancy_summary = bali_occupancy_data.pivot_table(
+                index='Site',
+                columns='Month',
+                values='Fill',
+                aggfunc='sum'
+            ).fillna(0)
+            
+            # Filter to only the current and previous two months
+            filtered_occupancy_summary = filtered_occupancy_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            
+            # Display the filtered table
+            st.markdown(f"### Occupancy Rate for {previous_month_2}, {previous_month_1}, and {current_month}")
+            st.dataframe(filtered_occupancy_summary)
+        
 
     elif bali_option == "Batch":
         st.write("Displaying Batch section for Bali.")
