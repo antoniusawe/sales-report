@@ -671,9 +671,21 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
+            # Styling the "No Group" cells in red
+            def style_no_group(value):
+                return f"<span style='color: red;'>{value}</span>" if value == "No Group" else value
+            
+            # Apply styling function to 'Group' column
+            grouped_data['Group'] = grouped_data['Group'].apply(style_no_group)
+
+            # Display in Streamlit using st.markdown with HTML table
+            # st.markdown(f"Data for Site: {site_option}", unsafe_allow_html=True)
+            
+            # Convert to HTML table for custom styling
+            st.markdown(
+                grouped_data.to_html(escape=False, index=False),
+                unsafe_allow_html=True
+            )
         
         elif site_option == "The Mansion":
             # Filter data hanya untuk site yang dipilih
@@ -712,9 +724,21 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
+            # Styling the "No Group" cells in red
+            def style_no_group(value):
+                return f"<span style='color: red;'>{value}</span>" if value == "No Group" else value
+            
+            # Apply styling function to 'Group' column
+            grouped_data['Group'] = grouped_data['Group'].apply(style_no_group)
+
+            # Display in Streamlit using st.markdown with HTML table
+            # st.markdown(f"Data for Site: {site_option}", unsafe_allow_html=True)
+            
+            # Convert to HTML table for custom styling
+            st.markdown(
+                grouped_data.to_html(escape=False, index=False),
+                unsafe_allow_html=True
+            )
         
         elif site_option == "Melati":
             # Filter data hanya untuk site yang dipilih
@@ -753,9 +777,21 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
+            # Styling the "No Group" cells in red
+            def style_no_group(value):
+                return f"<span style='color: red;'>{value}</span>" if value == "No Group" else value
+            
+            # Apply styling function to 'Group' column
+            grouped_data['Group'] = grouped_data['Group'].apply(style_no_group)
+
+            # Display in Streamlit using st.markdown with HTML table
+            # st.markdown(f"Data for Site: {site_option}", unsafe_allow_html=True)
+            
+            # Convert to HTML table for custom styling
+            st.markdown(
+                grouped_data.to_html(escape=False, index=False),
+                unsafe_allow_html=True
+            )
         
         elif site_option == "Pelaga":
             # Filter data hanya untuk site yang dipilih
@@ -794,9 +830,21 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
+            # Styling the "No Group" cells in red
+            def style_no_group(value):
+                return f"<span style='color: red;'>{value}</span>" if value == "No Group" else value
+            
+            # Apply styling function to 'Group' column
+            grouped_data['Group'] = grouped_data['Group'].apply(style_no_group)
+
+            # Display in Streamlit using st.markdown with HTML table
+            # st.markdown(f"Data for Site: {site_option}", unsafe_allow_html=True)
+            
+            # Convert to HTML table for custom styling
+            st.markdown(
+                grouped_data.to_html(escape=False, index=False),
+                unsafe_allow_html=True
+            )
     
 # Conditional logic based on location selection
 elif location == "India":
