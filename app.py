@@ -331,27 +331,23 @@ if location == "Bali":
 
         st.markdown(f"### Availability for Sites in {current_month}")
 
-        # Start a flexbox container
-        st.markdown("""
-            <div style='display: flex; flex-wrap: wrap; justify-content: space-around; gap: 20px;'>
-        """, unsafe_allow_html=True)
+        # Split the data into columns
+        columns = st.columns(len(site_availability_summary))
 
-        for index, row in site_availability_summary.iterrows():
-            site_name = row['Site']
-            available_count = row['Available']
+        # Iterate over each site and display it in its respective column
+        for index, row in enumerate(site_availability_summary.iterrows()):
+            site_name = row[1]['Site']
+            available_count = row[1]['Available']
             
-            # Create a box for each site with fixed width to align them side-by-side
-            st.markdown(f"""
-                <div style='width: 250px; border: 1px solid #ddd; padding: 20px; margin: 10px; text-align: center;'>
-                    <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
-                    <div style='font-size: 16px; color: #333333; margin-top: 10px;'>Available</div>
-                    <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Available Rooms/Spaces</div>
-                </div>
-            """, unsafe_allow_html=True)
-
-        # Close the flexbox container
-        st.markdown("</div>", unsafe_allow_html=True)
+            with columns[index]:
+                st.markdown(f"""
+                    <div style='text-align: center; border: 1px solid #ddd; padding: 20px;'>
+                        <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
+                        <div style='font-size: 16px; color: #333333; margin-top: 10px;'>Available</div>
+                        <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
+                        <div style='color: #202fb2; font-size: 18px;'>Available Rooms/Spaces</div>
+                    </div>
+                """, unsafe_allow_html=True)
 
         if location_analysis_option == "Occupancy Rate":
             # Filter occupancy data for the current month and the previous two months
