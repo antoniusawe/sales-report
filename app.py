@@ -323,28 +323,37 @@ if location == "Bali":
         current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
         site_availability_summary = current_month_occupancy.groupby(['Site', 'Batch start date'])['Available'].sum().reset_index()
 
+        aggregated_data = site_availability_summary.groupby('Site').agg({
+            'Available': 'sum',
+            'Batch start date': lambda x: ', '.join([f"{a} ({b})" for a, b in zip(x, site_batch_availability_summary.loc[x.index, 'Available'])])
+        }).reset_index()
+
+        # Rename columns for clarity
+        aggregated_data.columns = ['Site', 'Total Available', 'Batch Details']
+
+
         st.markdown(f"### Availability for Sites in {current_month}")
 
         # Split the data into columns
         columns = st.columns(len(site_availability_summary))
 
         # Iterate over each site and display it in its respective column
-        for index, row in enumerate(site_availability_summary.iterrows()):
-            site_name = row[1]['Site']
-            batch_start_date = row[1]['Batch start date']
-            available_count = row[1]['Available']
+        for index, row in aggregated_data.iterrows():
+            site_name = row['Site']
+            total_available = row['Total Available']
+            batch_details = row['Batch Details']
             
-            with columns[index]:
-                st.markdown(f"""
-                    <div style='text-align: center; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
-                        <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
-                        <div style='font-size: 16px; color: #333333;'><strong>Batch Start Date:</strong> {batch_start_date}</div>
-                        <br>
-                        <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
-                        <br>
-                        <div style='color: #202fb2; font-size: 18px;'>Available Rooms</div>
-                    </div>
-                """, unsafe_allow_html=True)
+            st.markdown(f"""
+                <div style='text-align: center; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
+                    <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
+                    <br>
+                    <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
+                    <br>
+                    <div style='font-size: 16px; color: #333333;'>Batch Details:</div>
+                    <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
+                </div>
+            """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Display the Batch section for Bali
