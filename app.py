@@ -321,7 +321,7 @@ if location == "Bali":
         # Get the current month and filter data
         current_month = datetime.now().strftime('%B')
         current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
-        site_availability_summary = current_month_occupancy.groupby('Site')['Available'].sum().reset_index()
+        site_availability_summary = current_month_occupancy.groupby(['Site', 'Batch start date'])['Available'].sum().reset_index()
 
         st.markdown(f"### Availability for Sites in {current_month}")
 
@@ -331,6 +331,7 @@ if location == "Bali":
         # Iterate over each site and display it in its respective column
         for index, row in enumerate(site_availability_summary.iterrows()):
             site_name = row[1]['Site']
+            batch_start_date = row[1]['Batch start date']
             available_count = row[1]['Available']
             
             with columns[index]:
