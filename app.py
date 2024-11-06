@@ -329,13 +329,25 @@ if location == "Bali":
         current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
         site_availability_summary = current_month_occupancy.groupby('Site')['Available'].sum().reset_index()
 
-        # Check if data is available for the current month
-        if site_availability_summary.empty:
-            st.warning(f"No availability data found for {current_month}.")
-        else:
-            # Display availability summary for the current month
-            st.markdown(f"### Availability for Sites in {current_month}")
-            st.table(site_availability_summary)
+        st.markdown(f"### Availability for Sites in {current_month}")
+
+        for index, row in site_availability_summary.iterrows():
+            site_name = row['Site']
+            available_count = row['Available']
+            
+            # Display each site's availability in a styled box
+            st.markdown(f"""
+                <div style='text-align: left; margin-bottom: 20px;'>
+                    <div style='font-size: 16px; color: #333333;'>Site: {site_name}</div>
+                    <div style='display: flex; justify-content: center; padding: 20px;'>
+                        <div style='text-align: left;'>
+                            <div style='font-size: 16px; color: #333333;'>Available</div>
+                            <div style='font-size: 48px;'>{available_count}</div>
+                            <div style='color: #202fb2; font-size: 18px;'>Available Rooms/Spaces</div>
+                        </div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
 
         if location_analysis_option == "Occupancy Rate":
             # Filter occupancy data for the current month and the previous two months
