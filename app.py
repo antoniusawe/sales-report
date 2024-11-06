@@ -331,23 +331,27 @@ if location == "Bali":
 
         st.markdown(f"### Availability for Sites in {current_month}")
 
+        # Start a flexbox container
+        st.markdown("""
+            <div style='display: flex; flex-wrap: wrap; justify-content: space-around; gap: 20px;'>
+        """, unsafe_allow_html=True)
+
         for index, row in site_availability_summary.iterrows():
             site_name = row['Site']
             available_count = row['Available']
             
-            # Display each site's availability in a styled box
+            # Create a box for each site with inline-block styling to keep them side-by-side
             st.markdown(f"""
-                <div style='text-align: left; margin-bottom: 20px;'>
-                    <div style='font-size: 16px; color: #333333;'>Site: {site_name}</div>
-                    <div style='display: flex; justify-content: center; padding: 20px;'>
-                        <div style='text-align: left;'>
-                            <div style='font-size: 16px; color: #333333;'>Available</div>
-                            <div style='font-size: 48px;'>{available_count}</div>
-                            <div style='color: #202fb2; font-size: 18px;'>Available Rooms/Spaces</div>
-                        </div>
-                    </div>
+                <div style='flex: 1 1 200px; border: 1px solid #ddd; padding: 20px; margin: 10px; text-align: center;'>
+                    <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
+                    <div style='font-size: 16px; color: #333333; margin-top: 10px;'>Available</div>
+                    <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
+                    <div style='color: #202fb2; font-size: 18px;'>Available Rooms/Spaces</div>
                 </div>
             """, unsafe_allow_html=True)
+
+        # Close the flexbox container
+        st.markdown("</div>", unsafe_allow_html=True)
 
         if location_analysis_option == "Occupancy Rate":
             # Filter occupancy data for the current month and the previous two months
