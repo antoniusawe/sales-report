@@ -332,7 +332,9 @@ if location == "Bali":
         aggregated_data.columns = ['Site', 'Total Available', 'Batch Details']
 
 
-        st.markdown(f"### Availability for Sites in {current_month}")
+        st.markdown(f"""
+            <h3 style='text-align: center;'>Availability for Sites in {current_month}</h3>
+        """, unsafe_allow_html=True)
 
         # Define the number of columns per row to control the layout
         num_columns = 4
