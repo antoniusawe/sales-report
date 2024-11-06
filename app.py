@@ -653,6 +653,9 @@ if location == "Bali":
             selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
             selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
             
+            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
+            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
+            
             # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
@@ -661,6 +664,16 @@ if location == "Bali":
                 DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
                 NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
+
+            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
+            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
+
+            # Display the `Year` column as a string to avoid commas in the output
+            grouped_data['Year'] = grouped_data['Year'].astype(str)
+            
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
+            st.write(f"Data for Site: {site_option}")
+            st.dataframe(grouped_data)
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
             grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
@@ -692,6 +705,9 @@ if location == "Bali":
             selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
             selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
             
+            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
+            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
+            
             # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
@@ -700,6 +716,16 @@ if location == "Bali":
                 DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
                 NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
+
+            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
+            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
+
+            # Display the `Year` column as a string to avoid commas in the output
+            grouped_data['Year'] = grouped_data['Year'].astype(str)
+            
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
+            st.write(f"Data for Site: {site_option}")
+            st.dataframe(grouped_data)
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
             grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
@@ -731,6 +757,9 @@ if location == "Bali":
             selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
             selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
             
+            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
+            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
+            
             # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
@@ -739,6 +768,16 @@ if location == "Bali":
                 DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
                 NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
+
+            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
+            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
+
+            # Display the `Year` column as a string to avoid commas in the output
+            grouped_data['Year'] = grouped_data['Year'].astype(str)
+            
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
+            st.write(f"Data for Site: {site_option}")
+            st.dataframe(grouped_data)
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
             grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
@@ -770,6 +809,9 @@ if location == "Bali":
             selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
             selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
             
+            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
+            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
+            
             # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
@@ -778,6 +820,16 @@ if location == "Bali":
                 DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
                 NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
+
+            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
+            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
+
+            # Display the `Year` column as a string to avoid commas in the output
+            grouped_data['Year'] = grouped_data['Year'].astype(str)
+            
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
+            st.write(f"Data for Site: {site_option}")
+            st.dataframe(grouped_data)
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
             grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
