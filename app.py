@@ -318,6 +318,30 @@ if location == "Bali":
             st.dataframe(bali_sales_data)
 
     elif bali_option == "Location":
+        # Get the current month and filter data
+        current_month = datetime.now().strftime('%B')
+        current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
+        site_availability_summary = current_month_occupancy.groupby('Site')['Available'].sum().reset_index()
+
+        st.markdown(f"### Availability for Sites in {current_month}")
+
+        # Split the data into columns
+        columns = st.columns(len(site_availability_summary))
+
+        # Iterate over each site and display it in its respective column
+        for index, row in enumerate(site_availability_summary.iterrows()):
+            site_name = row[1]['Site']
+            available_count = row[1]['Available']
+            
+            with columns[index]:
+                st.markdown(f"""
+                    <div style='text-align: center; border: 1px solid #ddd; padding: 20px;'>
+                        <div style='font-size: 16px; color: #333333;'></strong> {site_name}</div>
+                        <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
+                        <div style='color: #202fb2; font-size: 18px;'>Available Rooms</div>
+                    </div>
+                """, unsafe_allow_html=True)
+
         # Display the Batch section for Bali
         location_analysis_option = st.radio(
             "Select Analysis Type:",
