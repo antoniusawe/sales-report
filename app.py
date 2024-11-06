@@ -630,7 +630,7 @@ if location == "Bali":
             )
         
     elif bali_option == "Batch":
-        # Menampilkan opsi pilihan Site menggunakan st.radio
+        # Pilihan Site
         site_option = st.radio("Select Site", bali_sales_data['Site'].unique())
 
         # Check if the selected site is "Yoga Amertham"
@@ -638,14 +638,29 @@ if location == "Bali":
             # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
+            # Format 'Year' column properly by converting it to integer or removing commas if necessary
+            selected_site_data['Year'] = selected_site_data['Year'].replace(',', '', regex=True).astype(int)
+            
+            # Convert 'Month' to datetime, sort it, then convert back to month name
+            selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
+            selected_site_data = selected_site_data.sort_values(by='Month')
+            selected_site_data['Month'] = selected_site_data['Month'].dt.strftime('%B')
+            
+            # Format 'Batch start date' and 'Batch end date' to a consistent display format
+            selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
+            selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
+            
             # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
             ).agg(
-                fully_paid=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
-                deposit=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
-                not_paid=('PAID STATUS', lambda x: x.isna().sum())
+                fully_paid=('Paid Status', lambda x: (x == 'FULLY PAID').sum()),
+                deposit=('Paid Status', lambda x: (x == 'DEPOSIT').sum()),
+                not_paid=('Paid Status', lambda x: x.isna().sum())
             ).reset_index()
+
+            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
+            grouped_data['Total'] = grouped_data['fully_paid'] + grouped_data['deposit'] + grouped_data['not_paid']
 
             # Menampilkan hasil dalam bentuk tabel di Streamlit
             st.write(f"Data for Site: {site_option}")
