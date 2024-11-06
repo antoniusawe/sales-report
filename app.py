@@ -343,17 +343,18 @@ if location == "Bali":
             total_available = row['Total Available']
             batch_details = row['Batch Details']
             
-            st.markdown(f"""
-                <div style='text-align: center; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
-                    <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
-                    <br>
-                    <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
-                    <br>
-                    <div style='font-size: 16px; color: #333333;'>Batch Details:</div>
-                    <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
-                </div>
-            """, unsafe_allow_html=True)
+            with columns[index]:
+                st.markdown(f"""
+                    <div style='text-align: center; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
+                        <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
+                        <br>
+                        <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
+                        <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
+                        <br>
+                        <div style='font-size: 16px; color: #333333;'>Batch Details:</div>
+                        <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
+                    </div>
+                """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Display the Batch section for Bali
