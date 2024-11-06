@@ -630,7 +630,17 @@ if location == "Bali":
             )
         
     elif bali_option == "Batch":
-        st.write("On Progress")
+        # Menampilkan opsi pilihan Site menggunakan st.radio
+        site_option = st.radio("Select Site", bali_sales_data['Site'].unique())
+
+        # Menampilkan hasil pemilihan Site (opsional)
+        st.write(f"Selected Site: {site_option}")
+
+        # Lakukan tindakan tertentu berdasarkan Site yang dipilih
+        # Misalnya, menampilkan data yang hanya terkait dengan Site yang dipilih
+        selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
+        st.write("Data for selected site:", selected_site_data)
+    
         
 
 # Conditional logic based on location selection
