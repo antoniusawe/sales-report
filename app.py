@@ -654,9 +654,9 @@ if location == "Bali":
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
             ).agg(
-                fully_paid=('Paid Status', lambda x: (x == 'FULLY PAID').sum()),
-                deposit=('Paid Status', lambda x: (x == 'DEPOSIT').sum()),
-                not_paid=('Paid Status', lambda x: x.isna().sum())
+                fully_paid=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
+                deposit=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
+                not_paid=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
