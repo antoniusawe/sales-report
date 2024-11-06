@@ -672,18 +672,7 @@ if location == "Bali":
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
             # Menampilkan hasil dalam bentuk tabel di Streamlit
-            st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
             st.dataframe(grouped_data)
         
         elif site_option == "The Mansion":
@@ -724,18 +713,7 @@ if location == "Bali":
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
             # Menampilkan hasil dalam bentuk tabel di Streamlit
-            st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
             st.dataframe(grouped_data)
         
         elif site_option == "Melati":
@@ -776,18 +754,7 @@ if location == "Bali":
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
             # Menampilkan hasil dalam bentuk tabel di Streamlit
-            st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
             st.dataframe(grouped_data)
         
         elif site_option == "Pelaga":
@@ -828,18 +795,7 @@ if location == "Bali":
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
             # Menampilkan hasil dalam bentuk tabel di Streamlit
-            st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
             st.dataframe(grouped_data)
     
 # Conditional logic based on location selection
