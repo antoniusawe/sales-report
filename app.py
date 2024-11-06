@@ -324,13 +324,18 @@ if location == "Bali":
             ["Occupancy Rate", "Location Performance"]
         )
         
-    current_month = datetime.now().strftime('%B')
-    current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
-    site_availability_summary = current_month_occupancy.groupby('Site')['Available'].sum().reset_index()
+        # Get the current month and filter data
+        current_month = datetime.now().strftime('%B')
+        current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
+        site_availability_summary = current_month_occupancy.groupby('Site')['Available'].sum().reset_index()
 
-    # Display availability summary for the current month
-    st.markdown(f"### Availability for Sites in {current_month}")
-    st.table(site_availability_summary)  # or use st.dataframe() for more interactivity
+        # Check if data is available for the current month
+        if site_availability_summary.empty:
+            st.warning(f"No availability data found for {current_month}.")
+        else:
+            # Display availability summary for the current month
+            st.markdown(f"### Availability for Sites in {current_month}")
+            st.table(site_availability_summary)
 
         if location_analysis_option == "Occupancy Rate":
             # Filter occupancy data for the current month and the previous two months
