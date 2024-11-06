@@ -638,9 +638,6 @@ if location == "Bali":
             # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
-            # Pastikan semua entri di kolom 'Paid Status' menggunakan huruf kapital
-            selected_site_data['Paid Status'] = selected_site_data['Paid Status'].str.upper()
-            
             # Format 'Year' column properly by removing commas and ensuring it's integer
             selected_site_data['Year'] = selected_site_data['Year'].astype(str).str.replace(',', '').astype(int)
             
