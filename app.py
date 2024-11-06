@@ -630,7 +630,7 @@ if location == "Bali":
             )
         
     elif bali_option == "Batch":
-        st.write("Displaying Batch section for Bali.")
+        st.write("On Progress")
         
 
 # Conditional logic based on location selection
