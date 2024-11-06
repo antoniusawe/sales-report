@@ -343,7 +343,6 @@ if location == "Bali":
                 st.markdown(f"""
                     <div style='text-align: center; border: 1px solid #ddd; padding: 20px;'>
                         <div style='font-size: 16px; color: #333333;'></strong> {site_name}</div>
-                        <div style='font-size: 16px; color: #333333; margin-top: 10px;'>Available</div>
                         <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
                         <div style='color: #202fb2; font-size: 18px;'>Available Rooms</div>
                     </div>
