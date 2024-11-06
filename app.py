@@ -341,6 +341,7 @@ if location == "Bali":
                         <div style='color: #202fb2; font-size: 18px;'>Available Rooms</div>
                     </div>
                 """, unsafe_allow_html=True)
+        st.markdown("<br><br>", unsafe_allow_html=True)
 
         # Display the Batch section for Bali
         location_analysis_option = st.radio(
