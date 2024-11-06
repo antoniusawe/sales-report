@@ -641,8 +641,8 @@ if location == "Bali":
             # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
             selected_site_data['PAID STATUS'] = selected_site_data['PAID STATUS'].str.upper()
             
-            # Pastikan 'Year' column properly as integer type
-            selected_site_data['Year'] = selected_site_data['Year'].astype(int)
+            # Convert 'Year' to integer for processing, then back to string for display
+            selected_site_data['Year'] = selected_site_data['Year'].astype(int).astype(str)
             
             # Convert 'Month' to datetime, sort it, then convert back to month name
             selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
@@ -668,8 +668,8 @@ if location == "Bali":
             # Menampilkan hasil dalam bentuk tabel di Streamlit
             st.write(f"Data for Site: {site_option}")
             
-            # Pastikan `Year` tampil sebagai integer tanpa koma
-            grouped_data['Year'] = grouped_data['Year'].astype(int)
+            # Display the `Year` column as a string to avoid commas in the output
+            grouped_data['Year'] = grouped_data['Year'].astype(str)
             
             st.dataframe(grouped_data)
     
