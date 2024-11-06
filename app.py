@@ -334,7 +334,7 @@ if location == "Bali":
 
         st.markdown(f"### Availability for Sites in {current_month}")
 
-        # Define the number of columns per row to control the layout (e.g., 4 per row)
+        # Define the number of columns per row to control the layout
         num_columns = 4
         rows = [st.columns(num_columns) for _ in range((len(aggregated_data) + num_columns - 1) // num_columns)]
 
@@ -350,7 +350,7 @@ if location == "Bali":
 
             with rows[row_index][col_index]:
                 st.markdown(f"""
-                    <div style='text-align: center; width: 200px; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
+                    <div style='text-align: center; width: 200px; min-width: 200px; max-width: 200px; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
                         <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
                         <br>
                         <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
@@ -360,7 +360,7 @@ if location == "Bali":
                         <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
                     </div>
                 """, unsafe_allow_html=True)
-                
+
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Display the Batch section for Bali
