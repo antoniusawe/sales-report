@@ -340,9 +340,9 @@ if location == "Bali":
             site_name = row['Site']
             available_count = row['Available']
             
-            # Create a box for each site with inline-block styling to keep them side-by-side
+            # Create a box for each site with fixed width to align them side-by-side
             st.markdown(f"""
-                <div style='flex: 1 1 200px; border: 1px solid #ddd; padding: 20px; margin: 10px; text-align: center;'>
+                <div style='width: 250px; border: 1px solid #ddd; padding: 20px; margin: 10px; text-align: center;'>
                     <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
                     <div style='font-size: 16px; color: #333333; margin-top: 10px;'>Available</div>
                     <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
