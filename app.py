@@ -633,13 +633,23 @@ if location == "Bali":
         # Menampilkan opsi pilihan Site menggunakan st.radio
         site_option = st.radio("Select Site", bali_sales_data['Site'].unique())
 
-        # Menampilkan hasil pemilihan Site (opsional)
-        st.write(f"Selected Site: {site_option}")
+        # Check if the selected site is "Yoga Amertham"
+        if site_option == "Yoga Amertham":
+            # Filter data hanya untuk site yang dipilih
+            selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
+            
+            # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
+            grouped_data = selected_site_data.groupby(
+                ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
+            ).agg(
+                fully_paid=('Paid Status', lambda x: (x == 'FULLY PAID').sum()),
+                deposit=('Paid Status', lambda x: (x == 'DEPOSIT').sum()),
+                not_paid=('Paid Status', lambda x: x.isna().sum())
+            ).reset_index()
 
-        # Lakukan tindakan tertentu berdasarkan Site yang dipilih
-        # Misalnya, menampilkan data yang hanya terkait dengan Site yang dipilih
-        selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
-        st.write("Data for selected site:", selected_site_data)
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
+            st.write(f"Data for Site: {site_option}")
+            st.dataframe(grouped_data)
     
         
 
