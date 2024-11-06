@@ -638,8 +638,11 @@ if location == "Bali":
             # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
-            # Format 'Year' column properly by converting it to integer or removing commas if necessary
-            selected_site_data['Year'] = selected_site_data['Year'].replace(',', '', regex=True).astype(int)
+            # Pastikan semua entri di kolom 'Paid Status' menggunakan huruf kapital
+            selected_site_data['Paid Status'] = selected_site_data['Paid Status'].str.upper()
+            
+            # Format 'Year' column properly by removing commas and ensuring it's integer
+            selected_site_data['Year'] = selected_site_data['Year'].astype(str).str.replace(',', '').astype(int)
             
             # Convert 'Month' to datetime, sort it, then convert back to month name
             selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
@@ -654,9 +657,9 @@ if location == "Bali":
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
             ).agg(
-                fully_paid=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
-                deposit=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
-                not_paid=('PAID STATUS', lambda x: x.isna().sum())
+                fully_paid=('Paid Status', lambda x: (x == 'FULLY PAID').sum()),
+                deposit=('Paid Status', lambda x: (x == 'DEPOSIT').sum()),
+                not_paid=('Paid Status', lambda x: x.isna().sum())
             ).reset_index()
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
@@ -666,8 +669,6 @@ if location == "Bali":
             st.write(f"Data for Site: {site_option}")
             st.dataframe(grouped_data)
     
-        
-
 # Conditional logic based on location selection
 elif location == "India":
     # Dropdown for program selection when location is "India"
