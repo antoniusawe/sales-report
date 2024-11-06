@@ -657,13 +657,13 @@ if location == "Bali":
             grouped_data = selected_site_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
             ).agg(
-                fully_paid=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
-                deposit=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
-                not_paid=('PAID STATUS', lambda x: x.isna().sum())
+                FULLY_PAID=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
+                DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
+                NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT PAID']
+            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
 
             # # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
