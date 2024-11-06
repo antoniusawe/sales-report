@@ -663,10 +663,10 @@ if location == "Bali":
             ).reset_index()
 
             # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['fully_paid'] + grouped_data['deposit'] + grouped_data['not_paid']
+            grouped_data['Total'] = grouped_data['FULLY PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT PAID']
 
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            st.write(f"Data for Site: {site_option}")
+            # # Menampilkan hasil dalam bentuk tabel di Streamlit
+            # st.write(f"Data for Site: {site_option}")
             
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
