@@ -336,9 +336,12 @@ if location == "Bali":
             
             with columns[index]:
                 st.markdown(f"""
-                    <div style='text-align: center; border: 1px solid #ddd; padding: 20px;'>
-                        <div style='font-size: 16px; color: #333333;'></strong> {site_name}</div>
+                    <div style='text-align: center; border: 1px solid #ddd; padding: 20px; margin: 10px;'>
+                        <div style='font-size: 16px; color: #333333;'><strong>Site:</strong> {site_name}</div>
+                        <div style='font-size: 16px; color: #333333;'><strong>Batch Start Date:</strong> {batch_start_date}</div>
+                        <br>
                         <div style='font-size: 48px; color: #202fb2;'>{available_count}</div>
+                        <br>
                         <div style='color: #202fb2; font-size: 18px;'>Available Rooms</div>
                     </div>
                 """, unsafe_allow_html=True)
