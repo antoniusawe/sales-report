@@ -635,6 +635,7 @@ if location == "Bali":
 
         # Check if the selected site is "Yoga Amertham"
         if site_option == "Yoga Amertham":
+            # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
             # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
@@ -670,17 +671,12 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Create a "Display Group" column with red text for "No Group" entries
-            grouped_data['Display Group'] = grouped_data['Group'].apply(
-                lambda x: f"**:red[{x}]**" if x == "No Group" else x
-            )
-
-            # Display the table with `Display Group` for highlighting "No Group"
-            display_columns = ['Year', 'Month', 'Batch start date', 'Batch end date', 'Display Group', 'FULLY_PAID', 'DEPOSIT', 'NOT_PAID', 'Total']
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data[display_columns].rename(columns={"Display Group": "Group"}))
+            st.dataframe(grouped_data)
         
         elif site_option == "The Mansion":
+            # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
             # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
@@ -716,17 +712,12 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Create a "Display Group" column with red text for "No Group" entries
-            grouped_data['Display Group'] = grouped_data['Group'].apply(
-                lambda x: f"**:red[{x}]**" if x == "No Group" else x
-            )
-
-            # Display the table with `Display Group` for highlighting "No Group"
-            display_columns = ['Year', 'Month', 'Batch start date', 'Batch end date', 'Display Group', 'FULLY_PAID', 'DEPOSIT', 'NOT_PAID', 'Total']
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data[display_columns].rename(columns={"Display Group": "Group"}))
+            st.dataframe(grouped_data)
         
         elif site_option == "Melati":
+            # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
             # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
@@ -762,17 +753,12 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Create a "Display Group" column with red text for "No Group" entries
-            grouped_data['Display Group'] = grouped_data['Group'].apply(
-                lambda x: f"**:red[{x}]**" if x == "No Group" else x
-            )
-
-            # Display the table with `Display Group` for highlighting "No Group"
-            display_columns = ['Year', 'Month', 'Batch start date', 'Batch end date', 'Display Group', 'FULLY_PAID', 'DEPOSIT', 'NOT_PAID', 'Total']
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data[display_columns].rename(columns={"Display Group": "Group"}))
+            st.dataframe(grouped_data)
         
         elif site_option == "Pelaga":
+            # Filter data hanya untuk site yang dipilih
             selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
             
             # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
@@ -808,15 +794,9 @@ if location == "Bali":
             # Display the `Year` column as a string to avoid commas in the output
             grouped_data['Year'] = grouped_data['Year'].astype(str)
             
-            # Create a "Display Group" column with red text for "No Group" entries
-            grouped_data['Display Group'] = grouped_data['Group'].apply(
-                lambda x: f"**:red[{x}]**" if x == "No Group" else x
-            )
-
-            # Display the table with `Display Group` for highlighting "No Group"
-            display_columns = ['Year', 'Month', 'Batch start date', 'Batch end date', 'Display Group', 'FULLY_PAID', 'DEPOSIT', 'NOT_PAID', 'Total']
+            # Menampilkan hasil dalam bentuk tabel di Streamlit
             # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data[display_columns].rename(columns={"Display Group": "Group"}))
+            st.dataframe(grouped_data)
     
 # Conditional logic based on location selection
 elif location == "India":
