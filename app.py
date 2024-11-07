@@ -339,347 +339,497 @@ if location == "Bali":
             with col3:
                 st_echarts(options=month_bar_chart_data, height="300px")
 
+
+
     elif bali_option == "Location":
-        # Get the current month and filter data
-        current_month = datetime.now().strftime('%B')
-        current_month_occupancy = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
-        site_availability_summary = current_month_occupancy.groupby(['Site', 'Batch start date'])['Available'].sum().reset_index()
+        if program == "200HR":
+            # Filter data untuk kategori 200HR dan konversi kolom 'Batch start date'
+            data_200hr_batches = bali_occupancy_data[bali_occupancy_data['Category'] == '200HR']
+            if 'Batch start date' in data_200hr_batches.columns:
+                data_200hr_batches['Batch start date'] = pd.to_datetime(data_200hr_batches['Batch start date'], errors='coerce')
 
-        aggregated_data = site_availability_summary.groupby('Site').agg({
-            'Available': 'sum',
-            'Batch start date': lambda x: ', '.join([f"{a} ({b})" for a, b in zip(x, site_availability_summary.loc[x.index, 'Available'])])
-        }).reset_index()
+            # Radio button untuk memilih tahun (Year)
+            unique_years = ["All"] + sorted(data_200hr_batches['Year'].dropna().unique())
+            selected_year = st.radio("Select a Year:", unique_years, key="year_selection_location_200hr")
 
-        # Rename columns for clarity
-        aggregated_data.columns = ['Site', 'Total Available', 'Batch Details']
-
-
-        st.markdown(f"""
-            <h3 style='text-align: center;'>Availability for Sites in {current_month}</h3>
-        """, unsafe_allow_html=True)
-
-        # Define the number of columns per row to control the layout
-        num_columns = 4
-        rows = [st.columns(num_columns) for _ in range((len(aggregated_data) + num_columns - 1) // num_columns)]
-
-        # Iterate over each site and display its information in a structured, grid-like format
-        for index, row in enumerate(aggregated_data.iterrows()):
-            site_name = row[1]['Site']
-            total_available = row[1]['Total Available']
-            batch_details = row[1]['Batch Details']
+            # Filter data berdasarkan tahun yang dipilih
+            year_data = data_200hr_batches if selected_year == "All" else data_200hr_batches[data_200hr_batches['Year'] == selected_year]
             
-            # Determine the current row and column within that row
-            row_index = index // num_columns
-            col_index = index % num_columns
+            # Selectbox untuk memilih bulan
+            unique_months = sorted(year_data['Batch start date'].dt.month.dropna().unique())
+            month_names = ["All"] + [datetime(2000, month, 1).strftime('%B') for month in unique_months]
+            selected_month = st.selectbox("Select a Month:", month_names, key="month_selection_location_200hr")
 
-            with rows[row_index][col_index]:
+            # Menentukan bulan saat ini atau bulan yang dipilih untuk ditampilkan
+            if selected_year == "All" or selected_month == "All":
+                # Get the current month if "All" is selected
+                current_month = datetime.now().strftime('%B')
+                filtered_data = bali_occupancy_data[bali_occupancy_data['Month'] == current_month]
+            else:
+                # Filter berdasarkan bulan yang dipilih
+                month_num = datetime.strptime(selected_month, '%B').month
+                filtered_data = year_data[year_data['Batch start date'].dt.month == month_num]
+                current_month = selected_month
+
+            # Menghitung ketersediaan per site dan per tanggal batch
+            site_availability_summary = filtered_data.groupby(['Site', 'Batch start date'])['Available'].sum().reset_index()
+
+            # Pastikan kolom 'Batch start date' sudah dalam format datetime
+            if site_availability_summary['Batch start date'].dtype == 'O':  # 'O' stands for object type
+                site_availability_summary['Batch start date'] = pd.to_datetime(site_availability_summary['Batch start date'], errors='coerce')
+
+            # Agregasi data dengan memastikan format tanggal sesuai
+            aggregated_data = site_availability_summary.groupby('Site').agg({
+                'Available': 'sum',
+                'Batch start date': lambda x: ', '.join([
+                    f"{a.strftime('%d %b %Y')} ({b})" if pd.notnull(a) else "Unknown Date" 
+                    for a, b in zip(x, site_availability_summary.loc[x.index, 'Available'])
+                ])
+            }).reset_index()
+
+            # Rename columns for clarity
+            aggregated_data.columns = ['Site', 'Total Available', 'Batch Details']
+
+            st.markdown(f"""
+                <h3 style='text-align: center;'>Availability for Sites in {current_month}</h3>
+            """, unsafe_allow_html=True)
+
+            # Define the number of columns per row to control the layout
+            num_columns = 4
+            rows = [st.columns(num_columns) for _ in range((len(aggregated_data) + num_columns - 1) // num_columns)]
+
+            # Display data in a grid format
+            for index, row in enumerate(aggregated_data.iterrows()):
+                site_name = row[1]['Site']
+                total_available = row[1]['Total Available']
+                batch_details = row[1]['Batch Details']
+                
+                row_index = index // num_columns
+                col_index = index % num_columns
+
+                with rows[row_index][col_index]:
+                    st.markdown(f"""
+                        <div style='text-align: center; width: 200px; padding: 20px; margin: 10px;'>
+                            <div style='font-size: 16px; color: #333333;'>{site_name}</div>
+                            <br>
+                            <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
+                            <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
+                            <br>
+                            <div style='font-size: 16px; color: #333333;'>Batch:</div>
+                            <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+        elif program == "300HR":
+            # Filter data untuk kategori 300HR dan konversi kolom 'Batch start date'
+            data_300hr_batches = bali_occupancy_data[bali_occupancy_data['Category'] == '300HR']
+            if 'Batch start date' in data_300hr_batches.columns:
+                data_300hr_batches['Batch start date'] = pd.to_datetime(data_300hr_batches['Batch start date'], errors='coerce')
+
+            # Radio button untuk memilih tahun (Year)
+            unique_years = ["All"] + sorted(data_300hr_batches['Year'].dropna().unique())
+            selected_year = st.radio("Select a Year:", unique_years, key="year_selection_location_300hr")
+
+            # Filter data berdasarkan tahun yang dipilih
+            year_data = data_300hr_batches if selected_year == "All" else data_300hr_batches[data_300hr_batches['Year'] == selected_year]
+            
+            # Selectbox untuk memilih bulan
+            unique_months = sorted(year_data['Batch start date'].dt.month.dropna().unique())
+            month_names = ["All"] + [datetime(2000, month, 1).strftime('%B') for month in unique_months]
+            selected_month = st.selectbox("Select a Month:", month_names, key="month_selection_location_300hr")
+
+            # Menentukan bulan saat ini atau bulan yang dipilih untuk ditampilkan
+            if selected_year == "All" or selected_month == "All":
+                # Get the current month if "All" is selected, filtered only for 300HR data
+                current_month = datetime.now().strftime('%B')
+                filtered_data = data_300hr_batches[data_300hr_batches['Month'] == current_month]
+            else:
+                # Filter berdasarkan bulan yang dipilih untuk 300HR
+                month_num = datetime.strptime(selected_month, '%B').month
+                filtered_data = year_data[year_data['Batch start date'].dt.month == month_num]
+                current_month = selected_month
+
+            # Cek apakah filtered_data kosong
+            if filtered_data.empty:
+                st.write("No data available for the selected filters.")
+            else:
+                # Menghitung ketersediaan per site dan per tanggal batch
+                site_availability_summary = filtered_data.groupby(['Site', 'Batch start date'])['Available'].sum().reset_index()
+                
+                # Pastikan kolom 'Batch start date' dalam format datetime
+                if site_availability_summary['Batch start date'].dtype == 'O':  # 'O' stands for object type
+                    site_availability_summary['Batch start date'] = pd.to_datetime(site_availability_summary['Batch start date'], errors='coerce')
+
+                # Agregasi data dengan memastikan format tanggal sesuai
+                aggregated_data = site_availability_summary.groupby('Site').agg({
+                    'Available': 'sum',
+                    'Batch start date': lambda x: ', '.join([
+                        f"{a.strftime('%d %b %Y')} ({b})" if pd.notnull(a) else "Unknown Date"
+                        for a, b in zip(x, site_availability_summary.loc[x.index, 'Available'])
+                    ])
+                }).reset_index()
+
+                # Rename columns for clarity
+                aggregated_data.columns = ['Site', 'Total Available', 'Batch Details']
+
                 st.markdown(f"""
-                    <div style='text-align: center; width: 200px; padding: 20px; margin: 10px;'>
-                        <div style='font-size: 16px; color: #333333;'></strong> {site_name}</div>
-                        <br>
-                        <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
-                        <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
-                        <br>
-                        <div style='font-size: 16px; color: #333333;'>Batch:</div>
-                        <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
-                    </div>
+                    <h3 style='text-align: center;'>Availability for Sites in {current_month}</h3>
                 """, unsafe_allow_html=True)
 
-        st.markdown("<br>", unsafe_allow_html=True)
+                # Define the number of columns per row to control the layout
+                num_columns = 4
+                rows = [st.columns(num_columns) for _ in range((len(aggregated_data) + num_columns - 1) // num_columns)]
 
-        # Display the Batch section for Bali
+                # Display data in a grid format
+                for index, row in enumerate(aggregated_data.iterrows()):
+                    site_name = row[1]['Site']
+                    total_available = row[1]['Total Available']
+                    batch_details = row[1]['Batch Details']
+                    
+                    row_index = index // num_columns
+                    col_index = index % num_columns
+
+                    with rows[row_index][col_index]:
+                        st.markdown(f"""
+                            <div style='text-align: center; width: 200px; padding: 20px; margin: 10px;'>
+                                <div style='font-size: 16px; color: #333333;'>{site_name}</div>
+                                <br>
+                                <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
+                                <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
+                                <br>
+                                <div style='font-size: 16px; color: #333333;'>Batch:</div>
+                                <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
+                            </div>
+                        """, unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+        # Menambahkan pilihan untuk analisis
         location_analysis_option = st.radio(
             "Select Analysis Type:",
             ["Occupancy Rate", "Location Performance"]
         )
 
         if location_analysis_option == "Occupancy Rate":
-            # Filter occupancy data for the current month and the previous two months
+            # Tentukan program yang dipilih, baik "200HR" atau "300HR"
+            selected_program = "200HR" if program == "200HR" else "300HR"
+            
+            # Filter data untuk kategori yang sesuai (200HR atau 300HR)
+            occupancy_data = bali_occupancy_data[bali_occupancy_data['Category'] == selected_program]
+
+            # Filter occupancy data untuk bulan saat ini dan dua bulan sebelumnya
             current_month = datetime.now().strftime('%B')
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
-            base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
+            base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # Bulan sebagai baseline
 
-            # Ensure 'Occupancy' column is converted to numeric after removing '%' and then calculate mean
-            bali_occupancy_data['Occupancy'] = bali_occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
+            # Pastikan kolom 'Occupancy' dalam bentuk numerik setelah menghapus '%'
+            occupancy_data['Occupancy'] = occupancy_data['Occupancy'].astype(str).str.replace('%', '', regex=True).astype(float)
 
-            # Creating occupancy summary table for baseline month and the three displayed months
-            occupancy_summary = bali_occupancy_data.pivot_table(
+            # Membuat tabel ringkasan occupancy untuk baseline dan tiga bulan terakhir
+            occupancy_summary = occupancy_data.pivot_table(
                 index='Site',
                 columns='Month',
                 values='Occupancy',
                 aggfunc='mean'
             ).fillna(0)
 
-            # Filtering only relevant months (base month for comparison + three displayed months)
-            occupancy_summary = occupancy_summary[[base_month, previous_month_2, previous_month_1, current_month]]
+            # Pastikan bahwa kolom yang diperlukan ada di `occupancy_summary`
+            required_months = [base_month, previous_month_2, previous_month_1, current_month]
+            available_months = [month for month in required_months if month in occupancy_summary.columns]
 
-            # Calculate Growth for each month compared to the previous one
-            growth_summary = occupancy_summary.pct_change(axis=1) * 100  # Calculate as percentage
-            growth_summary = growth_summary[[previous_month_2, previous_month_1, current_month]].copy()
+            if len(available_months) < 3:
+                st.write("No sufficient data available for the selected filters.")
+            else:
+                # Filter hanya untuk bulan-bulan yang tersedia
+                occupancy_summary = occupancy_summary[available_months]
 
-            # Styling growth values for display
-            def style_growth(value):
-                if value > 0:
-                    color = "green"
-                elif value < 0:
-                    color = "red"
-                else:
-                    color = "black"
-                return f"<span style='color: {color};'>{value:.2f}%</span>"
+                # Hitung Growth untuk setiap bulan dibandingkan dengan bulan sebelumnya
+                growth_summary = occupancy_summary.pct_change(axis=1) * 100  # Hitung sebagai persentase
+                growth_summary = growth_summary[available_months[1:]].copy()
 
-            # Apply the styling function to each cell in the DataFrame to create `growth_display`
-            growth_display = growth_summary.applymap(style_growth)
+                # Styling pertumbuhan untuk tampilan
+                def style_growth(value):
+                    if value > 0:
+                        color = "green"
+                    elif value < 0:
+                        color = "red"
+                    else:
+                        color = "black"
+                    return f"<span style='color: {color};'>{value:.2f}%</span>"
 
-            st.markdown(
-                f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
-                f"<div style='text-align: center;'>"
-                f"<p style='font-size: 14px; font-weight: bold; color: #333;'>"
-                f"Avg Occupancy for {previous_month_2}, {previous_month_1}, and {current_month}</p>"
-                f"</div></div>",
-                unsafe_allow_html=True
-            )
+                # Terapkan styling untuk setiap sel dalam DataFrame untuk growth_display
+                growth_display = growth_summary.applymap(style_growth)
 
-            # Display the dataframe centered
-            st.markdown(
-                f"<div style='display: flex; justify-content: center;'>"
-                f"{occupancy_summary[[previous_month_2, previous_month_1, current_month]].applymap(lambda x: f'{x:.2f}%').to_html(index=True, classes='dataframe', border=0)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center; margin-top: 20px;'>"
+                    f"<div style='text-align: center;'>"
+                    f"<p style='font-size: 14px; font-weight: bold; color: #333;'>"
+                    f"Avg Occupancy for {', '.join(available_months[1:])} ({selected_program})</p>"
+                    f"</div></div>",
+                    unsafe_allow_html=True
+                )
 
-            # Prepare data for the bar chart
-            sites = occupancy_summary.index.tolist()  # List of sites (rows)
-            months = [previous_month_2, previous_month_1, current_month]  # List of months
+                # Tampilkan occupancy_summary dalam format tabel
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center;'>"
+                    f"{occupancy_summary[available_months[1:]].applymap(lambda x: f'{x:.2f}%').to_html(index=True, classes='dataframe', border=0)}"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
 
-            # Initialize series data for each month
-            series_data = []
-            for month in months:
-                # Extract Avg Occupancy values for each site
-                avg_values = occupancy_summary[month].values.tolist()
+                # Siapkan data untuk bar chart
+                sites = occupancy_summary.index.tolist()  # Daftar site
+                months = available_months[1:]  # Daftar bulan yang tersedia
 
-                # Create a series entry for the chart with tooltip enabled
-                series_data.append({
-                    "name": month,
-                    "type": "bar",
-                    "data": avg_values,
-                })
+                # Inisialisasi data seri untuk setiap bulan
+                series_data = []
+                for month in months:
+                    # Ambil nilai rata-rata occupancy untuk setiap site
+                    avg_values = occupancy_summary[month].values.tolist()
 
-            # Define chart options with tooltip
-            chart_options = {
-                "title": {
-                    "text": "Occupancy Rate",
-                    "left": "center",
-                    "top": "top",
-                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
-                },
-                "tooltip": {
-                    "trigger": "item",  # Change to "item" to display each data point
-                    "formatter": "{a} <br/>{b}: {c}%",  # Show month (series name), site, and value
-                    "axisPointer": {  # Set the axis pointer type
-                        "type": "shadow"  # Display shadow as axis indicator
+                    # Buat entri seri untuk chart dengan tooltip
+                    series_data.append({
+                        "name": month,
+                        "type": "bar",
+                        "data": avg_values,
+                    })
+
+                # Definisikan opsi chart dengan tooltip
+                chart_options = {
+                    "title": {
+                        "text": f"Occupancy Rate ({selected_program})",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 16, "fontWeight": "bold"}
                     },
-                },
-                "legend": {
-                    "data": months,
-                    "orient": "horizontal",
-                    "bottom": "0",
-                    "left": "center"
-                },
-                "xAxis": {
-                    "type": "category",
-                    "data": sites,
-                    "axisLabel": {
-                        "interval": 0,
-                        "fontSize": 12,
-                        "rotate": 0,
-                        "fontWeight": "bold"
-                    }
-                },
-                "yAxis": {
-                    "type": "value",
-                    "axisLabel": {
-                        "formatter": "{value}%",  # Show percentage
-                        "fontSize": 12
-                    }
-                },
-                "series": series_data
-            }
+                    "tooltip": {
+                        "trigger": "item",
+                        "formatter": "{a} <br/>{b}: {c}%",  # Menampilkan nama bulan, site, dan nilai
+                        "axisPointer": {
+                            "type": "shadow"
+                        },
+                    },
+                    "legend": {
+                        "data": months,
+                        "orient": "horizontal",
+                        "bottom": "0",
+                        "left": "center"
+                    },
+                    "xAxis": {
+                        "type": "category",
+                        "data": sites,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 12,
+                            "rotate": 0,
+                            "fontWeight": "bold"
+                        }
+                    },
+                    "yAxis": {
+                        "type": "value",
+                        "axisLabel": {
+                            "formatter": "{value}%",  # Menampilkan persentase
+                            "fontSize": 12
+                        }
+                    },
+                    "series": series_data
+                }
 
-            # Render the bar chart
-            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-            st_echarts(options=chart_options, height="400px")
-            st.markdown("</div>", unsafe_allow_html=True)
+                # Render bar chart
+                st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+                st_echarts(options=chart_options, height="400px")
+                st.markdown("</div>", unsafe_allow_html=True)
 
-            # Centered growth table below the two tables and chart
-            st.markdown(
-                f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
-                f"Growth Occupancy Rate from Previous Months</div>",
-                unsafe_allow_html=True
-            )
+                # Tampilkan tabel pertumbuhan dengan styling
+                st.markdown(
+                    f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
+                    f"Growth Occupancy Rate from Previous Months</div>",
+                    unsafe_allow_html=True
+                )
 
-            # Center the growth table with a div wrapper
-            st.markdown(
-                f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
-                f"{growth_display.to_html(escape=False, index=True)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
+                # Pusatkan tampilan growth table dengan div wrapper
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+                    f"{growth_display.to_html(escape=False, index=True)}"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
 
         elif location_analysis_option == "Location Performance":
-            # Setup months for analysis
+            # Tentukan program yang dipilih, baik "200HR" atau "300HR"
+            selected_program = "200HR" if program == "200HR" else "300HR"
+
+            # Filter data untuk kategori yang sesuai (200HR atau 300HR)
+            performance_data = bali_occupancy_data[bali_occupancy_data['Category'] == selected_program]
+
+            # Tentukan bulan untuk analisis
             current_month = datetime.now().strftime('%B')
             previous_month_1 = (datetime.now().replace(day=1) - pd.DateOffset(months=1)).strftime('%B')
             previous_month_2 = (datetime.now().replace(day=1) - pd.DateOffset(months=2)).strftime('%B')
-            base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # August as baseline
+            base_month = (datetime.now().replace(day=1) - pd.DateOffset(months=3)).strftime('%B')  # Bulan baseline
 
-            # Create "Site Filled" table based on "Fill" values including the base month
-            fill_summary = bali_occupancy_data.pivot_table(
+            # Membuat tabel "Site Filled" berdasarkan nilai "Fill", termasuk base_month untuk perhitungan
+            fill_summary = performance_data.pivot_table(
                 index='Site',
                 columns='Month',
                 values='Fill',
                 aggfunc='sum'
             ).fillna(0)
-            # Include base_month for calculation but exclude it from display
-            fill_summary = fill_summary[[base_month, previous_month_2, previous_month_1, current_month]].copy()
-            fill_summary = fill_summary.astype(int)  # Ensure all values are integers
-
-            # Display "Site Filled" table for the last three months only (excluding base_month from display)
-            st.markdown(
-                f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333;'>"
-                f"Students for {previous_month_2}, {previous_month_1}, and {current_month}</div><br>",
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                f"<div style='display: flex; justify-content: center;'>"
-                f"{fill_summary[[previous_month_2, previous_month_1, current_month]].to_html(index=True, classes='dataframe', border=0)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
-
-            # Display the bar chart below the "Site Filled" table
-            # Prepare data for the bar chart (using displayed months only, excluding base_month)
-            sites = fill_summary.index.tolist()  # List of sites (rows)
-            months = [previous_month_2, previous_month_1, current_month]  # List of months for display
-
-            # Initialize series data for each month
-            series_data = []
-            for month in months:
-                # Extract Fill values for each site
-                fill_values = fill_summary[month].values.tolist()
-                
-                # Create a series entry for the chart with tooltip enabled
-                series_data.append({
-                    "name": month,
-                    "type": "bar",
-                    "data": fill_values,
-                })
-
-            # Define chart options with tooltip
-            chart_options = {
-                "title": {
-                    "text": "Number of Students by Month",
-                    "left": "center",
-                    "top": "top",
-                    "textStyle": {"fontSize": 16, "fontWeight": "bold"}
-                },
-                "tooltip": {
-                    "trigger": "item",
-                    "formatter": "{a} <br/>{b}: {c}",  # Show month (series name), site, and value
-                    "axisPointer": {
-                        "type": "shadow"
-                    },
-                },
-                "legend": {
-                    "data": months,
-                    "orient": "horizontal",
-                    "bottom": "0",
-                    "left": "center"
-                },
-                "xAxis": {
-                    "type": "category",
-                    "data": sites,
-                    "axisLabel": {
-                        "interval": 0,
-                        "fontSize": 12,
-                        "rotate": 0,
-                        "fontWeight": "bold"
-                    }
-                },
-                "yAxis": {
-                    "type": "value",
-                    "axisLabel": {
-                        "formatter": "{value}",  # Show values as integers
-                        "fontSize": 12
-                    }
-                },
-                "series": series_data
-            }
-
-            # Render the bar chart
-            st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
-            st_echarts(options=chart_options, height="400px")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-            # Calculate Growth Summary as difference in numbers (not percentage) for the last three months only
-            growth_summary = fill_summary.diff(axis=1)  # Calculate differences between consecutive months
-            growth_summary = growth_summary[[previous_month_2, previous_month_1, current_month]].copy()  # Exclude base_month from display
             
-            # Styling growth values for display
-            def style_growth(value):
-                if value > 0:
-                    color = "green"
-                elif value < 0:
-                    color = "red"
-                else:
-                    color = "black"
-                return f"<span style='color: {color};'>{value}</span>"
+            # Pastikan kolom yang diperlukan ada di `fill_summary`
+            required_months = [base_month, previous_month_2, previous_month_1, current_month]
+            available_months = [month for month in required_months if month in fill_summary.columns]
 
-            # Apply styling to growth summary
-            growth_display = growth_summary.applymap(style_growth)
+            if len(available_months) < 3:
+                st.write("No sufficient data available for the selected filters.")
+            else:
+                # Filter hanya untuk bulan-bulan yang tersedia
+                fill_summary = fill_summary[available_months].astype(int)
 
-            # Display Growth Summary table at the bottom
-            st.markdown(
-                f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
-                f"Growth in Number of Students from Previous Months</div>",
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
-                f"{growth_display.to_html(escape=False, index=True)}"
-                f"</div>",
-                unsafe_allow_html=True
-            )
-        
+                # Tampilkan tabel "Site Filled" hanya untuk tiga bulan terakhir (tanpa base_month)
+                st.markdown(
+                    f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333;'>"
+                    f"Students for {', '.join(available_months[1:])} ({selected_program})</div><br>",
+                    unsafe_allow_html=True
+                )
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center;'>"
+                    f"{fill_summary[available_months[1:]].to_html(index=True, classes='dataframe', border=0)}"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
+
+                # Siapkan data untuk grafik batang (menggunakan bulan yang ditampilkan saja)
+                sites = fill_summary.index.tolist()  # Daftar situs (baris)
+                months = available_months[1:]  # Daftar bulan untuk tampilan
+
+                # Inisialisasi data seri untuk setiap bulan
+                series_data = []
+                for month in months:
+                    # Ambil nilai Fill untuk setiap site
+                    fill_values = fill_summary[month].values.tolist()
+                    
+                    # Buat entri seri untuk chart dengan tooltip
+                    series_data.append({
+                        "name": month,
+                        "type": "bar",
+                        "data": fill_values,
+                    })
+
+                # Definisikan opsi chart dengan tooltip
+                chart_options = {
+                    "title": {
+                        "text": f"Number of Students by Month ({selected_program})",
+                        "left": "center",
+                        "top": "top",
+                        "textStyle": {"fontSize": 16, "fontWeight": "bold"}
+                    },
+                    "tooltip": {
+                        "trigger": "item",
+                        "formatter": "{a} <br/>{b}: {c}",  # Menampilkan nama bulan, site, dan nilai
+                        "axisPointer": {
+                            "type": "shadow"
+                        },
+                    },
+                    "legend": {
+                        "data": months,
+                        "orient": "horizontal",
+                        "bottom": "0",
+                        "left": "center"
+                    },
+                    "xAxis": {
+                        "type": "category",
+                        "data": sites,
+                        "axisLabel": {
+                            "interval": 0,
+                            "fontSize": 12,
+                            "rotate": 0,
+                            "fontWeight": "bold"
+                        }
+                    },
+                    "yAxis": {
+                        "type": "value",
+                        "axisLabel": {
+                            "formatter": "{value}",  # Menampilkan nilai sebagai bilangan bulat
+                            "fontSize": 12
+                        }
+                    },
+                    "series": series_data
+                }
+
+                # Render bar chart
+                st.markdown("<div style='display: flex; justify-content: center; margin-top: 10px;'>", unsafe_allow_html=True)
+                st_echarts(options=chart_options, height="400px")
+                st.markdown("</div>", unsafe_allow_html=True)
+
+                # Hitung Growth Summary sebagai perbedaan jumlah siswa untuk tiga bulan terakhir saja
+                growth_summary = fill_summary.diff(axis=1)  # Hitung perbedaan antara bulan-bulan berurutan
+                growth_summary = growth_summary[available_months[1:]].copy()  # Tampilkan hanya tiga bulan terakhir
+                
+                # Styling pertumbuhan untuk tampilan
+                def style_growth(value):
+                    if value > 0:
+                        color = "green"
+                    elif value < 0:
+                        color = "red"
+                    else:
+                        color = "black"
+                    return f"<span style='color: {color};'>{value}</span>"
+
+                # Terapkan styling ke growth summary
+                growth_display = growth_summary.applymap(style_growth)
+
+                # Tampilkan Growth Summary table di bagian bawah
+                st.markdown(
+                    f"<div style='text-align: center; font-size: 14px; font-weight: bold; color: #333; margin-top: 20px;'>"
+                    f"Growth in Number of Students from Previous Months</div>",
+                    unsafe_allow_html=True
+                )
+                st.markdown(
+                    f"<div style='display: flex; justify-content: center; margin-top: 10px;'>"
+                    f"{growth_display.to_html(escape=False, index=True)}"
+                    f"</div>",
+                    unsafe_allow_html=True
+                )
+
+
     elif bali_option == "Batch":
         # Pilihan Site
         site_option = st.radio("Select Site", bali_sales_data['Site'].unique())
 
-        # Check if the selected site is "Yoga Amertham"
-        if site_option == "Yoga Amertham":
-            # Filter data hanya untuk site yang dipilih
-            selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
-            
-            # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
-            selected_site_data['PAID STATUS'] = selected_site_data['PAID STATUS'].str.upper()
-            
-            # Convert 'Year' to integer for processing, then back to string for display
-            selected_site_data['Year'] = selected_site_data['Year'].astype(int).astype(str)
-            
-            # Convert 'Month' to datetime, sort it, then convert back to month name
-            selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
-            selected_site_data = selected_site_data.sort_values(by='Month')
-            selected_site_data['Month'] = selected_site_data['Month'].dt.strftime('%B')
-            
-            # Format 'Batch start date' and 'Batch end date' to a consistent display format
-            selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
-            selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
-            
-            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
-            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
-            
+        # Filter data hanya untuk site yang dipilih
+        selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
+
+        # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
+        selected_site_data['PAID STATUS'] = selected_site_data['PAID STATUS'].str.upper()
+
+        # Convert 'Year' ke tipe integer untuk pemrosesan, lalu kembali ke string untuk tampilan
+        selected_site_data['Year'] = selected_site_data['Year'].astype(int).astype(str)
+
+        # Convert 'Month' ke datetime, urutkan, lalu ubah kembali ke nama bulan
+        selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
+        selected_site_data = selected_site_data.sort_values(by='Month')
+        selected_site_data['Month'] = selected_site_data['Month'].dt.strftime('%B')
+
+        # Format 'Batch start date' dan 'Batch end date' untuk tampilan konsisten
+        selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
+        selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
+
+        # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
+        selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
+
+        # Menggunakan pilihan program dari dropdown yang ada di atas (misalnya, `program` variabel yang sudah dipilih pengguna)
+        # Filter data berdasarkan program yang sudah dipilih (200HR atau 300HR)
+        program_data = selected_site_data[selected_site_data['Category'] == program]
+
+        if program_data.empty:
+            st.write("No data available for the selected site and program.")
+        else:
             # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
-            grouped_data = selected_site_data.groupby(
+            grouped_data = program_data.groupby(
                 ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
             ).agg(
                 FULLY_PAID=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
@@ -687,139 +837,16 @@ if location == "Bali":
                 NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
             ).reset_index()
 
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
+            # Menambahkan kolom 'Total' sebagai jumlah dari fully_paid, deposit, dan not_paid
             grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
 
-            # Display the `Year` column as a string to avoid commas in the output
+            # Pastikan kolom `Year` tetap dalam tipe string agar tidak menampilkan koma
             grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
+
+            # Tampilkan hasil dalam bentuk tabel di Streamlit
+            st.markdown(f"### {site_option} ({program} Program)")
             st.dataframe(grouped_data)
-        
-        elif site_option == "The Mansion":
-            # Filter data hanya untuk site yang dipilih
-            selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
-            
-            # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
-            selected_site_data['PAID STATUS'] = selected_site_data['PAID STATUS'].str.upper()
-            
-            # Convert 'Year' to integer for processing, then back to string for display
-            selected_site_data['Year'] = selected_site_data['Year'].astype(int).astype(str)
-            
-            # Convert 'Month' to datetime, sort it, then convert back to month name
-            selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
-            selected_site_data = selected_site_data.sort_values(by='Month')
-            selected_site_data['Month'] = selected_site_data['Month'].dt.strftime('%B')
-            
-            # Format 'Batch start date' and 'Batch end date' to a consistent display format
-            selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
-            selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
-            
-            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
-            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
-            
-            # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
-            grouped_data = selected_site_data.groupby(
-                ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
-            ).agg(
-                FULLY_PAID=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
-                DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
-                NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
-            ).reset_index()
 
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-        
-        elif site_option == "Melati":
-            # Filter data hanya untuk site yang dipilih
-            selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
-            
-            # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
-            selected_site_data['PAID STATUS'] = selected_site_data['PAID STATUS'].str.upper()
-            
-            # Convert 'Year' to integer for processing, then back to string for display
-            selected_site_data['Year'] = selected_site_data['Year'].astype(int).astype(str)
-            
-            # Convert 'Month' to datetime, sort it, then convert back to month name
-            selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
-            selected_site_data = selected_site_data.sort_values(by='Month')
-            selected_site_data['Month'] = selected_site_data['Month'].dt.strftime('%B')
-            
-            # Format 'Batch start date' and 'Batch end date' to a consistent display format
-            selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
-            selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
-            
-            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
-            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
-            
-            # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
-            grouped_data = selected_site_data.groupby(
-                ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
-            ).agg(
-                FULLY_PAID=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
-                DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
-                NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
-            ).reset_index()
-
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-        
-        elif site_option == "Pelaga":
-            # Filter data hanya untuk site yang dipilih
-            selected_site_data = bali_sales_data[bali_sales_data['Site'] == site_option]
-            
-            # Pastikan semua entri di kolom 'PAID STATUS' menggunakan huruf kapital
-            selected_site_data['PAID STATUS'] = selected_site_data['PAID STATUS'].str.upper()
-            
-            # Convert 'Year' to integer for processing, then back to string for display
-            selected_site_data['Year'] = selected_site_data['Year'].astype(int).astype(str)
-            
-            # Convert 'Month' to datetime, sort it, then convert back to month name
-            selected_site_data['Month'] = pd.to_datetime(selected_site_data['Month'], format='%B')
-            selected_site_data = selected_site_data.sort_values(by='Month')
-            selected_site_data['Month'] = selected_site_data['Month'].dt.strftime('%B')
-            
-            # Format 'Batch start date' and 'Batch end date' to a consistent display format
-            selected_site_data['Batch start date'] = pd.to_datetime(selected_site_data['Batch start date']).dt.strftime('%d %b %Y')
-            selected_site_data['Batch end date'] = pd.to_datetime(selected_site_data['Batch end date']).dt.strftime('%d %b %Y')
-            
-            # Mengisi nilai kosong di kolom 'Group' dengan label 'No Group'
-            selected_site_data['Group'] = selected_site_data['Group'].fillna('No Group')
-            
-            # Group data berdasarkan Year, Month, Batch start date, Batch end date, dan Group
-            grouped_data = selected_site_data.groupby(
-                ['Year', 'Month', 'Batch start date', 'Batch end date', 'Group']
-            ).agg(
-                FULLY_PAID=('PAID STATUS', lambda x: (x == 'FULLY PAID').sum()),
-                DEPOSIT=('PAID STATUS', lambda x: (x == 'DEPOSIT').sum()),
-                NOT_PAID=('PAID STATUS', lambda x: x.isna().sum())
-            ).reset_index()
-
-            # Add 'Total' column as sum of fully_paid, deposit, and not_paid
-            grouped_data['Total'] = grouped_data['FULLY_PAID'] + grouped_data['DEPOSIT'] + grouped_data['NOT_PAID']
-
-            # Display the `Year` column as a string to avoid commas in the output
-            grouped_data['Year'] = grouped_data['Year'].astype(str)
-            
-            # Menampilkan hasil dalam bentuk tabel di Streamlit
-            # st.write(f"Data for Site: {site_option}")
-            st.dataframe(grouped_data)
-    
 # Conditional logic based on location selection
 elif location == "India":
     # Dropdown for program selection when location is "India"
