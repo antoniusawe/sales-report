@@ -311,6 +311,7 @@ if location == "Bali":
             month_counts = balance_zero_data.groupby('Month')['NAME'].count().reset_index()
             month_counts = month_counts.sort_values(by='NAME', ascending=False)
             highest_value_month = month_counts['NAME'].max() if not month_counts.empty else 0
+            current_month_name = datetime.now().strftime('%B')
 
             if not month_counts.empty:
                 month_bar_chart_data = {
@@ -320,8 +321,15 @@ if location == "Bali":
                     "yAxis": {"type": "value"},
                     "series": [{
                         "data": [
-                            {"value": count, "itemStyle": {"color": "#FF5733" if count == highest_value_month else "#5470C6"}}
-                            for count in month_counts['NAME']
+                            {
+                                "value": count,
+                                "itemStyle": {
+                                    "color": "#28A745" if month == current_month_name else (
+                                        "#FF5733" if count == highest_value_month else "#5470C6"
+                                    )
+                                }
+                            }
+                            for month, count in zip(month_counts['Month'], month_counts['NAME'])
                         ],
                         "type": "bar",
                         "label": {"show": True, "position": "top", "formatter": "{c}", "fontSize": 9, "color": "#333333"}
