@@ -311,7 +311,7 @@ if location == "Bali":
             month_counts = balance_zero_data.groupby('Month')['NAME'].count().reset_index()
             month_counts = month_counts.sort_values(by='NAME', ascending=False)
             highest_value_month = month_counts['NAME'].max() if not month_counts.empty else 0
-            
+
             if not month_counts.empty:
                 month_bar_chart_data = {
                     "title": {"text": "Top Months", "left": "center"},
@@ -354,11 +354,14 @@ if location == "Bali":
 
             # Filter data berdasarkan tahun yang dipilih
             year_data = data_200hr_batches if selected_year == "All" else data_200hr_batches[data_200hr_batches['Year'] == selected_year]
-            
-            # Selectbox untuk memilih bulan
-            unique_months = sorted(year_data['Batch start date'].dt.month.dropna().unique())
-            month_names = ["All"] + [datetime(2000, month, 1).strftime('%B') for month in unique_months]
-            selected_month = st.selectbox("Select a Month:", month_names, key="month_selection_location_200hr")
+
+            # Menampilkan Selectbox untuk memilih bulan hanya jika tahun yang dipilih bukan "All"
+            if selected_year != "All":
+                unique_months = sorted(year_data['Batch start date'].dt.month.dropna().unique())
+                month_names = ["All"] + [datetime(2000, month, 1).strftime('%B') for month in unique_months]
+                selected_month = st.selectbox("Select a Month:", month_names, key="month_selection_location_200hr")
+            else:
+                selected_month = "All"  # Set selected month to "All" jika tahun "All" dipilih
 
             # Menentukan bulan saat ini atau bulan yang dipilih untuk ditampilkan
             if selected_year == "All" or selected_month == "All":
@@ -434,11 +437,14 @@ if location == "Bali":
 
             # Filter data berdasarkan tahun yang dipilih
             year_data = data_300hr_batches if selected_year == "All" else data_300hr_batches[data_300hr_batches['Year'] == selected_year]
-            
-            # Selectbox untuk memilih bulan
-            unique_months = sorted(year_data['Batch start date'].dt.month.dropna().unique())
-            month_names = ["All"] + [datetime(2000, month, 1).strftime('%B') for month in unique_months]
-            selected_month = st.selectbox("Select a Month:", month_names, key="month_selection_location_300hr")
+
+            # Menampilkan Selectbox untuk memilih bulan hanya jika tahun yang dipilih bukan "All"
+            if selected_year != "All":
+                unique_months = sorted(year_data['Batch start date'].dt.month.dropna().unique())
+                month_names = ["All"] + [datetime(2000, month, 1).strftime('%B') for month in unique_months]
+                selected_month = st.selectbox("Select a Month:", month_names, key="month_selection_location_300hr")
+            else:
+                selected_month = "All"  # Set selected month to "All" jika tahun "All" dipilih
 
             # Menentukan bulan saat ini atau bulan yang dipilih untuk ditampilkan
             if selected_year == "All" or selected_month == "All":
