@@ -314,6 +314,13 @@ if location == "Bali":
             current_month_name = datetime.now().strftime('%B')
 
             if not month_counts.empty:
+                # Normalisasi nama bulan di month_counts untuk memastikan kesesuaian format
+                month_counts['Month'] = month_counts['Month'].apply(lambda x: x.capitalize())
+                
+                # Debug: Cek daftar nama bulan untuk memastikan mereka sesuai dengan format `current_month_name`
+                print("Daftar bulan di month_counts:", month_counts['Month'].tolist())
+                print("Bulan berjalan:", current_month_name)
+                
                 month_bar_chart_data = {
                     "title": {"text": "Top Months", "left": "center"},
                     "tooltip": {"trigger": "item", "formatter": "{b}: {c}"},
