@@ -88,8 +88,8 @@ if location == "Bali":
             # Calculate metrics
             newest_batch_date = filtered_data['Batch start date'].max()
             cut_off_date = newest_batch_date.strftime('%d %b %Y') if pd.notnull(newest_batch_date) else "No date available"
-            total_booking_ctr = filtered_data[filtered_data["BALANCE"] == 0]["NAME"].count()
-            total_paid_amount = filtered_data[filtered_data["BALANCE"] == 0]["PAID"].sum()
+            total_booking_ctr = filtered_data["NAME"].count()
+            total_paid_amount = filtered_data["PAID"].sum()
             average_occupancy = occupancy_data_filtered['Occupancy'].mean()
 
             # Display metrics
