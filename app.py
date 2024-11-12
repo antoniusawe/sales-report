@@ -308,7 +308,7 @@ if location == "Bali":
 
             # Create and display Month bar chart based on fully paid data
             balance_zero_data = filtered_data[filtered_data['BALANCE'] == 0]
-            month_counts = balance_zero_data.groupby('Month')['NAME'].count().reset_index()
+            month_counts = filtered_data.groupby('Month')['NAME'].count().reset_index()
             month_counts = month_counts.sort_values(by='NAME', ascending=False)
             highest_value_month = month_counts['NAME'].max() if not month_counts.empty else 0
 
