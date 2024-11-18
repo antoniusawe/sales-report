@@ -1,10 +1,5 @@
-streamlit
+streamlit!=1.34.0
 pandas
+plotly
 openpyxl
 matplotlib
-streamlit-echarts
-plotly
-requests
-datetime
-python-dateutil
-pytz
