@@ -35,21 +35,21 @@ def show(ryp_200hr_data, ryp_300hr_data):
     # Tampilkan total students dengan gaya seperti overview.py
     st.markdown(
         f"""
-        <div style='display: flex; justify-content: center; gap: 50px; padding: 20px;'>
-                <div style='text-align: left;'>
-                    <div style='font-size: 16px; color: #333333;'>Total Booking</div>
-                    <div style='font-size: 48px;'>{total_students}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Number of Students</div>
+        <div style="display: flex; justify-content: space-around; text-align: center;">
+                <div style="margin-right: 20px;">
+                    <h2 style="font-size: 24px; color: #333333;">Total Booking</h2>
+                    <h1 style="font-size: 50px; color: #333333; margin: 0;">{total_students}</h1>
+                    <p style="font-size: 18px; color: #1f77b4;">Number of students</p>
                 </div>
-                <div style='text-align: left;'>
-                    <div style='font-size: 16px; color: #333333;'>Total Payable</div>
-                    <div style='font-size: 48px;'>{total_payment_received:,.0f}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>in USD or USD equiv</div>
+                <div style="margin: 0 20px;">
+                    <h2 style="font-size: 24px; color: #333333;">Total Payable</h2>
+                    <h1 style="font-size: 50px; color: #333333; margin: 0;">${total_payment_received:,.0f}</h1>
+                    <p style="font-size: 18px; color: #1f77b4;">in USD or USD equiv</p>
                 </div>
-                <div style='text-align: left;'>
-                    <div style='font-size: 16px; color: #333333;'>Outstanding</div>
-                    <div style='font-size: 48px;'>{total_pending_payment:,.0f}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>{outstanding_percentage:.2f}% of Total Payable</div>
+                <div style="margin-left: 20px;">
+                    <h2 style="font-size: 24px; color: #333333;">Outstanding</h2>
+                    <h1 style="font-size: 50px; color: #333333; margin: 0;">${total_pending_payment:,.0f}</h1>
+                    <p style="font-size: 18px; color: #1f77b4;">{outstanding_percentage:.2f}% of Total Payable</p>
                 </div>
             </div>
         """, 
