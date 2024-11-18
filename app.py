@@ -7,10 +7,10 @@ st.set_page_config(page_title="Dashboard House of Om", page_icon="🏠")
 # Display the main image and title
 st.image("https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png",  
          use_column_width=True)
-st.markdown("<h1 style='text-align: center; font-size: 50px;'>HOUSE OF OM - DASHBOARD</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; font-size: 50px;'>HOUSE OF OM - SALES & OCCUPANCY DASHBOARD</h1>", unsafe_allow_html=True)
 
 # Judul aplikasi
-st.title("Sales Dashboard & Occupancy")
+# st.title("Sales Dashboard & Occupancy")
 
 # Membaca data dari file Excel
 try:
