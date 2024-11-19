@@ -1,7 +1,7 @@
 import streamlit as st
 st.set_page_config(
     page_title="Dashboard House of Om",
-    page_icon="https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png"
+    page_icon="https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/WHITE%20SQUARE%20LOGO%202%2016X16.png"
 )
 
 import pandas as pd
