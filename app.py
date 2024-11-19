@@ -1,5 +1,8 @@
 import streamlit as st
-st.set_page_config(page_title="Dashboard House of Om", page_icon="🏠")
+st.set_page_config(
+    page_title="Dashboard House of Om",
+    page_icon="https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png"
+)
 
 import pandas as pd
 import pages.page1 as page1  # Import halaman pertama yang akan kita buat
