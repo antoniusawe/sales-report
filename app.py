@@ -34,7 +34,7 @@ st.markdown(
 # Membaca data dari file Excel
 try:
     occupancy_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/bali_occupancy.xlsx")
-    sales_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/Offline Sales by invoice.xlsx")
+    sales_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/Offline%20Sales%20by%20invoice.xlsx")
     ryp_200hr_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/ryp_student_database_200hr.xlsx")
     ryp_300hr_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/ryp_student_database_300hr.xlsx")
 
