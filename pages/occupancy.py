@@ -4,82 +4,102 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-def show_location(filtered_df_sales):
-    st.header("Accommodation Sales by Location and Month")
-    st.caption("This overview uses the **DATE OF PAYMENT** as the primary reference for the analysis.")
+def show_occupancy(filtered_df_occupancy, program_choice, selected_year, selected_month, selected_week):
+    st.header(f"Occupancy Rate Analysis for {program_choice}")
 
-    # Mengurutkan data berdasarkan NAME dan DATE OF PAYMENT (oldest first)
-    filtered_df_sales['DATE OF PAYMENT'] = pd.to_datetime(filtered_df_sales['DATE OF PAYMENT'], errors='coerce')
-    filtered_df_sales = filtered_df_sales.sort_values(by=['NAME', 'DATE OF PAYMENT'])
+    # Tampilkan informasi filter
+    if selected_year != "All":
+        st.subheader(f"Year: {selected_year}")
+    if selected_month != "All":
+        st.subheader(f"Month: {selected_month}")
+    if selected_week != "All":
+        st.subheader(f"Week: {selected_week}")
 
-    # Hapus duplikat berdasarkan 'NAME', hanya ambil yang paling awal
-    unique_bookings = filtered_df_sales.drop_duplicates(subset='NAME', keep='first')
-
-    # Tambahkan kolom nomor bulan untuk pengurutan
-    unique_bookings['MONTH_NUM'] = pd.to_datetime(unique_bookings['MONTH'], format='%B', errors='coerce').dt.month
-
-    # Urutkan data berdasarkan LOCATION dan MONTH_NUM
-    unique_bookings = unique_bookings.sort_values(by=['LOCATION', 'MONTH_NUM'])
-
-    # Agregasi data berdasarkan LOCATION, MONTH, dan define_accommodation
-    aggregated_data = unique_bookings.groupby(['LOCATION', 'MONTH', 'define_accommodation']).size().reset_index(name='count')
-
-    # Konversi urutan bulan menjadi nama bulan
-    aggregated_data['MONTH'] = pd.to_datetime(aggregated_data['MONTH'], format='%B', errors='coerce')
-    aggregated_data = aggregated_data.sort_values(by=['LOCATION', 'MONTH'])
-    aggregated_data['MONTH'] = aggregated_data['MONTH'].dt.strftime('%B')
-
-    # Jika data agregasi kosong, tampilkan peringatan
-    if aggregated_data.empty:
-        st.warning("No data available for the selected criteria.")
+    # Validasi apakah data occupancy tersedia
+    if filtered_df_occupancy.empty:
+        st.warning("Filtered occupancy data is empty. Please check your filters.")
         return
 
-    # Tampilkan visualisasi per LOCATION
-    locations = aggregated_data['LOCATION'].unique()
-    for location in locations:
-        # st.subheader(f"Sales for {location}")
+    # Pastikan kolom penting tersedia
+    required_columns = ['SITE', 'ROOM', 'FILL', 'CAPACITY', 'MONTH', 'YEAR', 'WEEK']
+    missing_columns = [col for col in required_columns if col not in filtered_df_occupancy.columns]
+    if missing_columns:
+        st.error(f"Missing required columns: {', '.join(missing_columns)}")
+        return
 
-        # Filter data untuk lokasi ini
-        location_data = aggregated_data[aggregated_data['LOCATION'] == location]
+    # Filter berdasarkan Year
+    if selected_year != "All":
+        filtered_df_occupancy = filtered_df_occupancy[filtered_df_occupancy['YEAR'] == int(selected_year)]
 
-        # **Definisikan Warna Tetap untuk Setiap Accommodation**
-    accommodation_colors = {
-        "DORM": "#89CFF0",  # Baby Blue
-        "PRIVATE": "#0000FF",  # Blue
-        "TWIN": "#7393B3",  # Blue Gray
-        "TWIN DELUXE": "#6495ED",  # Cornflower Blue
-        "DELUXE": "#6082B6",  # Glaucous
-        "GRAND DELUXE": "#1F51FF",  # Neon Blue
-        "PRIVATE DELUXE": "#96DED1",  # Robin Egg Blue
-        "TRIPLE": "#9FE2BF",  # Seafoam Green
-        "NO ACCOMMODATION": "#0818A8",  # Zaffre
-        "3DAYS SHT": "#008080"  # Tßeal
-    }
+    # Filter berdasarkan Month
+    if selected_month != "All":
+        filtered_df_occupancy = filtered_df_occupancy[filtered_df_occupancy['MONTH'] == selected_month]
 
-    # Tampilkan visualisasi per LOCATION
-    locations = aggregated_data['LOCATION'].unique()
-    for location in locations:
-        # Filter data untuk lokasi ini
-        location_data = aggregated_data[aggregated_data['LOCATION'] == location]
+    # Filter berdasarkan Week
+    if selected_week != "All":
+        filtered_df_occupancy = filtered_df_occupancy[filtered_df_occupancy['WEEK'] == selected_week]
 
-        # Buat bar chart horizontal untuk lokasi ini
+    # Breakdown data per Site, Room, dan Month
+    occupancy_rate_by_site_room = (
+        filtered_df_occupancy.groupby(['SITE', 'ROOM', 'MONTH'])
+        .agg(
+            Total_Capacity=('CAPACITY', 'sum'),
+            Total_Fill=('FILL', 'sum')
+        )
+        .reset_index()
+    )
+
+    # Hitung ulang Occupancy Rate berdasarkan Total Fill dan Total Capacity
+    occupancy_rate_by_site_room['Occupancy Rate (%)'] = (
+        (occupancy_rate_by_site_room['Total_Fill'] / occupancy_rate_by_site_room['Total_Capacity']) * 100
+    ).round(2)
+
+    # Sort Bulan agar sesuai dengan urutan kalender
+    month_order = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    occupancy_rate_by_site_room['MONTH'] = pd.Categorical(
+        occupancy_rate_by_site_room['MONTH'], categories=month_order, ordered=True
+    )
+    occupancy_rate_by_site_room = occupancy_rate_by_site_room.sort_values(by=['SITE', 'MONTH', 'ROOM'])
+
+    # Tampilkan tabel breakdown Occupancy Rate per Site
+    st.subheader("Occupancy Rate Breakdown by Site")
+    sites = occupancy_rate_by_site_room['SITE'].unique()
+    for site in sites:
+        site_data = occupancy_rate_by_site_room[occupancy_rate_by_site_room['SITE'] == site]
+        st.subheader(site)
+
+        # Pindahkan MONTH ke paling kiri dan hapus kolom SITE
+        site_data = site_data[['MONTH', 'ROOM', 'Total_Capacity', 'Total_Fill', 'Occupancy Rate (%)']]
+
+        # Tampilkan tabel per site
+        st.dataframe(site_data.rename(columns={
+            'ROOM': 'Room',
+            'MONTH': 'Month',
+            'Total_Capacity': 'Total Capacity',
+            'Total_Fill': 'Total Fill',
+            'Occupancy Rate (%)': 'Occupancy Rate (%)'
+        }))
+
+        # **Buat Horizontal Bar Chart dengan Occupancy Rate**
         fig = px.bar(
-            location_data,
-            x='count',  # Jumlah booking
-            y='MONTH',  # Bulan di Y-axis
-            color='define_accommodation',  # Stack berdasarkan akomodasi
-            color_discrete_map=accommodation_colors,  # Gunakan color mapping
-            orientation='h',  # Horizontal bar chart
-            title=f"Accommodation Sales in {location}",
-            labels={'count': 'Number of Sales', 'MONTH': 'Month', 'define_accommodation': 'Accommodation'},
-            text='count',
-            barmode='stack'
+            site_data,
+            x='Occupancy Rate (%)',
+            y='MONTH',  # Harus konsisten dengan nama kolom
+            color='ROOM',
+            orientation='h',
+            title=f"Occupancy Rate in {site} (in %)",
+            labels={'Occupancy Rate (%)': 'Occupancy Rate (%)', 'MONTH': 'Month', 'ROOM': 'Room'},
+            text='Occupancy Rate (%)',
+            color_discrete_sequence=px.colors.qualitative.Set2  # Pilihan warna
         )
         fig.update_layout(
-            xaxis_title="Number of Sales",
+            xaxis_title="Occupancy Rate (%)",
             yaxis_title="Month",
-            legend_title="Accommodation",
-            height=500  # Tinggi grafik agar rapi
+            legend_title="Room",
+            height=500  # Sesuaikan tinggi chart
         )
 
         # Tampilkan grafik di Streamlit
