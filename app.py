@@ -1,12 +1,12 @@
 import streamlit as st
+import pandas as pd
+import pages.ytt as ytt
+import pages.ryp as ryp
+
 st.set_page_config(
     page_title="Dashboard House of Om",
     page_icon="https://raw.githubusercontent.com/antoniusawe/sales-report/main/images/house_of_om-removebg-preview.png"
 )
-
-import pandas as pd
-import pages.ytt as ytt
-import pages.ryp as ryp
 
 # Menyembunyikan navigasi default di sidebar dengan CSS
 hide_default_sidebar_nav = """
@@ -31,9 +31,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Judul aplikasi
-# st.title("Sales Dashboard & Occupancy")
-
 # Membaca data dari file Excel
 try:
     occupancy_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/bali_occupancy.xlsx")
@@ -41,7 +38,6 @@ try:
     ryp_200hr_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/ryp_student_database_200hr.xlsx")
     ryp_300hr_file_path = pd.read_excel("https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/ryp_student_database_300hr.xlsx")
 
-    try:
     # Membaca data dari file Sales
     df_sales = pd.read_excel(sales_file_path)
 
