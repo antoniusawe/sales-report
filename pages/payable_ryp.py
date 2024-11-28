@@ -1,65 +1,89 @@
 import streamlit as st
-import pandas as pd
+import matplotlib.pyplot as plt
 import plotly.express as px
+import pandas as pd
+import plotly.graph_objects as go
 
-def show_payable(ryp_data, program_choice):
-    # st.header(f"Payable Information for {program_choice}")
+def show_payable(data, program_choice):
+    """
+    Menampilkan data payable berdasarkan pilihan program dengan visualisasi line chart.
+    :param data: DataFrame yang telah difilter untuk Payable.
+    :param program_choice: Pilihan program dari pengguna (All, 200HR, 300HR).
+    """
 
-    # # Debugging: Tampilkan kolom yang tersedia
-    # st.write("Available Columns in Dataset:")
-    # st.write(ryp_data.columns)
+    # Header untuk bagian Payable
+    st.subheader(f"Payable Details ({program_choice})")
+    st.caption("Details about total payable amounts over time.")
 
-    # Validasi kolom data yang diperlukan
-    required_columns = ['Batch start date', 'Batch end date', 'Total Payable (in USD or USD equiv)', 'Total paid (as of today)']
-    if not all(col in ryp_data.columns for col in required_columns):
-        st.error("Required columns are missing in the data.")
+    # Validasi data kosong
+    if data.empty:
+        st.warning("No payable data available for the selected program.")
         return
 
-    # Menghitung total payable dan paid per batch
-    batch_data = ryp_data.groupby(['Batch start date', 'Batch end date']).agg(
-        Total_Payable=('Total Payable (in USD or USD equiv)', 'sum'),
-        Total_Paid=('Total paid (as of today)', 'sum')
-    ).reset_index()
+    # Proses kolom tanggal booking
+    if 'DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT' in data.columns:
+        data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'] = pd.to_datetime(
+            data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'], errors='coerce'
+        )
 
-    # # Debugging: Tampilkan data setelah pengelompokan
-    # st.write("Batch Data After Grouping:")
-    # st.write(batch_data)
+        # Filter data dengan tanggal booking valid
+        valid_data = data[data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].notnull()]
 
-    # Cek jika data kosong
-    if batch_data.empty:
-        st.warning("No data available for the selected program or filters.")
-        return
+        # Tambahkan kolom bulan untuk visualisasi
+        valid_data['BOOKING MONTH'] = valid_data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].dt.to_period('M').astype(str)
 
-    # Konversi tanggal batch ke datetime
-    batch_data['Batch start date'] = pd.to_datetime(batch_data['Batch start date'])
-    batch_data['Batch end date'] = pd.to_datetime(batch_data['Batch end date'])
+        # Agregasi total payable per bulan
+        payable_distribution = valid_data.groupby('BOOKING MONTH')['TOTAL PAYABLE (IN USD OR USD EQUIV)'].sum().reset_index()
+        payable_distribution.rename(columns={'TOTAL PAYABLE (IN USD OR USD EQUIV)': 'TOTAL PAYABLE'}, inplace=True)
 
-    # Sorting berdasarkan Batch Start Date
-    batch_data = batch_data.sort_values(by='Batch start date').reset_index(drop=True)
+        # Agregasi total paid per bulan
+        paid_distribution = valid_data.groupby('BOOKING MONTH')['TOTAL PAID (AS OF TODAY)'].sum().reset_index()
+        paid_distribution.rename(columns={'TOTAL PAID (AS OF TODAY)': 'TOTAL PAID'}, inplace=True)
 
-    # Membuat label batch dengan format vertikal
-    batch_data['Batch'] = batch_data['Batch start date'].dt.strftime('%d %b %Y') + "<br>to<br>" + batch_data['Batch end date'].dt.strftime('%d %b %Y')
+        # Sorting bulan agar terurut
+        payable_distribution['BOOKING MONTH'] = pd.to_datetime(payable_distribution['BOOKING MONTH'], format='%Y-%m')
+        payable_distribution.sort_values(by='BOOKING MONTH', inplace=True)
+        payable_distribution['BOOKING MONTH'] = payable_distribution['BOOKING MONTH'].dt.strftime('%b %Y')
 
-    # # Menampilkan tabel data untuk verifikasi
-    # st.dataframe(batch_data[['Batch start date', 'Batch end date', 'Total_Payable', 'Total_Paid']])
+        paid_distribution['BOOKING MONTH'] = pd.to_datetime(paid_distribution['BOOKING MONTH'], format='%Y-%m')
+        paid_distribution.sort_values(by='BOOKING MONTH', inplace=True)
+        paid_distribution['BOOKING MONTH'] = paid_distribution['BOOKING MONTH'].dt.strftime('%b %Y')
 
-    # Membuat Line Chart Combo
-    fig_combo = px.line(
-        batch_data,
-        x='Batch',
-        y=['Total_Payable', 'Total_Paid'],
-        title="Payable and Paid Over Batches",
-        labels={
-            'value': 'Amount (USD)',
-            'Batch': 'Batch',
-            'variable': 'Metric'
-        },
-        markers=True
-    )
+        # Visualisasi dengan line chart menggunakan Plotly
+        # st.markdown("### Total Payable and Total Paid Over Time")
+        fig = go.Figure()
 
-    # Menambahkan teks di atas titik data untuk keterbacaan
-    for trace in fig_combo.data:
-        trace.update(text=trace.y, textposition="top center")
+        # Tambahkan garis untuk Total Payable
+        fig.add_trace(go.Scatter(
+            x=payable_distribution['BOOKING MONTH'],
+            y=payable_distribution['TOTAL PAYABLE'],
+            mode='lines+markers',
+            name='Total Payable',
+            line=dict(color='blue', width=2),
+        ))
 
-    # Menampilkan grafik
-    st.plotly_chart(fig_combo, use_container_width=True)
+        # Tambahkan garis putus-putus untuk Total Paid
+        fig.add_trace(go.Scatter(
+            x=paid_distribution['BOOKING MONTH'],
+            y=paid_distribution['TOTAL PAID'],
+            mode='lines+markers',
+            name='Total Paid',
+            line=dict(color='green', width=2, dash='dash'),
+        ))
+
+        # Konfigurasi layout chart
+        fig.update_layout(
+            title="Total Payable vs Total Paid Distribution",
+            xaxis_title="Month",
+            yaxis_title="Amount (USD)",
+            legend_title="Metrics",
+            template="plotly_white"
+        )
+
+        st.plotly_chart(fig)
+    else:
+        st.warning("Booking deposit date information is not available.")
+
+    # # Tambahkan tabel data payable untuk referensi
+    # st.markdown("### Payable Data Table")
+    # st.dataframe(data)
