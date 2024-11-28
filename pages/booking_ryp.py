@@ -52,7 +52,6 @@ def show_booking(data, program_choice):
         )
         st.plotly_chart(fig_monthly)
 
-        valid_data.columns = valid_data.columns.str.strip().str.upper()
         # Visualisasi distribusi Booking Source (Doughnut Chart)
         if 'BOOKING SOURCE' in valid_data.columns:
             booking_source_counts = valid_data['BOOKING SOURCE'].value_counts().reset_index()
