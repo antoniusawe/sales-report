@@ -1,65 +1,86 @@
 import streamlit as st
+import matplotlib.pyplot as plt
+import plotly.express as px
 import pandas as pd
-from pages.occupancy_rate import show_occupancy_rate
-from pages.occupancy_zscore import show_occupancy_zscore  # Import fungsi Z-Score
+import plotly.graph_objects as go
 
-def show_location(filtered_occupancy_data, filtered_sales_data, program_choice, selected_year, selected_month):
-    st.header("Total Available Rooms per Site")
+def show_location(filtered_df_sales):
+    st.header("Accommodation Sales by Location and Month")
+    st.caption("This overview uses the **DATE OF PAYMENT** as the primary reference for the analysis.")
 
-    # Menghitung total 'Available' berdasarkan 'Site' dan 'Batch start date' sesuai data yang sudah difilter
-    available_data_by_site = filtered_occupancy_data.groupby(['Site', 'Batch start date'])['Available'].sum().reset_index()
+    # Mengurutkan data berdasarkan NAME dan DATE OF PAYMENT (oldest first)
+    filtered_df_sales['DATE OF PAYMENT'] = pd.to_datetime(filtered_df_sales['DATE OF PAYMENT'], errors='coerce')
+    filtered_df_sales = filtered_df_sales.sort_values(by=['NAME', 'DATE OF PAYMENT'])
 
-    # Menghitung total available rooms per Site
-    total_available_per_site = available_data_by_site.groupby('Site')['Available'].sum().reset_index()
+    # Hapus duplikat berdasarkan 'NAME', hanya ambil yang paling awal
+    unique_bookings = filtered_df_sales.drop_duplicates(subset='NAME', keep='first')
 
-    # Menambahkan kolom 'Batch Details' dengan informasi batch start date dan jumlah available untuk setiap site
-    total_available_per_site['Batch Details'] = total_available_per_site['Site'].apply(
-        lambda site: ", ".join([f"{date} ({available})" for date, available in zip(
-            available_data_by_site[available_data_by_site['Site'] == site]['Batch start date'],
-            available_data_by_site[available_data_by_site['Site'] == site]['Available']
-        )])
-    )
+    # Tambahkan kolom nomor bulan untuk pengurutan
+    unique_bookings['MONTH_NUM'] = pd.to_datetime(unique_bookings['MONTH'], format='%B', errors='coerce').dt.month
 
-    # Menampilkan data dalam format grid
-    num_columns = 2
-    rows = [st.columns(num_columns) for _ in range((len(total_available_per_site) + num_columns - 1) // num_columns)]
+    # Urutkan data berdasarkan LOCATION dan MONTH_NUM
+    unique_bookings = unique_bookings.sort_values(by=['LOCATION', 'MONTH_NUM'])
 
-    for index, row in enumerate(total_available_per_site.iterrows()):
-        site_name = row[1]['Site']
-        total_available = row[1]['Available']
-        batch_details = row[1]['Batch Details']
+    # Agregasi data berdasarkan LOCATION, MONTH, dan define_accommodation
+    aggregated_data = unique_bookings.groupby(['LOCATION', 'MONTH', 'define_accommodation']).size().reset_index(name='count')
 
-        row_index = index // num_columns
-        col_index = index % num_columns
+    # Konversi urutan bulan menjadi nama bulan
+    aggregated_data['MONTH'] = pd.to_datetime(aggregated_data['MONTH'], format='%B', errors='coerce')
+    aggregated_data = aggregated_data.sort_values(by=['LOCATION', 'MONTH'])
+    aggregated_data['MONTH'] = aggregated_data['MONTH'].dt.strftime('%B')
 
-        with rows[row_index][col_index]:
-            st.markdown(f"""
-                <div style='
-                    text-align: center; 
-                    width: 200px; 
-                    padding: 20px; 
-                    margin: 10px; 
-                    border-radius: 15px; 
-                    background: linear-gradient(145deg, #e6e6e6, #ffffff);
-                    box-shadow:  5px 5px 15px #aaaaaa, 
-                                 -5px -5px 15px #ffffff;
-                '>
-                    <div style='font-size: 16px; color: #333333;'>{site_name}</div>
-                    <br>
-                    <div style='font-size: 48px; color: #202fb2;'>{total_available}</div>
-                    <div style='color: #202fb2; font-size: 18px;'>Total Available Rooms</div>
-                    <br>
-                    <div style='font-size: 16px; color: #333333;'>Batch:</div>
-                    <div style='font-size: 14px; color: #666666;'>{batch_details}</div>
-                </div>
-            """, unsafe_allow_html=True)
+    # Jika data agregasi kosong, tampilkan peringatan
+    if aggregated_data.empty:
+        st.warning("No data available for the selected criteria.")
+        return
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Tampilkan visualisasi per LOCATION
+    locations = aggregated_data['LOCATION'].unique()
+    for location in locations:
+        # st.subheader(f"Sales for {location}")
 
-    # Tombol untuk Generate Occupancy Rate
-    if st.button("Generate Occupancy Rate"):
-        show_occupancy_rate(filtered_occupancy_data, program_choice, selected_year, selected_month)
+        # Filter data untuk lokasi ini
+        location_data = aggregated_data[aggregated_data['LOCATION'] == location]
 
-    # Tombol untuk Generate Z-Score
-    if st.button("Generate Z-Score"):
-        show_occupancy_zscore(filtered_occupancy_data, program_choice, selected_year, selected_month)
+        # **Definisikan Warna Tetap untuk Setiap Accommodation**
+    accommodation_colors = {
+        "DORM": "#89CFF0",  # Baby Blue
+        "PRIVATE": "#0000FF",  # Blue
+        "TWIN": "#7393B3",  # Blue Gray
+        "TWIN DELUXE": "#6495ED",  # Cornflower Blue
+        "DELUXE": "#6082B6",  # Glaucous
+        "GRAND DELUXE": "#1F51FF",  # Neon Blue
+        "PRIVATE DELUXE": "#96DED1",  # Robin Egg Blue
+        "TRIPLE": "#9FE2BF",  # Seafoam Green
+        "NO ACCOMMODATION": "#0818A8",  # Zaffre
+        "3DAYS SHT": "#008080"  # Tßeal
+    }
+
+    # Tampilkan visualisasi per LOCATION
+    locations = aggregated_data['LOCATION'].unique()
+    for location in locations:
+        # Filter data untuk lokasi ini
+        location_data = aggregated_data[aggregated_data['LOCATION'] == location]
+
+        # Buat bar chart horizontal untuk lokasi ini
+        fig = px.bar(
+            location_data,
+            x='count',  # Jumlah booking
+            y='MONTH',  # Bulan di Y-axis
+            color='define_accommodation',  # Stack berdasarkan akomodasi
+            color_discrete_map=accommodation_colors,  # Gunakan color mapping
+            orientation='h',  # Horizontal bar chart
+            title=f"Accommodation Sales in {location}",
+            labels={'count': 'Number of Sales', 'MONTH': 'Month', 'define_accommodation': 'Accommodation'},
+            text='count',
+            barmode='stack'
+        )
+        fig.update_layout(
+            xaxis_title="Number of Sales",
+            yaxis_title="Month",
+            legend_title="Accommodation",
+            height=500  # Tinggi grafik agar rapi
+        )
+
+        # Tampilkan grafik di Streamlit
+        st.plotly_chart(fig, use_container_width=True)
