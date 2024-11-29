@@ -38,7 +38,8 @@ try:
     sales_file_path = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/Offline%20Sales%20by%20invoice.xlsx"
     ryp_200hr_file_path = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/ryp_student_database_200hr.xlsx"
     ryp_300hr_file_path = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/ryp_student_database_300hr.xlsx"
-
+    kommo_file_path = "https://raw.githubusercontent.com/antoniusawe/sales-report/main/data/cek_kommo.xlsx"
+    
     # Membaca data dari file Sales
     df_sales = pd.read_excel(sales_file_path)
 
@@ -54,6 +55,10 @@ try:
     df_ryp_300hr = pd.read_excel(ryp_300hr_file_path)
     df_ryp_300hr.columns = df_ryp_300hr.columns.str.strip().str.upper()  # Normalisasi nama kolom 300HR
 
+    # Membaca data leads dari Kommo
+    df_leads = pd.read_excel(kommo_file_path)
+    df_leads.columns = df_leads.columns.str.strip().str.upper()
+
     st.success("© 2024 House of Om")
 except FileNotFoundError as e:
     if "Offline Sales by invoice" in str(e):
@@ -68,12 +73,16 @@ except FileNotFoundError as e:
     if "ryp_student_database_300hr" in str(e):
         st.error(f"File 300HR tidak ditemukan di lokasi: {ryp_300hr_file_path}")
         df_ryp_300hr = None
+    if "kommo_leads" in str(e):
+        st.error(f"File Kommo Leads tidak ditemukan di lokasi: {kommo_file_path}")
+        df_leads = None
 except Exception as e:
     st.error(f"Terjadi kesalahan saat membaca file: {e}")
     df_sales = None
     df_occupancy = None
     df_ryp_200hr = None
     df_ryp_300hr = None
+    df_leads = None
 
 # Sidebar untuk navigasi antar halaman
 st.sidebar.title("Navigation")
@@ -84,7 +93,7 @@ if page == "Home":
     st.write("Gunakan menu di samping untuk navigasi.")
 elif page == "YTT":
     if df_sales is not None and df_occupancy is not None:
-        ytt.show(df_sales, df_occupancy)
+        ytt.show(df_sales, df_occupancy, df_leads)
     else:
         st.warning("Data tidak tersedia. Pastikan file berhasil dimuat.")
 elif page == "RYP":
