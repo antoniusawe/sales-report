@@ -27,16 +27,38 @@ def show_booking(filtered_df_sales):
     # Hitung total amount dari 'PRODUCT PRICE'
     total_amount = unique_bookings['PRODUCT PRICE'].sum()
 
+    # Menghitung unique leads
+    unique_leads = filtered_df_leads.drop_duplicates(subset='ID', keep='first')
+
+    # Hitung Booking Rate
+    total_bookings = unique_bookings['NAME'].nunique()
+    total_leads = unique_leads['ID'].nunique()
+    booking_rate = total_bookings / total_leads if total_leads > 0 else 0  # Menghindari pembagian dengan 0
+
     # Tampilkan Total Booking, Total Amount, dan Occupancy berdampingan
     st.markdown(
         f"""
         <div style="display: flex; justify-content: space-between; text-align: center; padding: 20px;">
+            <div style="margin: 0 20px; flex: 1;">
+                <h2 style="font-size: 24px; color: #333333;">Total Leads</h2>
+                <h1 style="font-size: 50px; color: #333333; margin: 0;">{unique_leads['ID'].nunique()}</h1>
+                <p style="font-size: 18px; color: #1f77b4;">Number of Leads</p>
+            </div>
             <div style="margin-right: 20px; flex: 1;">
                 <h2 style="font-size: 24px; color: #333333;">Total Booking</h2>
                 <h1 style="font-size: 50px; color: #333333; margin: 0;">{unique_bookings['NAME'].nunique()}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">Number of students</p>
             </div>
             <div style="margin: 0 20px; flex: 1;">
+                <h2 style="font-size: 24px; color: #333333;">Booking Rate</h2>
+                <h1 style="font-size: 50px; color: #333333; margin: 0;">{booking_rate:.2%}</h1>  <!-- Format as percentage -->
+                <p style="font-size: 18px; color: #1f77b4;">Booking to Leads Ratio</p>
+            </div>
+        </div>
+
+        <!-- Menambahkan Flexbox baru untuk Total Amount di baris bawah -->
+        <div style="display: flex; justify-content: center; text-align: center; padding: 20px; margin-top: 20px;">
+            <div style="flex: 1; margin: 0 20px;">
                 <h2 style="font-size: 24px; color: #333333;">Total Amount</h2>
                 <h1 style="font-size: 50px; color: #333333; margin: 0;">${total_amount:,.0f}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">in USD or USD equiv</p>
