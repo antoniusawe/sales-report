@@ -84,7 +84,7 @@ def show(df_sales, df_occupancy, df_leads):
     filtered_df_sales['MONTH'] = filtered_df_sales['MONTH'].astype(str)
 
     # Menampilkan pilihan halaman (Overview, Location, Batch)
-    view_choice = st.radio("Select View:", ["Booking", "Location", "Batch", "Occupancy Rate", "Leads"], horizontal=True, key="view_choice")
+    view_choice = st.radio("Select View:", ["Booking", "Location", "Batch", "Occupancy Rate"], horizontal=True, key="view_choice")
 
     # Menampilkan konten berdasarkan pilihan tampilan
     if view_choice == "Booking":
