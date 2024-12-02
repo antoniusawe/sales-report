@@ -20,7 +20,7 @@ def show(df_sales, df_occupancy, df_leads):
             filtered_df_sales = df_sales.copy()
             filtered_df_occupancy = df_occupancy.copy()
 
-        # Tambahkan kolom WEEK ke df_occupancy jika belum ada
+        # Menambahkan kolom WEEK ke df_occupancy jika belum ada
         if 'WEEK' not in filtered_df_occupancy.columns:
             if 'BATCH START DATE' in filtered_df_occupancy.columns:
                 filtered_df_occupancy['BATCH START DATE'] = pd.to_datetime(
@@ -33,6 +33,7 @@ def show(df_sales, df_occupancy, df_leads):
                 st.error("Kolom 'BATCH START DATE' tidak ditemukan dalam occupancy data.")
                 return
 
+        # Menambahkan kolom WEEK ke df_leads berdasarkan 'created_at'
         if 'CREATED_AT' in df_leads.columns:
             df_leads['CREATED_AT'] = pd.to_datetime(df_leads['CREATED_AT'], errors='coerce')
             df_leads['WEEK'] = df_leads['CREATED_AT'].apply(lambda x: f"WEEK {((x.day - 1) // 7) + 1}" if pd.notnull(x) else None)
@@ -53,23 +54,23 @@ def show(df_sales, df_occupancy, df_leads):
             # Konversi kolom Month menjadi string nama bulan (jika berubah menjadi datetime)
             filtered_df_sales['MONTH'] = pd.to_datetime(filtered_df_sales['MONTH'], format='%B', errors='coerce').dt.strftime('%B')
 
-            # Membuat dropdown untuk memilih bulan
-            months = ["All"] + filtered_df_sales['MONTH'].dropna().unique().tolist()
-            selected_month = st.selectbox("Select Month", months, key="month_select")
+        # Membuat dropdown untuk memilih bulan
+        months = ["All"] + filtered_df_sales['MONTH'].dropna().unique().tolist()
+        selected_month = st.selectbox("Select Month", months, key="month_select")
 
-            # Filter data berdasarkan Month yang dipilih
-            if selected_month != "All":
-                filtered_df_sales = filtered_df_sales[filtered_df_sales['MONTH'] == selected_month]
-                filtered_df_leads = filtered_df_leads[filtered_df_leads['MONTH'] == selected_month]
+        # Filter data berdasarkan Month yang dipilih
+        if selected_month != "All":
+            filtered_df_sales = filtered_df_sales[filtered_df_sales['MONTH'] == selected_month]
+            filtered_df_leads = filtered_df_leads[filtered_df_leads['MONTH'] == selected_month]
 
-            # Membuat dropdown untuk memilih WEEK
-            weeks = ["All"] + filtered_df_sales['WEEK'].dropna().unique().tolist()
-            selected_week = st.selectbox("Select Week", weeks, key="week_select")
+        # Membuat dropdown untuk memilih WEEK
+        weeks = ["All"] + filtered_df_sales['WEEK'].dropna().unique().tolist()
+        selected_week = st.selectbox("Select Week", weeks, key="week_select")
 
-            # Filter data berdasarkan WEEK yang dipilih
-            if selected_week != "All":
-                filtered_df_sales = filtered_df_sales[filtered_df_sales['WEEK'] == selected_week]
-                filtered_df_leads = filtered_df_leads[filtered_df_leads['WEEK'] == selected_week]
+        # Filter data berdasarkan WEEK yang dipilih
+        if selected_week != "All":
+            filtered_df_sales = filtered_df_sales[filtered_df_sales['WEEK'] == selected_week]
+            filtered_df_leads = filtered_df_leads[filtered_df_leads['WEEK'] == selected_week]
         else:
             selected_month = "All"  # Jika "All" dipilih di Year, otomatis bulan menjadi "All"
             selected_week = "All"  # Jika "All" dipilih di Year, otomatis minggu menjadi "All"
@@ -83,7 +84,7 @@ def show(df_sales, df_occupancy, df_leads):
     filtered_df_sales['MONTH'] = filtered_df_sales['MONTH'].astype(str)
 
     # Menampilkan pilihan halaman (Overview, Location, Batch)
-    view_choice = st.radio("Select View:", ["Booking", "Location", "Batch", "Occupancy Rate"], horizontal=True, key="view_choice")
+    view_choice = st.radio("Select View:", ["Booking", "Location", "Batch", "Occupancy Rate", "Leads"], horizontal=True, key="view_choice")
 
     # Menampilkan konten berdasarkan pilihan tampilan
     if view_choice == "Booking":
