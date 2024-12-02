@@ -40,18 +40,18 @@ def show_booking(filtered_df_sales, filtered_df_leads):
         f"""
         <div style="display: flex; justify-content: space-between; text-align: center; padding: 20px;">
             <div style="flex: 1; padding: 0 20px;">
-                <h2 style="font-size: 24px; color: #333333;">Total Leads</h2>
-                <h1 style="font-size: 50px; color: #333333; margin: 0;">{unique_leads['ID'].nunique()}</h1>
+                <h2 style="font-size: 20px; color: #333333;">Total Leads</h2>
+                <h1 style="font-size: 46px; color: #333333; margin: 0;">{unique_leads['ID'].nunique()}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">Number of Leads</p>
             </div>
             <div style="flex: 1; padding: 0 20px;">
-                <h2 style="font-size: 24px; color: #333333;">Total Booking</h2>
-                <h1 style="font-size: 50px; color: #333333; margin: 0;">{unique_bookings['NAME'].nunique()}</h1>
+                <h2 style="font-size: 20px; color: #333333;">Total Booking</h2>
+                <h1 style="font-size: 46px; color: #333333; margin: 0;">{unique_bookings['NAME'].nunique()}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">Number of students</p>
             </div>
             <div style="flex: 1; padding: 0 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h2 style="font-size: 24px; color: #333333;">Booking Rate</h2>
-                <h1 style="font-size: 50px; color: #333333; margin: 0;">{booking_rate:.2%}</h1>  <!-- Format as percentage -->
+                <h2 style="font-size: 20px; color: #333333;">Booking Rate</h2>
+                <h1 style="font-size: 46px; color: #333333; margin: 0;">{booking_rate:.2%}</h1>  <!-- Format as percentage -->
                 <p style="font-size: 18px; color: #1f77b4;">Booking to Leads Ratio</p>
             </div>
         </div>
