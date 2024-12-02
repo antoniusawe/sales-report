@@ -4,7 +4,7 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-def show_booking(filtered_df_sales):
+def show_booking(filtered_df_sales, filtered_df_leads):
     st.header("Overview by Booking")
     # Add a small note below the header
     st.caption("This overview uses the **DATE OF PAYMENT** as the primary reference for the analysis.")
