@@ -66,13 +66,21 @@ def show_ryp(df_ryp_200hr, df_ryp_300hr):
     if selected_year != "All":
         ryp_data = ryp_data[ryp_data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].dt.year == int(selected_year)]
 
-    # Tambahkan dropdown pilihan Month
-    month_options = ["All"] + sorted(ryp_data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].dropna().dt.strftime('%B').unique().tolist())
-    selected_month = st.selectbox("Select Month", month_options, key="month_dropdown")
+    # Menentukan apakah Month dropdown harus dinonaktifkan
+    month_disabled = selected_year == "All"
 
-    # Filter data berdasarkan Month
-    if selected_month != "All":
-        ryp_data = ryp_data[ryp_data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].dt.strftime('%B') == selected_month]
+    # Tambahkan dropdown pilihan Month hanya jika Year bukan "All"
+    if not month_disabled:
+        # Menampilkan opsi bulan
+        month_options = ["All"] + sorted(ryp_data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].dropna().dt.strftime('%B').unique().tolist())
+        selected_month = st.selectbox("Select Month", month_options, key="month_dropdown")
+
+        # Filter data berdasarkan Month
+        if selected_month != "All":
+            ryp_data = ryp_data[ryp_data['DATE ON WHICH CUSTOMER MADE THE BOOKING DEPOSIT'].dt.strftime('%B') == selected_month]
+    else:
+        # Jika Year adalah "All", tampilkan Select Month yang tidak tersedia
+        selected_month = st.selectbox("Select Month", ["All"], disabled=True)
 
     # Perhitungan metrik pembayaran
     total_students, total_payment_received, total_pending_payment, outstanding_percentage = calculate_payment_metrics(ryp_data)
@@ -82,18 +90,18 @@ def show_ryp(df_ryp_200hr, df_ryp_300hr):
         f"""
         <div style="display: flex; justify-content: space-around; text-align: center;">
             <div style="margin-right: 20px;">
-                <h2 style="font-size: 24px; color: #333333;">Total Booking</h2>
-                <h1 style="font-size: 50px; color: #333333; margin: 0;">{total_students}</h1>
+                <h2 style="font-size: 20px; color: #333333;">Total Booking</h2>
+                <h1 style="font-size: 46px; color: #333333; margin: 0;">{total_students}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">Number of students</p>
             </div>
             <div style="margin: 0 20px;">
-                <h2 style="font-size: 24px; color: #333333;">Total Payable</h2>
-                <h1 style="font-size: 50px; color: #333333; margin: 0;">${total_payment_received:,.0f}</h1>
+                <h2 style="font-size: 20px; color: #333333;">Total Payable</h2>
+                <h1 style="font-size: 46px; color: #333333; margin: 0;">${total_payment_received:,.0f}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">in USD or USD equiv</p>
             </div>
             <div style="margin-left: 20px;">
-                <h2 style="font-size: 24px; color: #333333;">Outstanding</h2>
-                <h1 style="font-size: 50px; color: #333333; margin: 0;">${total_pending_payment:,.0f}</h1>
+                <h2 style="font-size: 20px; color: #333333;">Outstanding</h2>
+                <h1 style="font-size: 46px; color: #333333; margin: 0;">${total_pending_payment:,.0f}</h1>
                 <p style="font-size: 18px; color: #1f77b4;">{outstanding_percentage:.2f}% of Total Payable</p>
             </div>
         </div>
