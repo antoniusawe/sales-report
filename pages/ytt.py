@@ -44,6 +44,9 @@ def show(df_sales, df_occupancy, df_leads):
         years = ["All"] + sorted(filtered_df_sales['YEAR'].dropna().astype(int).unique().tolist())
         selected_year = st.selectbox("Select Year", years, key="year_select")
 
+        # Menentukan apakah Month dan Week harus dinonaktifkan
+        disable_month_week = selected_year == "All"
+
         # Filter data berdasarkan Year (kecuali jika "All" dipilih)
         if selected_year != "All":
             filtered_df_sales = filtered_df_sales[filtered_df_sales['YEAR'] == selected_year]
@@ -56,7 +59,7 @@ def show(df_sales, df_occupancy, df_leads):
 
         # Membuat dropdown untuk memilih bulan
         months = ["All"] + filtered_df_sales['MONTH'].dropna().unique().tolist()
-        selected_month = st.selectbox("Select Month", months, key="month_select")
+        selected_month = st.selectbox("Select Month", months, key="month_select", disabled=disable_month_week)
 
         # Filter data berdasarkan Month yang dipilih
         if selected_month != "All":
@@ -65,7 +68,7 @@ def show(df_sales, df_occupancy, df_leads):
 
         # Membuat dropdown untuk memilih WEEK
         weeks = ["All"] + filtered_df_sales['WEEK'].dropna().unique().tolist()
-        selected_week = st.selectbox("Select Week", weeks, key="week_select")
+        selected_week = st.selectbox("Select Week", weeks, key="week_select", disabled=disable_month_week)
 
         # Filter data berdasarkan WEEK yang dipilih
         if selected_week != "All":
