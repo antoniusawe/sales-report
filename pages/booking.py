@@ -28,7 +28,7 @@ def show_booking(filtered_df_sales, filtered_df_leads):
     total_amount = unique_bookings['PRODUCT PRICE'].sum()
 
     # Menghitung unique leads
-    unique_leads = filtered_df_leads.drop_duplicates(subset='ID', keep='first')
+    unique_leads = filtered_df_leads.loc[filtered_df_leads['PIPELINE_NAME'] != 'Clients'].drop_duplicates(subset='ID', keep='first')
 
     # Hitung Booking Rate
     total_bookings = unique_bookings['NAME'].nunique()
