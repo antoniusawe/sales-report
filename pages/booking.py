@@ -168,6 +168,59 @@ def show_booking(filtered_df_sales, filtered_df_leads):
         daily_bookings=('NAME', 'nunique')  # Jumlah unique bookings per hari
     ).reset_index()
 
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    
+    # Membuat layout dengan 2 baris (1 untuk chart, 1 untuk tabel)
+    fig = make_subplots(
+        rows=2, cols=1,
+        shared_xaxes=True,  # Share x-axis antara chart dan tabel
+        row_heights=[0.8, 0.2],  # Tinggi masing-masing row
+        vertical_spacing=0.05
+    )
+    
+    # Tambahkan bar chart (row 1)
+    fig.add_trace(
+        go.Bar(
+            x=weekly_data['MONTH'],
+            y=weekly_data['unique_bookings'],
+            marker_color=weekly_data['WEEK'],  # Warna berdasarkan minggu
+            name='Bookings per Weeks',
+            text=weekly_data['unique_bookings'],  # Tampilkan teks
+            textposition='outside'
+        ),
+        row=1, col=1
+    )
+    
+    # Tambahkan tabel (row 2)
+    fig.add_trace(
+        go.Table(
+            header=dict(
+                values=["Month", "Week", "Unique Bookings"],
+                fill_color='lightgrey',
+                align='center'
+            ),
+            cells=dict(
+                values=[
+                    weekly_data['MONTH'],  # Kolom bulan
+                    weekly_data['WEEK'],  # Kolom minggu
+                    weekly_data['unique_bookings']  # Kolom bookings
+                ],
+                align='center'
+            )
+        ),
+        row=2, col=1
+    )
+    
+    # Update layout
+    fig.update_layout(
+        height=800,  # Tinggi grafik
+        title_text="Bookings per Weeks with Data Table"
+    )
+    
+    # Tampilkan di Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
     # Hitung rata-rata booking harian
     avg_daily_bookings = daily_data['daily_bookings'].mean()
 
