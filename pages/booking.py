@@ -118,25 +118,25 @@ def show_booking(filtered_df_sales, filtered_df_leads):
     weekly_data = weekly_data.sort_values(by=['MONTH', 'WEEK'])
     weekly_data['MONTH'] = weekly_data['MONTH'].dt.strftime('%B')
 
-    # # Membuat grouped bar chart dengan gradasi manual
-    # fig = px.bar(
-    #     weekly_data,
-    #     x='MONTH',
-    #     y='unique_bookings',  # Gunakan 'unique_bookings' sebagai y-axis
-    #     color='WEEK',
-    #     title="Bookings per Weeks",
-    #     labels={'unique_bookings': 'Number of Bookings', 'WEEK': 'Week', 'MONTH': 'Month'},
-    #     # text='unique_bookings',  # Menampilkan angka di atas bar
-    #     barmode='group'  # Membuat grouped bar chart
-    # )
-    # fig.update_layout(
-    #     xaxis=dict(title="Month"),
-    #     yaxis=dict(title="Number of Bookings"),
-    #     legend=dict(title="Week")
-    # )
+    # Membuat grouped bar chart dengan gradasi manual
+    fig = px.bar(
+        weekly_data,
+        x='MONTH',
+        y='unique_bookings',  # Gunakan 'unique_bookings' sebagai y-axis
+        color='WEEK',
+        title="Bookings per Weeks",
+        labels={'unique_bookings': 'Number of Bookings', 'WEEK': 'Week', 'MONTH': 'Month'},
+        # text='unique_bookings',  # Menampilkan angka di atas bar
+        barmode='group'  # Membuat grouped bar chart
+    )
+    fig.update_layout(
+        xaxis=dict(title="Month"),
+        yaxis=dict(title="Number of Bookings"),
+        legend=dict(title="Week")
+    )
 
-    # # Tampilkan grafik di Streamlit
-    # st.plotly_chart(fig, use_container_width=True)
+    # Tampilkan grafik di Streamlit
+    st.plotly_chart(fig, use_container_width=True)
 
     fig = px.bar(
         weekly_data,
